@@ -7,11 +7,11 @@ generator client {
 
 datasource db {
     provider = "mongodb"
-    url      = env("DATABASE_URL")
+    url      = "mongodb+srv://serviya:LKJ741zxc@cluster0.ezxkjig.mongodb.net/serviYa?retryWrites=true&w=majority;a"
 }
 model AuthUser {
   id String @id @map("_id")
-  user_id String
+  // user_id String
   name String 
   email String
   username String @unique
@@ -19,7 +19,7 @@ model AuthUser {
   auth_key     AuthKey[]
   // here you can add custom fields for your user
   // e.g. name, email, username, roles, etc.
-  @@index([user_id])
+  // @@index([user_id]) 
   @@map("auth_user")
 }
 

@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions ={
-    defautl: async({request})=>{
+    default: async({request})=>{
         const {name, username, password, email} = Object.fromEntries(await request.formData()) as Record  < string, string >
         try{
             await auth.createUser({
@@ -24,7 +24,7 @@ export const actions: Actions ={
                 attributes:{
                     name,
                     email,
-                    username
+                    username,
                 }
             })
         }catch(error){
