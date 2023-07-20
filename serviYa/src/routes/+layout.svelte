@@ -1,40 +1,37 @@
 <script lang="ts">
+  import type { PageData } from "./$types";
+  export let data: PageData;
 </script>
 
-<nav>
-  <a href="/#">Task Manager</a>
-  <button
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarText"
-    aria-controls="navbarText"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span />
-  </button>
-  <div id="navbarText">
-    <div>
-      {#if true}
-        <span>&nbsp;&nbsp</span>
-      {:else}<span>&nbsp;</span>{/if}
-    </div>
-    <span>
-      <ul>
-        {#if true}
-          <li>
-            <a href="/#" on:click>Log Out</a>
-          </li>
-        {:else}
-          <li>
-            <a href="/#" on:click>Log In</a>
-          </li>
-        {/if}
-      </ul>
-    </span>
-  </div>
-</nav>
+<div class="container">
+  <nav>
+    <div id="navbarText">
+      <div>
+        {#if data.user}
+          <span>{data.user.email} &nbsp;&nbsp{data.user.name}</span>
+        {:else}<span>&nbsp;</span>{/if}
+      </div>
 
-<main class="container">
+      <ul>
+        <form method="POST">
+          <li><a href="/">Home</a></li>
+          {#if !data.user}
+            <li>
+              <a href="/register" on:click>Register</a>
+            </li>
+            <li>
+              <a href="/login" on:click>Log in</a>
+            </li>
+          {:else}
+            <li>
+              <button formaction="/logout" type="submit">LogOut</button>
+            </li>
+            <li />
+          {/if}
+        </form>
+      </ul>
+    </div>
+  </nav>
+
   <slot />
-</main>
+</div>
