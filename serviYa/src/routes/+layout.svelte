@@ -1,19 +1,4 @@
 <script lang="ts">
-  import { isAuthenticated, user } from "../store";
-  import { login, logout } from "../lib/authConfig/auth_handlers";
-  import auth from "../authService";
-  import type { Auth0Client } from "@auth0/auth0-spa-js";
-  import { onMount } from "svelte";
-  import { auth0Client } from "../lib/authConfig/auth_handlers";
-  let authclient: Auth0Client;
-  auth0Client.subscribe((client) => (authclient = client));
-  onMount(async () => {
-    auth0Client.set(await auth.createClient());
-    auth0Client.subscribe(async (client) => {
-      isAuthenticated.set(await client.isAuthenticated());
-      user.set(await client.getUser());
-    });
-  });
 </script>
 
 <nav>
@@ -30,19 +15,19 @@
   </button>
   <div id="navbarText">
     <div>
-      {#if $isAuthenticated}
-        <span>&nbsp;&nbsp;{$user?.name} ({$user?.email})</span>
+      {#if true}
+        <span>&nbsp;&nbsp</span>
       {:else}<span>&nbsp;</span>{/if}
     </div>
     <span>
       <ul>
-        {#if $isAuthenticated}
+        {#if true}
           <li>
-            <a href="/#" on:click={logout(authclient)}>Log Out</a>
+            <a href="/#" on:click>Log Out</a>
           </li>
         {:else}
           <li>
-            <a href="/#" on:click={login(authclient)}>Log In</a>
+            <a href="/#" on:click>Log In</a>
           </li>
         {/if}
       </ul>
