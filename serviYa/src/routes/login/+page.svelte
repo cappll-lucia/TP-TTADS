@@ -26,6 +26,8 @@
         />
         <button type="submit" class="contrast" typeof="submit">Log in</button>
       </form>
+
+      <p>No tienes una cuenta <a href="/register">Register</a></p>
     </div>
     <div id="register-img" />
   </article>
