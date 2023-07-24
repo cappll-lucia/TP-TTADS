@@ -1,10 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { errorStore } from "../../store";
-  import type { LuciaError } from 'lucia-auth';
-
-  const data = $errorStore;
-  
+  import type { ActionData,PageData } from "./$types";
+   export let data;
+  export let form:ActionData;
 </script>
 
 <main class="container">
@@ -14,13 +11,21 @@
         <h1>Login</h1>
       </hgroup>
       <form  method="POST" >
+        {#if form?.message==="AUTH_INVALID_KEY_ID"}
+        <span class="error">Usuario incorrecto</span>
+        {/if}
         <input
+          value={form?.email ?? ''}
           type="text"
           name="username"
           placeholder="Username"
           aria-label="Username"
           required
         />
+       
+        {#if form?.message==="AUTH_INVALID_PASSWORD"}
+        <span class="error">Clave incorrecta</span>
+        {/if}
         <input
           type="password"
           name="password"
@@ -29,13 +34,11 @@
           autocomplete="current-password"
           required
         />
+        
         <button type="submit" class="contrast" typeof="submit">Log in</button>
       </form>
 
       <p>No tienes una cuenta <a href="/register">Register</a></p>
-      {#if data}
-        <p>{data}</p>
-      {/if}
     </div>
     <div id="login-img" />
   </article>
@@ -47,6 +50,10 @@
     .grid{
       margin-top:60px;
     }
+  }
+  .error{
+    font-size: small;
+    color: red;
   }
   #login-img {
     background-image: url('../../ai.profClient.png');
