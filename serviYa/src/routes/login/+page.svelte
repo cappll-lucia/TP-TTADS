@@ -1,7 +1,10 @@
 <script lang="ts">
-  import type { PageData, ActionData } from "./$types";
   import { page } from '$app/stores';
+  import { errorStore } from "../../store";
+  import type { LuciaError } from 'lucia-auth';
 
+  const data = $errorStore;
+  
 </script>
 
 <main class="container">
@@ -10,7 +13,7 @@
       <hgroup>
         <h1>Login</h1>
       </hgroup>
-      <form method="POST" action="?/login">
+      <form  method="POST" >
         <input
           type="text"
           name="username"
@@ -30,8 +33,8 @@
       </form>
 
       <p>No tienes una cuenta <a href="/register">Register</a></p>
-      {#if $page.error}
-        <p>{$page.error.message}</p>
+      {#if data}
+        <p>{data}</p>
       {/if}
     </div>
     <div id="login-img" />
