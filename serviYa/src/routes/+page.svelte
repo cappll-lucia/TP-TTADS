@@ -5,6 +5,7 @@
   import type { Province, Location, } from "../types";
   import { json, redirect } from "@sveltejs/kit";
   import { fade, fly } from 'svelte/transition';
+
   export let data: PageData;
   const id = [237, 238, 239, 240, 241, 242];
   let provinces : Province[]=[];
@@ -39,11 +40,11 @@
       
     }
   }
-  const searchProfessionalsAtLocation=()=>{
-    redirect(300, '/locationSearch')
-  }
 
 
+const searchProfessionalsAtLocation=()=>{
+  console.log(selectedLocation.id)
+}
 
 </script>
 
@@ -75,6 +76,9 @@
             <option value={loc} selected>{loc.nombre.toLocaleUpperCase()}</option>
           {/each}
         </select>
+        {/if}
+        {#if selectedLocation.id!='0'}
+        <button><a href={`/locationSearch/`}>Buscar Profesional</a></button>
         {/if}
       </div>
     </div>

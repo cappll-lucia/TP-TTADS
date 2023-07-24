@@ -1,5 +1,5 @@
 <script lang='ts'>
-
+export const route = '/locationSearch/:locationID'
 </script>
 
-<h1>redirect</h1>
+<h1>location</h1>

@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { PageData, ActionData } from "./$types";
+  import { page } from '$app/stores';
+
 </script>
 
 <main class="container">
@@ -8,7 +10,7 @@
       <hgroup>
         <h1>Login</h1>
       </hgroup>
-      <form method="POST">
+      <form method="POST" action="?/login">
         <input
           type="text"
           name="username"
@@ -28,6 +30,9 @@
       </form>
 
       <p>No tienes una cuenta <a href="/register">Register</a></p>
+      {#if $page.error}
+        <p>{$page.error.message}</p>
+      {/if}
     </div>
     <div id="login-img" />
   </article>

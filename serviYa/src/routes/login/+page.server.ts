@@ -1,6 +1,9 @@
 import { auth } from "$lib/server/lucia";
-import { fail, redirect } from "@sveltejs/kit";
+import { LuciaError } from "lucia-auth";
+import type { ErrorMessage } from "lucia-auth/auth/error";
+import { fail, redirect,error } from "@sveltejs/kit";
 import type { PageServerLoad, Actions } from "./$types";
+
 
 export const load: PageServerLoad = async ({ locals }) => {
   const session = await locals.auth.validate();
@@ -10,7 +13,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-  default: async ({ request, locals }) => {
+  login: async ({ request, locals }) => {
     const { username, password } = Object.fromEntries(
       await request.formData()
     ) as Record<string, string>;
@@ -19,9 +22,10 @@ export const actions: Actions = {
       const session = await auth.createSession(key.userId);
       //const sessionCookie = auth.createSessionCookie(session).serialize();
       locals.auth.setSession(session);
-    } catch (error) {
-      console.log(error);
-      return fail(400, { message: "Could not login user" });
+    } catch (err) {
+      let errorMessage = 'Could not login user';
+      if(err instanceof LuciaError) errorMessage=err.message;
+      throw error(400, errorMessage);
     }
     throw redirect(302, "/");
   },
