@@ -48,10 +48,16 @@
   </article>
 </main>
 
-<style>
-  #register-img {
-    background-image: url("https://blog.pedidosya.com.ar/static/PedidosYaRider-12febb9a302276a3e53ed5d4bc26bd75.webp");
+<style lang="scss">
+.container{
+  display:flex;
+  height:calc(100vh - 80px);
+  justify-content:center;
+  align-items:center;
+}
+#register-img {
+    background-image: url('../../ai.profClient.png');
     background-position: center;
-    background-size: cover;
+    background-size:contain;
   }
 </style>
