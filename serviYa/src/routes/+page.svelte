@@ -3,37 +3,35 @@
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
   import type { Province, Location } from "../types";
+  import {getProvinces, getLocations} from "../data/location_data.ts"
   import { json, redirect } from "@sveltejs/kit";
   import { fade, fly } from "svelte/transition";
-  import { images } from "../data/random_data.js";
+  import { images } from "../data/random_data.ts";
 
   export let data: PageData;
   let provinces: Province[] = [];
   let locations: Location[] = [];
   let selectedProvince: Province = { id: "0", nombre: "Provincia" };
   let selectedLocation: Location = { id: "0", nombre: "Localidad" };
+
   onMount(() => {
-    getProvinces();
+    loadProvinces();
   });
 
-  const getProvinces = async () => {
+  const loadProvinces = async () => {
     try {
-      const response = await fetch(
-        "https://apis.datos.gob.ar/georef/api/provincias?campos=nombre"
-      );
-      const jsonResponse = await response.json();
+      const jsonResponse = await getProvinces();
       provinces = [...jsonResponse.provincias];
       provinces.unshift(selectedProvince);
       selectedProvince = provinces[0];
     } catch (error) {}
   };
-  const getLocations = async () => {
+
+  const loadLocations = async () => {
     try {
       if (selectedProvince.id != "0") {
-        const response = await fetch(
-          `https://apis.datos.gob.ar/georef/api/localidades?provincia=${selectedProvince.id}&campos=nombre&max=500`
-        );
-        const jsonResponse = await response.json();
+        const jsonResponse = await getLocations(selectedProvince.id);
+        console.log(jsonResponse)
         locations = [...jsonResponse.localidades];
         locations.unshift(selectedLocation);
         selectedLocation = locations[0];
@@ -41,9 +39,6 @@
     } catch (error) {}
   };
 
-  const searchProfessionalsAtLocation = () => {
-    console.log(selectedLocation.id);
-  };
 </script>
 
 {#if data.user}
@@ -60,12 +55,12 @@
   <div class="landing">
     <div class="content">
       <div class="txt t-center">
-        <h1>Lorem ipsum dolor.</h1>
-        <span>Lorem ipsum, dolor sit amet consectetur adipisicing.</span>
+        <h1>ServiYa: Tu conexión con profesionales de excelencia</h1>
+        <span>Encuentra plomeros, gasistas, cerrajeros, mecánicos, docentes particulares y más, verificados y listos para ofrecerte sus servicios en tu localidad. </span>
       </div>
       <div class="input my-2">
-        <span>Lorem ipsum dolor sit amet consectetur.</span>
-        <select bind:value={selectedProvince} on:change={getLocations}>
+        <span>Explora expertos en tu zona</span>
+        <select bind:value={selectedProvince} on:change={loadLocations}>
           {#each provinces as prov (prov.id)}
             <option value={prov} selected
               >{prov.nombre.toLocaleUpperCase()}</option
@@ -75,7 +70,6 @@
         {#if selectedProvince.id != "0"}
           <select
             bind:value={selectedLocation}
-            on:change={searchProfessionalsAtLocation}
             transition:fade
           >
             {#each locations as loc}
@@ -86,7 +80,7 @@
           </select>
         {/if}
         {#if selectedLocation.id != "0"}
-          <button><a href={`/locationSearch/${selectedLocation.id}`}>Buscar Profesional</a></button>
+          <button class="searchByLocation-btn"><a href={`/locationSearch/${selectedProvince.id}/${selectedLocation.id}`} class="unlink">BUSCAR PROFESIONAL</a></button>
         {/if}
       </div>
     </div>
@@ -130,11 +124,17 @@
       flex-direction: column;
       color: #f6f6f6;
       .txt span {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+        text-align:center;
+        display: inline-block;
+        width: 70%;
+        position: relative;
+        left: 15%;
       }
       .txt h1 {
         color: #f6f6f6;
         --typography-spacing-vertical: 0;
+        text-align:center;
       }
       .input {
         width: 30rem;
@@ -151,6 +151,14 @@
           }
         }
       }
+    }
+  }
+
+  .searchByLocation-btn{
+    background-color: #1095c1;
+    .unlink{
+      text-decoration: none;
+      color: #f6f6f6;
     }
   }
 </style>
