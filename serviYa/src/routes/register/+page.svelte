@@ -1,6 +1,8 @@
 <script lang="ts">
+  import {enhance} from '$app/forms'
   import type { PageData, ActionData } from "./$types";
   export let form;
+  let loading=false;
 
 </script>
 
@@ -10,7 +12,12 @@
       <hgroup>
         <h1>Registro</h1>
       </hgroup>
-      <form method="POST" class="register-form">
+      <form method="POST" class="register-form" use:enhance={
+        ()=>{
+          loading=true
+          return ()=>{loading=false}
+        }
+        }>
         <div class="inputs">
           <input
           type="text"
@@ -73,7 +80,7 @@
           <span class="error">{form?.message}</span>
           {/if}
         </div>
-        <button type="submit" class="contrast submit-btn" typeof="submit">Register</button>
+        <button type="submit" class="contrast submit-btn" typeof="submit" aria-busy={loading}>Register</button>
       </form>
     </div>
     <div id="register-img" />

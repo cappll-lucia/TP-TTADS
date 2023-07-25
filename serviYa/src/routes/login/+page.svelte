@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { ActionData,PageData } from "./$types";
+  import {enhance} from '$app/forms'
    export let data;
   export let form:ActionData;
+  let loading=false;
 </script>
 
 <main class="container">
@@ -10,7 +12,15 @@
       <hgroup>
         <h1>Login</h1>
       </hgroup>
-      <form  method="POST" >
+      <form  method="POST" use:enhance={
+        ()=>{
+          loading=true;
+          return ({update})=>{
+            loading=false
+            update()
+          }
+        }
+        }>
         {#if form?.message==="AUTH_INVALID_KEY_ID"}
         <span class="error">Usuario incorrecto</span>
         {/if}
@@ -34,7 +44,7 @@
           required
         />
         
-        <button type="submit" class="contrast" typeof="submit">Log in</button>
+        <button type="submit" class="contrast" typeof="submit" aria-busy={loading}>Log in</button>
       </form>
 
       <p>No tienes una cuenta <a href="/register">Register</a></p>
