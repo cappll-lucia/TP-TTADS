@@ -22,7 +22,6 @@
           aria-label="Username"
           required
         />
-       
         {#if form?.message==="AUTH_INVALID_PASSWORD"}
         <span class="error">Clave incorrecta</span>
         {/if}
