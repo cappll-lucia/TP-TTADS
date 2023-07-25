@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Img from "$lib/components/Img.svelte";
+  import Img from "$lib/components/Image/Img.svelte";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
   import type { Province, Location } from "../types";
@@ -51,7 +51,7 @@
     {#each images as i (i.img_id)}
       <div>
         <a href="/description/{i.img_id}">
-          <Img imgData={i} />
+          <Img imgData={{img_id: i.img_id, description: undefined}}/>
         </a>
       </div>
     {/each}
@@ -86,7 +86,7 @@
           </select>
         {/if}
         {#if selectedLocation.id != "0"}
-          <button><a href={`/locationSearch/`}>Buscar Profesional</a></button>
+          <button><a href={`/locationSearch/${selectedLocation.id}`}>Buscar Profesional</a></button>
         {/if}
       </div>
     </div>
