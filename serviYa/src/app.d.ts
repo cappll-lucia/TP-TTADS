@@ -17,7 +17,7 @@ declare global {
   var __prisma: PrismaClient;
   /// <reference types="lucia" />
   declare namespace Lucia {
-    type Auth = import("$lib/server/lucia").Auth;
+    type Auth = import("$lib/server/lucia/lucia").Auth;
     type UserAttributes = {
       username: string;
       name: string;

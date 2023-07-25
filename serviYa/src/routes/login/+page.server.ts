@@ -1,4 +1,4 @@
-import { auth } from "$lib/server/lucia";
+import { auth } from "$lib/server/lucia/lucia";
 import { LuciaError } from "lucia-auth";
 import type { ErrorMessage } from "lucia-auth/auth/error";
 import { fail, redirect, error } from "@sveltejs/kit";
