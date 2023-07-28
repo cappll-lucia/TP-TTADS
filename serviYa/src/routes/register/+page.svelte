@@ -14,8 +14,11 @@
       </hgroup>
       <form method="POST" class="register-form" use:enhance={
         ()=>{
-          loading=true
-          return ()=>{loading=false}
+          loading=true;
+          return ({update} )=>{
+            loading=false
+            update()
+          }
         }
         }>
         <div class="inputs">
