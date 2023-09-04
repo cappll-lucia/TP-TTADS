@@ -17,9 +17,10 @@ export const actions: Actions = {
       string,
       string
     >;
-    const { name, username, password, email } = formData;
     try {
-      const result = registerSchema.parse(formData);
+      const { name, username, password, email } =
+        registerSchema.parse(formData);
+
       await auth.createUser({
         primaryKey: {
           providerId: "username",
@@ -35,7 +36,6 @@ export const actions: Actions = {
     } catch (error) {
       if (error instanceof ZodError) {
         const { fieldErrors: errors } = error.flatten();
-        // const { confirmPassword, ...others} =  formData;
         return {
           data: { ...formData },
           errors,
@@ -46,7 +46,6 @@ export const actions: Actions = {
           message: "No se pudo registrar al usuario",
         };
       }
-      return fail(400, { message: "Could not register user" });
     }
     throw redirect(302, "/login");
   },
