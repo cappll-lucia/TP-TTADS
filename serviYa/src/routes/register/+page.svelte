@@ -1,8 +1,26 @@
 <script lang="ts">
+  import {registerSchema} from "./registerSchema"
   import {enhance} from '$app/forms'
-  import type { PageData, ActionData } from "./$types";
+  import type { ActionData } from "./$types";
+    import { ZodError } from "zod";
   export let form;
   let loading=false;
+
+
+  function validateOrThrow(formdata:FormData) {
+    const obj={} as any;
+    formdata.forEach((v:any,k:any)=>obj[k]=v)
+    registerSchema.parse(obj)
+  }
+
+
+
+  function manageError(error:any){
+    if (error instanceof ZodError) {
+      const { fieldErrors } = error.flatten();
+      form={errors:fieldErrors} as ActionData
+    }
+  }
 
 </script>
 
@@ -13,11 +31,17 @@
         <h1>Registro</h1>
       </hgroup>
       <form method="POST" class="register-form" use:enhance={
-        ()=>{
-          loading=true;
-          return ({update} )=>{
-            loading=false
-            update()
+        ({formData})=>{
+          try{
+            validateOrThrow(formData)
+            loading=true;
+            return ({update} )=>{
+              loading=false
+              update()
+            }
+          }
+          catch (error){
+            manageError(error)
           }
         }
         }>
