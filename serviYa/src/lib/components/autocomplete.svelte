@@ -18,7 +18,6 @@
     city.set(selectedCity)
     hasBeenJustFound=true
     searchTerm=showCityDescription($city) ?? ""
-    console.log("dede")
     cities=[]
   }
 
@@ -91,10 +90,18 @@
     
   }
 
+  function onFocus(e:any){
+    e.target.select()
+    hide=false
+  }
 
 </script>
 
-<input bind:value={searchTerm} on:focusin={()=>hide=false} on:input={()=>indexSelected=-1} on:keydown={keyboardNavigate} > 
+<input bind:value={searchTerm} 
+  on:focusin={onFocus} 
+      on:input={()=>indexSelected=-1} 
+      on:keydown={keyboardNavigate}
+> 
 {#if !hide && searchTerm!=="" && cities.length!==0}
 <div transition:fade class="backthing" on:click={()=>hide=true}></div>
 <ul transition:slide={{duration:300}}  >
