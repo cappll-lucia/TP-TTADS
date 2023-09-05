@@ -55,15 +55,51 @@
     }
   }
 
+  let indexSelected=-1
+  function keyboardNavigate(event:KeyboardEvent){
+    const {key}=event
+    if(key==="Enter"){
+      document.getElementById('item-'+indexSelected)?.click()
+      return
+    }
+    if(!(key==="ArrowUp" || key==="ArrowDown")){
+      return
+    }
+    event.preventDefault()
+
+    document.getElementById('item-'+indexSelected)?.animate(
+      [ {background:'black'} ],
+      {
+        duration: 150,  
+        easing: 'ease-out', 
+        fill:"forwards"
+      }
+    ).play()
+
+    indexSelected=(key === "ArrowUp")? indexSelected-1:indexSelected+1
+    indexSelected=(indexSelected<-1)?-1:indexSelected 
+    indexSelected= indexSelected % cities.length
+
+    document.getElementById('item-'+indexSelected)?.animate(
+      [ {background:'#334'} ],
+      {
+        duration: 100,  
+        easing: 'ease-in-out', 
+        fill:"forwards"
+      }
+    ).play()
+    
+  }
+
 
 </script>
 
-<input bind:value={searchTerm} on:focusin={()=>hide=false} > 
-{#if !hide && cities.length!==0}
+<input bind:value={searchTerm} on:focusin={()=>hide=false} on:input={()=>indexSelected=-1} on:keydown={keyboardNavigate} > 
+{#if !hide && searchTerm!=="" && cities.length!==0}
 <div transition:fade class="backthing" on:click={()=>hide=true}></div>
-<ul transition:slide={{duration:300}} >
-  {#each cities as c }
-   <li on:click={()=>select(c)}>{showCityDescription(c)}</li> 
+<ul transition:slide={{duration:300}}  >
+  {#each cities as c, i }
+   <li id={'item-'+i} on:click={()=>select(c)}>{showCityDescription(c) }</li> 
   {/each}
 </ul>
 {/if}
@@ -89,8 +125,7 @@
   }
 
   li:hover{
-    background: #999;
-      
+    background: #334;
   }
 
 </style>
