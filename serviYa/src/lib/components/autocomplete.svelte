@@ -24,18 +24,32 @@
   }
 
   let searchTerm=""
+  const abortCont={
+    last: new AbortController(),
+    next: new AbortController(),
+    swap(){
+        this.last= abortCont.next
+        this.next= new AbortController()
+    }
+  }
   $: {
-    if(searchTerm==""){
+    if(searchTerm===""){
       cities=[]
     }
     if(searchTerm.length>3 && !hasBeenJustFound){
+      abortCont.last.abort()
       const url=`https://apis.datos.gob.ar/georef/api/localidades?nombre=${searchTerm}&max=10`
-      fetch(url)
+      fetch(url, {signal:abortCont.next.signal})
         .then(rawRes=>rawRes.json())
         .then(data=>{
           cities=data.localidades
         })
-        .catch(err=>console.error(err))
+        .catch(err=>{
+          if(err.name!=="AbortError"){
+            console.error(err)
+          }
+        })
+      abortCont.swap()
     }
     else{
       hasBeenJustFound=false
