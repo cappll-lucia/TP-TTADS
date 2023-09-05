@@ -8,6 +8,7 @@
   let cities=[] as City[]
   const city=getContext<Writable<City|null>>("city") 
   let hasBeenJustFound=false
+  let hide=true
   
   function showCityDescription(x:City| null){
      return x? capitalize(x.nombre)+', '+capitalize(x.provincia.nombre):"" 
@@ -57,9 +58,9 @@
 
 </script>
 
-<input bind:value={searchTerm} > 
-{#if cities.length!==0}
-<div transition:fade class="backthing" on:click={()=>cities=[]}></div>
+<input bind:value={searchTerm} on:focusin={()=>hide=false} > 
+{#if !hide && cities.length!==0}
+<div transition:fade class="backthing" on:click={()=>hide=true}></div>
 <ul transition:slide={{duration:300}} >
   {#each cities as c }
    <li on:click={()=>select(c)}>{showCityDescription(c)}</li> 
