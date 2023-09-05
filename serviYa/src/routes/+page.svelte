@@ -1,5 +1,6 @@
 <script lang="ts">
   import Img from "$lib/components/Image/Img.svelte";
+  import ServicesGallery from '$lib/components/servicesGallery/ServicesGallery.svelte';
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
   import type { Province, Location } from "../types";
@@ -20,8 +21,8 @@
 
   const loadProvinces = async () => {
     try {
-      const jsonResponse = await getProvinces();
-      provinces = [...jsonResponse.provincias];
+      const jsonResp = await getProvinces();
+      provinces = [...jsonResp.provincias];
       provinces.unshift(selectedProvince);
       selectedProvince = provinces[0];
     } catch (error) {}
@@ -30,9 +31,9 @@
   const loadLocations = async () => {
     try {
       if (selectedProvince.id != "0") {
-        const jsonResponse = await getLocations(selectedProvince.id);
-        console.log(jsonResponse)
-        locations = [...jsonResponse.localidades];
+        const jsonResp = await getLocations(selectedProvince.id);
+        console.log(jsonResp)
+        locations = [...jsonResp.localidades];
         locations.unshift(selectedLocation);
         selectedLocation = locations[0];
       }
@@ -42,15 +43,7 @@
 </script>
 
 {#if data.user}
-  <div class="grid my-3">
-    {#each images as i (i.img_id)}
-      <div>
-        <a href="/description/{i.img_id}">
-          <Img imgData={{img_id: i.img_id, description: undefined}}/>
-        </a>
-      </div>
-    {/each}
-  </div>
+  <ServicesGallery/>
 {:else}
   <div class="landing">
     <div class="content">
@@ -59,7 +52,7 @@
         <span>Encuentra plomeros, gasistas, cerrajeros, mecánicos, docentes particulares y más, verificados y listos para ofrecerte sus servicios en tu localidad. </span>
       </div>
       <div class="input my-2">
-        <span>Explora expertos en tu zona</span>
+        <span transition:fly={{y:200, duration:300}}>Explora expertos en tu zona</span>
         <select bind:value={selectedProvince} on:change={loadLocations}>
           {#each provinces as prov (prov.id)}
             <option value={prov} selected
@@ -80,7 +73,7 @@
           </select>
         {/if}
         {#if selectedLocation.id != "0"}
-          <button class="searchByLocation-btn"><a href={`/locationSearch/${selectedProvince.id}/${selectedLocation.id}`} class="unlink">BUSCAR PROFESIONAL</a></button>
+          <button transition:fly={{y:200, duration:300}} class="searchByLocation-btn"><a href={`/locationSearch/${selectedProvince.id}/${selectedLocation.id}`} class="unlink">BUSCAR PROFESIONAL</a></button>
         {/if}
       </div>
     </div>

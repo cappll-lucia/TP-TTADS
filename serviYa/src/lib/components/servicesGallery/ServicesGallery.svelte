@@ -1,0 +1,55 @@
+<script lang="ts">
+import {onMount} from 'svelte';
+import {services} from '../../../data/services_data.ts';
+
+
+</script>
+
+<div class="container services_gallery services_gallery_{services.length} col-lg-8 col-md-10 col-sm-12 col-12" use:cssVariables={{numColumns, numRows, gridTemplateAreas}}>
+    {#each services as s (s.service_id)}
+    <div class="services_gallery--serv{s.service_id} services_gallery--serv">
+        <a href="/pages/recetados.html">{s.description}</a>
+    </div>
+    {/each}
+</div>
+
+<style lang="scss">
+
+.services_gallery{
+  height: auto;
+  display: flex;
+  justify-content: space-arround;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  .services_gallery--serv{
+    height: 150px;
+    display: flex;
+    flex: 1; 
+    min-width: calc(33.33% - 50px); 
+    background-color:red;
+    border-radius: 20px;
+    margin: 5px;
+    justify-content:center;
+    align-items: center;
+    a{
+      font-size: 1rem;
+      font-weight: 600;
+      color: #000;
+    }
+  }
+}
+
+
+@media (max-width: 600px){
+  .services_gallery{
+  gap: 3px;
+  .services_gallery--serv{
+    min-width: calc(33.33% - 10px); 
+    border-radius: 20px;
+  }
+}
+}
+
+
+</style>
