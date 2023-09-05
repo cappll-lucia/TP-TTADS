@@ -2,15 +2,13 @@
   import type { Writable } from "svelte/store";
   import { getContext } from "svelte";
   import type { City } from "../../types";
-    import { capitalize } from "$lib/utils";
-    import { fade, slide } from "svelte/transition";
+  import { capitalize } from "$lib/utils";
+  import { fade, slide } from "svelte/transition";
 
   let cities=[] as City[]
   const city=getContext<Writable<City|null>>("city") 
   let hasBeenJustFound=false
   
-
-
   function showCityDescription(x:City| null){
      return x? capitalize(x.nombre)+', '+capitalize(x.provincia.nombre):"" 
   }
@@ -59,9 +57,10 @@
 
 </script>
 
-<input bind:value={searchTerm}> 
+<input bind:value={searchTerm} > 
 {#if cities.length!==0}
-<ul transition:slide={{duration:300}} on:blur={()=>cities=[]}>
+<div transition:fade class="backthing" on:click={()=>cities=[]}></div>
+<ul transition:slide={{duration:300}} >
   {#each cities as c }
    <li on:click={()=>select(c)}>{showCityDescription(c)}</li> 
   {/each}
@@ -70,6 +69,13 @@
 
 
 <style>
+  .backthing{
+    position: absolute;
+    left: 0;
+    width:100%;
+    background:rgba(20, 20, 40, 0.7);
+    height: 100%;
+  }
   ul{
     width: 17rem;
     display: flex;
