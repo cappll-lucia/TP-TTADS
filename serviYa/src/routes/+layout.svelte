@@ -1,5 +1,5 @@
 <script lang="ts">
-  import NavBar from "$lib/components/navbar/NavBar.svelte";
+  import NavBar from "$lib/components/NavBar.svelte";
 
   import type {PageData } from './$types';
  

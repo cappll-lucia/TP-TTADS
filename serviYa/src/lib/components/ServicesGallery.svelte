@@ -1,13 +1,16 @@
 <script lang="ts">
 import {onMount} from 'svelte';
-import {services} from '../../../data/services_data.ts';
+import {services} from '../../data/services_data.ts';
+
+
+const getColorIndex = ()=> Math.floor(Math.random() * (4-1  + 1))+1;
 
 
 </script>
 
 <div class="container services_gallery services_gallery_{services.length} col-lg-8 col-md-10 col-sm-12 col-12" use:cssVariables={{numColumns, numRows, gridTemplateAreas}}>
     {#each services as s (s.service_id)}
-    <div class="services_gallery--serv{s.service_id} services_gallery--serv">
+    <div class="services_gallery--servColor{getColorIndex()} services_gallery--serv">
         <a href="/pages/recetados.html">{s.description}</a>
     </div>
     {/each}
@@ -27,7 +30,6 @@ import {services} from '../../../data/services_data.ts';
     display: flex;
     flex: 1; 
     min-width: calc(33.33% - 50px); 
-    background-color:red;
     border-radius: 20px;
     margin: 5px;
     justify-content:center;
@@ -40,6 +42,18 @@ import {services} from '../../../data/services_data.ts';
   }
 }
 
+.services_gallery--servColor1{
+  background-color:#06FF00;
+}
+.services_gallery--servColor2{
+  background-color: #FFE400;
+}
+.services_gallery--servColor3{
+  background-color:#FF8E00;
+}
+.services_gallery--servColor4{
+  background-color: #FF1700;
+}
 
 @media (max-width: 600px){
   .services_gallery{

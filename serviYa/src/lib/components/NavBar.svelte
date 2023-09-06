@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {PageData } from '../../../routes/$types';
-    import Autocomplete from '../autocomplete.svelte';
+    import Autocomplete from './autocomplete.svelte';
     export let data: PageData;
 </script>
 

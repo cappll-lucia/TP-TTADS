@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Img from "$lib/components/Image/Img.svelte";
+  import Img from "$lib/components/Img.svelte";
   import { getContext, onMount } from "svelte";
-  import ServicesGallery from '$lib/components/servicesGallery/ServicesGallery.svelte';
+  import ServicesGallery from '$lib/components/ServicesGallery.svelte';
   import type { PageData } from "./$types";
   import type { Province, Location } from "../types";
   import {getProvinces, getLocations} from "../data/location_data.ts"
