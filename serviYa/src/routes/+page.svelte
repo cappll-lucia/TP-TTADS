@@ -1,13 +1,13 @@
 <script lang="ts">
   import Img from "$lib/components/Image/Img.svelte";
+  import { getContext, onMount } from "svelte";
   import ServicesGallery from '$lib/components/servicesGallery/ServicesGallery.svelte';
-  import { onMount } from "svelte";
   import type { PageData } from "./$types";
   import type { Province, Location } from "../types";
   import {getProvinces, getLocations} from "../data/location_data.ts"
-  import { json, redirect } from "@sveltejs/kit";
-  import { fade, fly } from "svelte/transition";
+  import { fade} from "svelte/transition";
   import { images } from "../data/random_data.ts";
+  import type { Writable } from "svelte/store";
 
   export let data: PageData;
   let provinces: Province[] = [];
@@ -40,8 +40,11 @@
     } catch (error) {}
   };
 
+
+  const city= getContext<Writable<Location|null>>('city')
 </script>
 
+<span>ciudad actual -> {$city?.nombre}</span>
 {#if data.user}
   <ServicesGallery/>
 {:else}
@@ -79,7 +82,6 @@
     </div>
   </div>
 {/if}
-
 <style lang="scss">
   /* .my-3 {
       margin-top: 3rem;

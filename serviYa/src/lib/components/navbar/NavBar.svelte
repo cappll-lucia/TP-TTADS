@@ -1,9 +1,10 @@
 <script lang="ts">
     import type {PageData } from '../../../routes/$types';
+    import Autocomplete from '../autocomplete.svelte';
     export let data: PageData;
 </script>
 
-<nav class=" navbar bg-white px-4">
+<nav class=" navbar bg-white px-4 ">
     <div class="serviya-logo">
       <img
       alt="logo"
@@ -12,6 +13,9 @@
       src="/serviYa2.png"
       />
       <a href="/">ServiYa</a>
+    </div>
+    <div style="padding-top:30px; padding-bottom: 20px;">
+      <Autocomplete/>
     </div>
     <div class="usr-menu">
       {#if data.user}
