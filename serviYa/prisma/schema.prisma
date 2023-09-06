@@ -1,22 +1,22 @@
-
-
 generator client {
   provider = "prisma-client-js"
   // previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
-    provider = "mongodb"
-    url      = "mongodb+srv://serviya:LKJ741zxc@cluster0.ezxkjig.mongodb.net/serviYa?retryWrites=true&w=majority;a"
+  provider = "mongodb"
+  url      = "mongodb+srv://serviya:LKJ741zxc@cluster0.ezxkjig.mongodb.net/serviYa?retryWrites=true&w=majority;a"
 }
+
 model AuthUser {
-  id String @id @map("_id")
+  id           String        @id @map("_id")
   // user_id String
-  name String 
-  email String
-  username String @unique
+  name         String
+  email        String
+  username     String        @unique
   auth_session AuthSession[]
   auth_key     AuthKey[]
+
   // here you can add custom fields for your user
   // e.g. name, email, username, roles, etc.
   // @@index([user_id]) 
@@ -24,23 +24,25 @@ model AuthUser {
 }
 
 model AuthSession {
-  id String @id @map("_id")
+  id             String   @id @map("_id")
   user_id        String
   active_expires BigInt
   idle_expires   BigInt
-  auth_user      AuthUser   @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
   @@map("auth_session")
 }
+
 model AuthKey {
-  id String @id @map("_id")
+  id              String   @id @map("_id")
   hashed_password String?
   user_id         String
   primary_key     Boolean
   expires         BigInt?
-  auth_user       AuthUser    @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
   @@map("auth_key")
-} 
+}
+
