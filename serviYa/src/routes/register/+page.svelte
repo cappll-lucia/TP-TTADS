@@ -61,17 +61,6 @@
           {/if}
           <input
           type="text"
-          name="username"
-          placeholder="Username"
-          aria-label="Username"
-          value={form?.data?.username ?? ''}
-          class="{form?.errors?.username ? 'input-error' : 'input'}"
-          />
-        {#if form?.errors?.username}
-          <span class="error">{form?.errors?.username[0]}</span>
-          {/if}
-          <input
-          type="text"
           name="name"
           placeholder="Name"
           aria-label="Name"

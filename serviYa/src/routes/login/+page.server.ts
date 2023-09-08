@@ -12,19 +12,19 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
-		const { username, password } = Object.fromEntries(await request.formData()) as Record<
+		const { email, password } = Object.fromEntries(await request.formData()) as Record<
 			string,
 			string
 		>;
 		try {
-			const key = await auth.useKey('username', username, password);
+			const key = await auth.useKey('email', email, password);
 			const session = await auth.createSession(key.userId);
 			locals.auth.setSession(session);
 			redirect(304, '/');
 		} catch (err) {
 			if (err instanceof LuciaError) {
 				return {
-					email: username,
+					email: email,
 					message: err.message
 				};
 			}

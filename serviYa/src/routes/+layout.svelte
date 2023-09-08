@@ -2,7 +2,6 @@
   import NavBar from "$lib/components/NavBar.svelte";
 
   import type {PageData } from './$types';
- 
   import { setContext } from 'svelte';
   import { writable } from 'svelte/store';
   

@@ -15,18 +15,18 @@ export const actions: Actions = {
 	default: async ({ request }) => {
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
 		try {
-			const { name, username, password, email } = registerSchema.parse(formData);
+			const { name, password, email } = registerSchema.parse(formData);
 
 			await auth.createUser({
 				primaryKey: {
-					providerId: 'username',
-					providerUserId: username,
+					providerId: 'email',
+					providerUserId: email,
 					password
 				},
 				attributes: {
 					name,
 					email,
-					username
+					role: "USER"
 				}
 			});
 		} catch (error) {

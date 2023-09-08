@@ -5,22 +5,27 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = "mongodb+srv://serviya:LKJ741zxc@cluster0.ezxkjig.mongodb.net/serviYa?retryWrites=true&w=majority;a"
+  url      = "mongodb+srv://serviya:LKJ741zxc@cluster0.ezxkjig.mongodb.net/serviYa?retryWrites=true"
 }
 
 model AuthUser {
-  id           String        @id @map("_id")
-  // user_id String
-  name         String
-  email        String
-  username     String        @unique
-  auth_session AuthSession[]
-  auth_key     AuthKey[]
+  id             String            @id @map("_id")
+  name           String
+  email          String @unique
+  role           String
+  auth_session   AuthSession[]
+  auth_key       AuthKey[]
+  profesinalData ProfessionalData?
 
-  // here you can add custom fields for your user
-  // e.g. name, email, username, roles, etc.
-  // @@index([user_id]) 
   @@map("auth_user")
+}
+
+model ProfessionalData {
+  id          String    @id @map("_id")
+  user_id     String    @unique
+  user        AuthUser  @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  location_id String
+  services    Service[]
 }
 
 model AuthSession {
@@ -46,3 +51,11 @@ model AuthKey {
   @@map("auth_key")
 }
 
+model Service {
+  id                 String            @id @map("_id")
+  name               String
+  ProfessionalData   ProfessionalData? @relation(fields: [professionalDataId], references: [id])
+  professionalDataId String?
+
+  @@map("service")
+}

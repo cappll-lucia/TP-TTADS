@@ -7,12 +7,6 @@ export const registerSchema = z
 			.min(1, { message: 'Ingrese su nombre' })
 			.max(50, { message: 'Ingrese hasta 50 caracteres' })
 			.trim(),
-		username: z
-			.string({ required_error: 'Ingrese su nombre de usuario' })
-			.min(1, { message: 'Ingrese su nombre de usuario' })
-			.max(20, {
-				message: 'El nombre de usuario puede tener hasta 20 caracteres'
-			}),
 		password: z
 			.string({ required_error: 'Ingrese su contraseña' })
 			.min(6, { message: 'La contraseña debe tener al menos 6 caracteres' })

@@ -1,17 +1,15 @@
 <script lang="ts">
-import {onMount} from 'svelte';
-import {services} from '../../data/services_data.ts';
 
-
+export let data;
 const getColorIndex = ()=> Math.floor(Math.random() * (4-1  + 1))+1;
 
 
 </script>
 
-<div class="container services_gallery services_gallery_{services.length} col-lg-8 col-md-10 col-sm-12 col-12" use:cssVariables={{numColumns, numRows, gridTemplateAreas}}>
-    {#each services as s (s.service_id)}
+<div class="container services_gallery services_gallery_{data.length} col-lg-8 col-md-10 col-sm-12 col-12" >
+    {#each data as s}
     <div class="services_gallery--servColor{getColorIndex()} services_gallery--serv">
-        <a href="/pages/recetados.html">{s.description}</a>
+        <a href="/pages/recetados.html">{s.name}</a>
     </div>
     {/each}
 </div>

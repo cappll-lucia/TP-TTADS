@@ -26,9 +26,9 @@
         {/if}
         <input
           value={form?.email ?? ''}
-          type="text"
-          name="username"
-          placeholder="Username"
+          type="email"
+          name="email"
+          placeholder="email"
           aria-label="Username"
           required
         />

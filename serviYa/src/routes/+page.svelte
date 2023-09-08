@@ -8,6 +8,7 @@
 	import type { Writable } from 'svelte/store';
 
 	export let data: PageData;
+
 	let provinces: Province[] = [];
 	let locations: Location[] = [];
 	let selectedProvince: Province = { id: '0', nombre: 'Provincia' };
@@ -30,7 +31,6 @@
 		try {
 			if (selectedProvince.id != '0') {
 				const jsonResp = await getLocations(selectedProvince.id);
-				console.log(jsonResp);
 				locations = [...jsonResp.localidades];
 				locations.unshift(selectedLocation);
 				selectedLocation = locations[0];
@@ -43,7 +43,7 @@
 
 <span>ciudad actual -> {$city?.nombre}</span>
 {#if data.user}
-	<ServicesGallery />
+	<ServicesGallery data={data.services}/>
 {:else}
 	<div class="landing">
 		<div class="content">
