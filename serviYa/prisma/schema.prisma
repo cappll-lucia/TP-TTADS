@@ -11,7 +11,7 @@ datasource db {
 model AuthUser {
   id             String            @id @map("_id")
   name           String
-  email          String @unique
+  email          String            @unique
   role           String
   auth_session   AuthSession[]
   auth_key       AuthKey[]
@@ -25,7 +25,8 @@ model ProfessionalData {
   user_id     String    @unique
   user        AuthUser  @relation(references: [id], fields: [user_id], onDelete: Cascade)
   location_id String
-  services    Service[]
+  services_id  String[] @db.ObjectId
+  services    Service[] @relation(references: [id], fields:[services_id])
 }
 
 model AuthSession {
@@ -52,10 +53,9 @@ model AuthKey {
 }
 
 model Service {
-  id                 String            @id @map("_id")
-  name               String
-  ProfessionalData   ProfessionalData? @relation(fields: [professionalDataId], references: [id])
-  professionalDataId String?
-
+  id   String @id  @default(auto()) @map("_id") @db.ObjectId
+  name String
+  professional_data_id String[]
+  professional_data ProfessionalData[] @relation(fields: [professional_data_id], references: [id])
   @@map("service")
 }

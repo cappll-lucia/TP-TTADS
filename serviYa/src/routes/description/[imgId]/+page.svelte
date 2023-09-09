@@ -3,7 +3,7 @@
   import { images } from "../../../data/random_data";
   const { id_img_param } = data;
   const imgData = images.find((img) => (img.img_id == id_img_param)) ;
-  import Img from '$lib/components/Image/Img.svelte';
+  import Img from '$lib/components/Img.svelte';
 	import { page } from '$app/stores';
 </script>
 

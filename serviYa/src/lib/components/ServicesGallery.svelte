@@ -2,14 +2,13 @@
 
 export let data;
 const getColorIndex = ()=> Math.floor(Math.random() * (4-1  + 1))+1;
-
-
+data.forEach(x=>x.color=getColorIndex())
 </script>
 
 <div class="container services_gallery services_gallery_{data.length} col-lg-8 col-md-10 col-sm-12 col-12" >
     {#each data as s}
-    <div class="services_gallery--servColor{getColorIndex()} services_gallery--serv">
-        <a href="/pages/recetados.html">{s.name}</a>
+    <div class="services_gallery--servColor{s.color} services_gallery--serv">
+        <a href="/">{s.name}</a>
     </div>
     {/each}
 </div>

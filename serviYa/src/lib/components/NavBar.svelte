@@ -15,11 +15,13 @@
       <a href="/">ServiYa</a>
     </div>
     <div style="padding-top:30px; padding-bottom: 20px;">
+      {#if data.user && data.user.role!=="ADMIN"}
       <Autocomplete/>
+      {/if}
     </div>
     <div class="usr-menu">
       {#if data.user}
-        <li>Bienvenido {data.user?.username}</li>
+        <li>Bienvenido, {data?.user?.name}!</li>
       {/if}
       <details class="menu" role="list">
         <summary aria-haspopup="listbox">

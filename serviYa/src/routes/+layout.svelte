@@ -9,6 +9,7 @@
   setContext('city', city)
   
   export let data: PageData;
+  
 </script>
 
 <div class="container-fluid">

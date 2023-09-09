@@ -5,11 +5,7 @@ import type { PageServerLoad } from "./login/$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
   try {
-    const services = [
-      { id: 1, name: "Plomeria" },
-      { id: 2, name: "Electricista" }
-    ]
-      ;
+    const services = await prisma.service.findMany({})
     return { services };
   } catch (error) {
     throw error;
