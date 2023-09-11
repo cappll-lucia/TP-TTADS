@@ -10,7 +10,7 @@ const {name, id, img} = data;
     </div>
     <div  class="actions">
         <a href="/{id}">Modificar</a>
-        <form action="?/deleteService&id={id}" method="POST">
+        <form action="?/delete_service&id={id}" method="POST">
             <button type="submit" class="outline secondary">Eliminar </button>
         </form>
     </div>

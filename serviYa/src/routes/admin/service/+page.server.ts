@@ -32,7 +32,37 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	deleteService: async ({ url }) => {
+	add_service: async ({ request }) => {
+		const { name, img } = Object.fromEntries(await request.formData()) as Record<string, string>;
+		if (!name || !img) {
+			return fail(400, { message: 'Invalid request' });
+		}
+		try {
+			/* const service = await prisma.service.create({
+				data: {
+					name
+				}
+			});
+			return {
+				status: 200,
+				service
+			}; */
+			const service = { id: _services.length + 1, name, img };
+			_services.push(service);
+			console.log(_services);
+			return {
+				status: 200,
+				service
+			};
+		} catch (error) {
+			return fail(400, { message: 'Server error' });
+		}
+	},
+	delete_service: async ({ url, locals }) => {
+		const { user, session } = await locals.auth.validateUser();
+		if (!session && user.role !== 'ADMIN') {
+			return fail(403, { message: 'No tienes permisos para realizar esta accion' });
+		}
 		const id = url.searchParams.get('id');
 		if (!id) {
 			return fail(400, { message: 'Invalid request' });
