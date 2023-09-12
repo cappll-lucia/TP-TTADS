@@ -3,67 +3,42 @@
     import Service from "$lib/components/Service.svelte";
 	import { enhance } from "$app/forms";
 	import { fade } from "svelte/transition";
-    export let form : ActionData;
-    console.log(form);
-    $: hide_form =true;
+	import { redirect } from "@sveltejs/kit";
     export let data : PageData;
-    $: ({ services } = data);
-    
+    $: ({ service } = data);
 
 </script>
 
 <div  class="actions">
-<a href="/#" on:click|preventDefault={()=>{
-    hide_form = !hide_form;
-}} role="button"> Nuevo Servicio</a>    
+<a href="/admin/services"  role="button"> Nuevo Servicio</a>    
 </div>
-<div class="container">
-    
-    {#each services as s (s.id)}
-    <Service  data={s}/>
-    {/each}
-</div>
-{#if !hide_form }
-<div transition:fade={{duration:200}} class="service_form" class:hidden={hide_form}>
+
+<div class="service_form" >
         <hgroup>
-        <h1>Nuevo servicio</h1>
+        <h1>{service?.name}</h1>
       </hgroup>
-        <form action="?/add_service" method="POST" use:enhance={()=>{
+        <form method="POST" use:enhance={()=>{
             return async ({ result, update }) => {
                if(result.type==="success"){
-                   update();
-                   alert("Servicio agregado correctamente")
-                   hide_form=true;
+                   window.location.href="/admin/service";
+                   alert("Servicio modificado correctamente")
                 }
         };
-        }}>
-            <input type="text" name="name" placeholder="Nombre del servicio" required>
-            <input type="text" name="img" placeholder="URL de la imagen">
-            <button type="submit">Agregar</button>
-            <a on:click|preventDefault={()=>{
-    hide_form = !hide_form;}} 
-     href="/#" role="button" class="contrast">Salir</a>
+        }}> <input type="hidden" name="id" value="{service?.id}">
+            <input type="text" value={service?.name} name="name" required>
+            <input type="text" name="img" value={service?.img}>
+            <button type="submit">Modificar</button>
+            <a href="/admin/service" role="button" class="contrast">Salir</a>    
         </form>
-</div>{/if}
+</div>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <div on:click={()=>{
-            hide_form = !hide_form;
-        }} class:overlay={!hide_form} ></div>
+       
 
 
 
   <style lang="scss">
-    .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(3px);
-    z-index: 5;
-    }
+
     .service_form{
         padding:  2rem 6rem 6rem 6rem;
         border-radius: 5px;
