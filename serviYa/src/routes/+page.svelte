@@ -3,7 +3,7 @@
 	import ServicesGallery from '$lib/components/ServicesGallery.svelte';
 	import type { PageData } from './$types';
 	import type { Province, Location } from '../types';
-	import { getProvinces, getLocations } from '../data/location_data.ts';
+	import { getProvinces, getLocations } from '../data/location_data';
 	import { fade, fly } from 'svelte/transition';
 	import type { Writable } from 'svelte/store';
 
@@ -43,7 +43,7 @@
 
 <span>ciudad actual -> {$city?.nombre}</span>
 {#if data.user}
-	<ServicesGallery data={data.services}/>
+	<ServicesGallery data={data.services} />
 {:else}
 	<div class="landing">
 		<div class="content">
