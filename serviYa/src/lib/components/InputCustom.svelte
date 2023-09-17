@@ -1,8 +1,8 @@
-<script lang="ts">
-	import { derived, type Writable } from 'svelte/store';
-	import { fly } from 'svelte/transition';
-
-	type Form =
+<script
+	lang="ts"
+	context="module"
+>
+	export type Form =
 		| {
 				data: { [x: string]: string };
 				errors: {
@@ -14,6 +14,11 @@
 		  }
 		| { message: string; data?: undefined; errors?: undefined }
 		| null;
+</script>
+
+<script lang="ts">
+	import { derived, type Writable } from 'svelte/store';
+	import { fly } from 'svelte/transition';
 
 	export let formStore: Writable<Form>;
 	export let name: string;

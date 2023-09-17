@@ -1,29 +1,15 @@
 <script lang="ts">
 	import { registerSchema } from './registerSchema';
 	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
-	import { ZodError } from 'zod';
-	import InputCustom from '$lib/components/InputCustom.svelte';
-	import { writable } from 'svelte/store';
+	import InputCustom, { type Form } from '$lib/components/InputCustom.svelte';
+	import { writable, type Writable } from 'svelte/store';
+	import { default_enhance } from '$lib/utils';
 
 	export let form;
-	const formStore = writable(form);
-	$: formStore.set(form);
+	const formStore = writable(form) as Writable<Form>;
+	$: formStore.set(form as Form);
 
 	let loading = false;
-
-	function validateOrThrow(formdata: FormData) {
-		const obj = {} as any;
-		formdata.forEach((v: any, k: any) => (obj[k] = v));
-		registerSchema.parse(obj);
-	}
-
-	function manageError(error: any) {
-		if (error instanceof ZodError) {
-			const { fieldErrors } = error.flatten();
-			form = { errors: fieldErrors } as ActionData;
-		}
-	}
 </script>
 
 <main class="container">
@@ -35,18 +21,7 @@
 			<form
 				method="POST"
 				class="register-form"
-				use:enhance={({ formData }) => {
-					try {
-						validateOrThrow(formData);
-						loading = true;
-						return ({ update }) => {
-							loading = false;
-							update();
-						};
-					} catch (error) {
-						manageError(error);
-					}
-				}}
+				use:enhance={default_enhance({ zodSchema: registerSchema, loading, formStore })}
 			>
 				<div class="inputs">
 					<InputCustom
