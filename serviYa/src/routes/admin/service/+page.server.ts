@@ -1,6 +1,4 @@
-import { auth } from '$lib/server/lucia/lucia';
-import { LuciaError } from 'lucia-auth';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { prisma } from '$lib/server/lucia/prisma';
 
