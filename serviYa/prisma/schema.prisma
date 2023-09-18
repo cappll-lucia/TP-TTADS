@@ -25,8 +25,9 @@ model ProfessionalData {
   user_id     String    @unique
   user        AuthUser  @relation(references: [id], fields: [user_id], onDelete: Cascade)
   location_id String
-  services_id  String[] @db.ObjectId
-  services    Service[] @relation(references: [id], fields:[services_id])
+  services_id String[]  @db.ObjectId
+  services    Service[] @relation(references: [id], fields: [services_id])
+  provinceId  String?   @db.ObjectId
 }
 
 model AuthSession {
@@ -53,9 +54,17 @@ model AuthKey {
 }
 
 model Service {
-  id   String @id  @default(auto()) @map("_id") @db.ObjectId
-  name String
+  id                   String             @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String
   professional_data_id String[]
-  professional_data ProfessionalData[] @relation(fields: [professional_data_id], references: [id])
+  professional_data    ProfessionalData[] @relation(fields: [professional_data_id], references: [id])
+
   @@map("service")
+}
+
+model Province {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  @@map("province")
 }

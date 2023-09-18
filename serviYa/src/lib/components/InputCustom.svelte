@@ -23,7 +23,8 @@
 	export let formStore: Writable<Form>;
 	export let name: string;
 	export let type: 'text' | 'password' | 'email';
-	export let placeholder: string;
+	export let placeholder = '';
+	export let default_value = '';
 
 	const hasError = derived(formStore, (form) => Boolean(form && form.errors && form.errors[name]));
 	const value = derived(formStore, (form) => (form && form.data ? form.data[name] : ''));
@@ -38,7 +39,7 @@
 	{placeholder}
 	aria-label={name}
 	class={$hasError ? 'input-error' : 'input'}
-	value={$value}
+	value={$value || default_value}
 />
 {#if $hasError}
 	<span
