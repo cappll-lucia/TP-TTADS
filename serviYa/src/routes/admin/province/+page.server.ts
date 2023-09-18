@@ -1,4 +1,4 @@
-import type { Actions } from '@sveltejs/kit';
+import { error, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
 import { prisma } from '$lib/server/lucia/prisma';
 import { provinceCreateSchema, provinceEditSchema } from './provinceSchema';
@@ -40,9 +40,19 @@ export const actions: Actions = {
 		}
 		const province = zodResult.data;
 
+		const old_province = await prisma.province.findUnique({ where: { id: province.id } });
+		if (!old_province) {
+			throw error(404, 'Not found province');
+		}
+
 		await prisma.province.update({
 			data: { name: province.name },
 			where: { id: province.id }
+		});
+
+		await prisma.city.updateMany({
+			data: { province: province.name },
+			where: { province: old_province.name }
 		});
 	}
 } satisfies Actions;

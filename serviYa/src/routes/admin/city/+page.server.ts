@@ -1,6 +1,7 @@
-import type { Actions } from '@sveltejs/kit';
-import { citySchema } from './citySchema';
+import { error, type Actions } from '@sveltejs/kit';
+import { cityCreateSchema } from './citySchema';
 import type { PageServerLoad } from '../$types';
+import { prisma } from '$lib/server/lucia/prisma';
 
 const aux = [] as any[];
 export const load: PageServerLoad = async ({ locals }) => {
@@ -8,13 +9,15 @@ export const load: PageServerLoad = async ({ locals }) => {
 	/* if (session && user.role !== 'ADMIN') {
 		throw redirect(302, '/');
 	} */
-	return { cities: aux };
+	const allowedProvinces = prisma.province.findMany({});
+	const cities = prisma.city.findMany({}); //TODO: Pagination???
+	return { cities, allowedProvinces };
 };
 
 export const actions: Actions = {
 	add_city: async ({ request }) => {
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
-		const zodResult = citySchema.safeParse(formData);
+		const zodResult = cityCreateSchema.safeParse(formData);
 		console.log('recived');
 		if (!zodResult.success) {
 			return {
@@ -24,6 +27,12 @@ export const actions: Actions = {
 		}
 		const city = zodResult.data;
 
+		const count = await prisma.province.count({ where: { name: city.province } });
+		if (count < 1) {
+			throw error(400, 'Province does not exist');
+		}
+
+		await prisma.city.create({ data: city });
 		console.log('adding city', city);
 		aux.push(city);
 	}

@@ -1,9 +1,14 @@
 import { z } from 'zod';
 
-export const citySchema = z.object({
+export const cityCreateSchema = z.object({
 	name: z
-		.string({ required_error: 'Ingrese el nombre' })
-		.min(3, { message: 'Ingrese el nombre' })
-		.max(20, { message: 'No puede exceder los 20 caracteres' })
+		.string({ required_error: 'please indicate a name' })
+		.min(3, { message: 'can not have les than 3 characters' })
+		.max(20, { message: 'can not exceed 20 charaters' })
+		.trim(),
+	province: z
+		.string({ required_error: 'select a province' })
+		.min(3, { message: 'select a province' })
+		.max(20, { message: 'can not exceed 20 charaters' })
 		.trim()
 });
