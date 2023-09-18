@@ -3,7 +3,6 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { ZodError } from 'zod';
 import { registerSchema } from './registerSchema';
-import type { FormResponse } from '../../types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -27,7 +26,7 @@ export const actions: Actions = {
 				attributes: {
 					name,
 					email,
-					role: 'USER'
+					role: "USER"
 				}
 			});
 		} catch (error) {
@@ -36,13 +35,12 @@ export const actions: Actions = {
 				return {
 					data: { ...formData },
 					errors
-				} satisfies FormResponse;
+				};
 			} else {
 				console.log(error);
 				return {
-					data: { ...formData },
 					message: 'No se pudo registrar al usuario'
-				} satisfies FormResponse;
+				};
 			}
 		}
 		throw redirect(302, '/login');
