@@ -4,13 +4,21 @@
 	import type { Province, Location } from '../../types';
 	import type { Writable } from 'svelte/store';
 	import { fade, fly } from 'svelte/transition';
+	import type { ActionData, PageData } from './$types';
+	import { browser } from '$app/environment';
 
 	//variables
 	let provinces: Province[] = [];
 	let locations: Location[] = [];
-	let selectedProvince: Province = { id: '0', nombre: 'Provincia' };
-	let selectedLocation: Location = { id: '0', nombre: 'Localidad' };
+	let selectedProvince = { id: '0', nombre: 'Provincia' };
+	let selectedLocation = { id: '0', nombre: 'Localidad' };
+	export let data: PageData;
+	const services = data.services as any[];
+	export let form: ActionData;
 
+	if (browser && form) {
+		alert(form.body.message);
+	}
 	onMount(() => {
 		loadProvinces();
 	});
@@ -19,23 +27,22 @@
 		try {
 			const jsonResp = await getProvinces();
 			provinces = [...jsonResp.provincias];
-			provinces.unshift(selectedProvince);
-			selectedProvince = provinces[0];
+			provinces.unshift({ id: '0', nombre: 'Provincia' });
 		} catch (error) {}
 	};
 
-	const loadLocations = async () => {
-		try {
-			if (selectedProvince.id != '0') {
-				const jsonResp = await getLocations(selectedProvince.id);
-				locations = [...jsonResp.localidades];
-				locations.unshift(selectedLocation);
-				selectedLocation = locations[0];
-			}
-		} catch (error) {}
+	const loadLocations = (id: string) => {
+		return async () => {
+			try {
+				if (id != '0') {
+					selectedLocation = { id: '0', nombre: 'Localidad' };
+					const jsonResp = await getLocations(id);
+					locations = [...jsonResp.localidades];
+					locations.unshift({ id: '0', nombre: 'Localidad' });
+				}
+			} catch (error) {}
+		};
 	};
-
-	const city = getContext<Writable<Location | null>>('city');
 </script>
 
 <div class="container">
@@ -60,24 +67,39 @@
 				required
 			/>
 			<select
-				name="province"
+				name="service_id"
+				id="service"
+			>
+				<option
+					disabled
+					selected>Servicio</option
+				>
+				{#each services as service (service.id)}
+					<option value={service.id}>{service.name.toUpperCase()}</option>
+				{/each}
+			</select>
+			<select
+				name="province_id"
 				id="province"
-				on:change={loadLocations}
-				bind:value={selectedProvince}
+				bind:value={selectedProvince.id}
+				on:change={loadLocations(selectedProvince.id)}
 			>
 				{#each provinces as province (province.id)}
-					<option value={province}>{province.nombre.toUpperCase()}</option>
+					<option
+						selected
+						value={province.id}>{province.nombre.toUpperCase()}</option
+					>
 				{/each}
 			</select>
 			{#if selectedProvince.id != '0'}
 				<select
-					name="location"
+					name="location_id"
 					id="location"
-					bind:value={selectedLocation}
+					bind:value={selectedLocation.id}
 					transition:fade
 				>
 					{#each locations as location (location.id)}
-						<option value={location}>{location.nombre.toUpperCase()}</option>
+						<option value={location.id}>{location.nombre.toUpperCase()}</option>
 					{/each}
 				</select>
 			{/if}
