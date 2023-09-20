@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+  // previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = "mongodb+srv://serviya:LKJ741zxc@cluster0.ezxkjig.mongodb.net/serviYa?retryWrites=true"
+}
+
+model AuthUser {
+  id             String            @id @map("_id")
+  name           String
+  email          String            @unique
+  role           String
+  auth_session   AuthSession[]
+  auth_key       AuthKey[]
+  profesinalData ProfessionalData?
+
+  @@map("auth_user")
+}
+
+model ProfessionalData {
+  id          String    @id @map("_id")
+  user_id     String    @unique
+  user        AuthUser  @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  location_id String
+  services_id String[]  @db.ObjectId
+  services    Service[] @relation(references: [id], fields: [services_id])
+  provinceId  String?   @db.ObjectId
+}
+
+model AuthSession {
+  id             String   @id @map("_id")
+  user_id        String
+  active_expires BigInt
+  idle_expires   BigInt
+  auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("auth_session")
+}
+
+model AuthKey {
+  id              String   @id @map("_id")
+  hashed_password String?
+  user_id         String
+  primary_key     Boolean
+  expires         BigInt?
+  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("auth_key")
+}
+
+model Service {
+  id                   String             @id @default(auto()) @map("_id") @db.ObjectId
+  name                 String
+  professional_data_id String[]
+  professional_data    ProfessionalData[] @relation(fields: [professional_data_id], references: [id])
+
+  @@map("service")
+}
+
+model City {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  province String
+
+  @@map("city")
+}
+
+model Province {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  @@map("province")
+}
