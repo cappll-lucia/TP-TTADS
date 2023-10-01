@@ -11,7 +11,7 @@
 ### Descripción
 Se desarrollará una plataforma que pondrá en contacto personas que brindan distintos servicios con sus potenciales clientes.
 
-### Modelo
+### Modelo de datos
 ```mermaid
 classDiagram
     User<|--Client

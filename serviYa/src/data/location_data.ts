@@ -1,4 +1,4 @@
-import type { Province, Location } from '../types';
+import type { Province } from '../types';
 
 export const getProvinces = async () => {
 	try {

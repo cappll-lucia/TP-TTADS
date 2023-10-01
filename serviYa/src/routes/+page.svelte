@@ -3,6 +3,7 @@
 	import ServicesGallery from '$lib/components/ServicesGallery.svelte';
 	import type { PageData } from './$types';
 	import type { Province, Location } from '../types';
+
 	import { getProvinces, getLocations } from '../data/location_data';
 	import { fade, fly } from 'svelte/transition';
 	import type { Writable } from 'svelte/store';

@@ -31,6 +31,7 @@
 		"@picocss/pico": "^1.5.10",
 		"@prisma/client": "4.16.2",
 		"lucia-auth": "^1.8.0",
+		"svelte-loading-spinners": "^0.3.4",
 		"zod": "^3.21.4"
 	}
 }
