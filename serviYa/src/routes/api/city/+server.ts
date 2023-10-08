@@ -14,10 +14,10 @@ export const GET: RequestHandler = async ({ url }) => {
 		});
 	}
 
-	const arr = await prisma.city.findMany({
+	const result = await prisma.city.findMany({
 		where: { name: { contains: search, mode: 'insensitive' } }
 	});
-	return new Response(JSON.stringify({ arr }), {
+	return new Response(JSON.stringify({ result }), {
 		status: 200,
 		headers: {
 			'Content-Type': 'application/json'

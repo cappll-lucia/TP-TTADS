@@ -1,138 +1,132 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import { getContext } from "svelte";
-  import type { City } from "../../types";
-  import { capitalize } from "$lib/utils";
-  import { fade, slide } from "svelte/transition";
+	import type { City } from '../../types';
+	import { capitalize } from '$lib/utils';
+	import { fade, slide } from 'svelte/transition';
 
-  let cities=[] as City[]
-  const city=getContext<Writable<City|null>>("city") 
-  let hasBeenJustFound=false
-  let hide=true
-  
-  function showCityDescription(x:City| null){
-     return x? capitalize(x.nombre)+', '+capitalize(x.provincia.nombre):"" 
-  }
+	let cities = [] as City[];
+	export let value: City | null;
+	let hasBeenJustFound = false;
+	let hide = true;
 
-  function select(selectedCity:City){
-    city.set(selectedCity)
-    hasBeenJustFound=true
-    searchTerm=showCityDescription($city) ?? ""
-    cities=[]
-  }
+	function showCityDescription(x: City | null) {
+		return x ? capitalize(x.name) + ', ' + capitalize(x.province) : '';
+	}
 
-  let searchTerm=""
-  const abortCont={
-    last: new AbortController(),
-    next: new AbortController(),
-    swap(){
-        this.last= abortCont.next
-        this.next= new AbortController()
-    }
-  }
-  $: {
-    if(searchTerm===""){
-      cities=[]
-    }
-    if(searchTerm.length>3 && !hasBeenJustFound){
-      abortCont.last.abort()
-      const url=`https://apis.datos.gob.ar/georef/api/localidades?nombre=${searchTerm}&max=10`
-      fetch(url, {signal:abortCont.next.signal})
-        .then(rawRes=>rawRes.json())
-        .then(data=>{
-          cities=data.localidades
-        })
-        .catch(err=>{
-          if(err.name!=="AbortError"){
-            console.error(err)
-          }
-        })
-      abortCont.swap()
-    }
-    else{
-      hasBeenJustFound=false
-    }
-  }
+	function select(selectedCity: City) {
+		value = selectedCity;
+		searchTerm = showCityDescription(selectedCity);
+		hasBeenJustFound = true;
+		cities = [];
+	}
 
-  let indexSelected=-1
-  function keyboardNavigate(event:KeyboardEvent){
-    const {key}=event
-    if(key==="Enter"){
-      document.getElementById('item-'+indexSelected)?.click()
-      return
-    }
-    if(!(key==="ArrowUp" || key==="ArrowDown")){
-      return
-    }
-    event.preventDefault()
+	let searchTerm = '';
+	const abortCont = {
+		last: new AbortController(),
+		next: new AbortController(),
+		swap() {
+			this.last = abortCont.next;
+			this.next = new AbortController();
+		}
+	};
+	$: {
+		if (searchTerm === '') {
+			cities = [];
+		}
+		if (searchTerm.length >= 2 && !hasBeenJustFound) {
+			abortCont.last.abort();
+			const url = `http://localhost:3000/api/city?name=${searchTerm}`;
 
-    document.getElementById('item-'+indexSelected)?.animate(
-      [ {background:'black'} ],
-      {
-        duration: 150,  
-        easing: 'ease-out', 
-        fill:"forwards"
-      }
-    ).play()
+			fetch(url, { signal: abortCont.next.signal })
+				.then((rawRes) => rawRes.json())
+				.then(({ result }) => {
+					cities = result;
+				})
+				.catch((err) => {
+					if (err.name !== 'AbortError') {
+						console.error(err);
+					}
+				});
+			abortCont.swap();
+		} else {
+			hasBeenJustFound = false;
+		}
+	}
 
-    indexSelected=(key === "ArrowUp")? indexSelected-1:indexSelected+1
-    indexSelected=(indexSelected<-1)?-1:indexSelected 
-    indexSelected= indexSelected % cities.length
+	let indexSelected = -1;
+	function keyboardNavigate(event: KeyboardEvent) {
+		const { key } = event;
+		if (key === 'Enter') {
+			document.getElementById('item-' + indexSelected)?.click();
+			return;
+		}
+		if (!(key === 'ArrowUp' || key === 'ArrowDown')) {
+			return;
+		}
+		event.preventDefault();
 
-    document.getElementById('item-'+indexSelected)?.animate(
-      [ {background:'#334'} ],
-      {
-        duration: 100,  
-        easing: 'ease-in-out', 
-        fill:"forwards"
-      }
-    ).play()
-    
-  }
+		document
+			.getElementById('item-' + indexSelected)
+			?.animate([{ background: 'black' }], {
+				duration: 150,
+				easing: 'ease-out',
+				fill: 'forwards'
+			})
+			.play();
 
-  function onFocus(e:any){
-    e.target.select()
-    hide=false
-  }
+		indexSelected = key === 'ArrowUp' ? indexSelected - 1 : indexSelected + 1;
+		indexSelected = indexSelected < -1 ? -1 : indexSelected;
+		indexSelected = indexSelected % cities.length;
 
+		document
+			.getElementById('item-' + indexSelected)
+			?.animate([{ background: '#334' }], {
+				duration: 100,
+				easing: 'ease-in-out',
+				fill: 'forwards'
+			})
+			.play();
+	}
+
+	function onFocus(e: any) {
+		e.target.select();
+		hide = false;
+	}
 </script>
 
-<input bind:value={searchTerm} 
-  on:focusin={onFocus} 
-      on:input={()=>indexSelected=-1} 
-      on:keydown={keyboardNavigate}
-> 
-{#if !hide && searchTerm!=="" && cities.length!==0}
-<div transition:fade class="backthing" on:click={()=>hide=true}></div>
-<ul transition:slide={{duration:300}}  >
-  {#each cities as c, i }
-   <li id={'item-'+i} on:click={()=>select(c)}>{showCityDescription(c) }</li> 
-  {/each}
-</ul>
+<input
+	bind:value={searchTerm}
+	on:focusin={onFocus}
+	on:input={() => (indexSelected = -1)}
+	on:keydown={keyboardNavigate}
+/>
+{#if !hide && searchTerm !== '' && cities.length !== 0}
+	<ul transition:slide={{ duration: 300 }}>
+		{#each cities as c, i}
+			<li>
+				<a
+					id={'item-' + i}
+					on:click={() => select(c)}
+				>
+					{showCityDescription(c)}
+				</a>
+			</li>
+		{/each}
+	</ul>
 {/if}
 
-
 <style>
-  .backthing{
-    position: absolute;
-    left: 0;
-    width:100%;
-    background:rgba(20, 20, 40, 0.7);
-    height: 100%;
-  }
-  ul{
-    width: 17rem;
-    display: flex;
-    flex-direction: column;
-    background: black;
-    position: absolute;
-  }
-  li{
-    width: 100%;
-  }
+	ul {
+		width: 17rem;
+		display: flex;
+		flex-direction: column;
+		background: black;
+		position: absolute;
+	}
+	li {
+		width: 100%;
+	}
 
-  li:hover{
-    background: #334;
-  }
-
+	li:hover {
+		background: #334;
+	}
 </style>
