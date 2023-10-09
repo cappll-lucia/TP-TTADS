@@ -15,7 +15,8 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	const result = await prisma.city.findMany({
-		where: { name: { contains: search, mode: 'insensitive' } }
+		where: { name: { contains: search, mode: 'insensitive' } },
+		take: 6
 	});
 	return new Response(JSON.stringify({ result }), {
 		status: 200,
