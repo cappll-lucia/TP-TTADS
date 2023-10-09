@@ -91,7 +91,7 @@
 	</ul>
 {/if}
 
-<style>
+<style lang="scss">
 	a {
 		width: 100%;
 		height: 100%;
@@ -117,15 +117,13 @@
 		width: 100%;
 	}
 
-	li:hover {
-		color: var(--primary);
-		background: var(--secondary-hover);
-		border-radius: 0.2rem;
-	}
-
 	.focused {
 		color: var(--primary);
 		background: var(--secondary);
 		border-radius: 0.2rem;
+	}
+
+	li:hover {
+		@extend .focused;
 	}
 </style>
