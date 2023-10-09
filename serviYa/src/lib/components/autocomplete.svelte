@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { City } from '../../types';
 	import { capitalize } from '$lib/utils';
-	import { fade, slide } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 	import { fetchWithCancel } from './fetchWithCancel';
 
 	let cities = [] as City[];
@@ -37,39 +37,25 @@
 		}
 	}
 
+	function clickSelectedItem() {
+		document.getElementById('item-a-' + indexSelected)?.click();
+	}
+	function focusItem(index: number) {
+		document.getElementById('item-' + indexSelected)?.classList.remove('focused');
+		document.getElementById('item-' + index)?.classList.add('focused');
+		indexSelected = index;
+	}
+
 	let indexSelected = -1;
 	function keyboardNavigate(event: KeyboardEvent) {
 		const { key } = event;
-		if (key === 'Enter') {
-			document.getElementById('item-' + indexSelected)?.click();
-			return;
-		}
-		if (!(key === 'ArrowUp' || key === 'ArrowDown')) {
-			return;
-		}
+		if (key === 'Enter') return clickSelectedItem();
+		if (!(key === 'ArrowUp' || key === 'ArrowDown')) return;
+
 		event.preventDefault();
-
-		document
-			.getElementById('item-' + indexSelected)
-			?.animate([{ background: 'black' }], {
-				duration: 150,
-				easing: 'ease-out',
-				fill: 'forwards'
-			})
-			.play();
-
-		indexSelected = key === 'ArrowUp' ? indexSelected - 1 : indexSelected + 1;
-		indexSelected = indexSelected < -1 ? -1 : indexSelected;
-		indexSelected = indexSelected % cities.length;
-
-		document
-			.getElementById('item-' + indexSelected)
-			?.animate([{ background: '#334' }], {
-				duration: 100,
-				easing: 'ease-in-out',
-				fill: 'forwards'
-			})
-			.play();
+		let newIndex = key === 'ArrowDown' ? indexSelected + 1 : indexSelected - 1;
+		newIndex = newIndex < -1 ? -1 : newIndex % cities.length;
+		focusItem(newIndex);
 	}
 
 	function onFocus(e: any) {
@@ -87,9 +73,15 @@
 {#if !hide && searchTerm !== '' && cities.length !== 0}
 	<ul transition:slide={{ duration: 300 }}>
 		{#each cities as c, i}
-			<li>
+			<li
+				class={false ? 'focused' : ''}
+				id={'item-' + i}
+				on:focus={() => focusItem(i)}
+				on:mouseover={() => focusItem(i)}
+			>
 				<a
-					id={'item-' + i}
+					id={'item-a-' + i}
+					href={null}
 					on:click={() => select(c)}
 				>
 					{showCityDescription(c)}
@@ -100,18 +92,40 @@
 {/if}
 
 <style>
+	a {
+		width: 100%;
+		height: 100%;
+		color: var(--text-color);
+	}
+
+	input {
+		margin: 0;
+	}
+
 	ul {
+		margin: 0;
 		width: 17rem;
 		display: flex;
 		flex-direction: column;
-		background: black;
+		background: var(--contrast-inverse);
 		position: absolute;
+		box-shadow: var(--card-box-shadow);
+		border-radius: 0.2rem;
 	}
+
 	li {
 		width: 100%;
 	}
 
 	li:hover {
-		background: #334;
+		color: var(--primary);
+		background: var(--secondary-hover);
+		border-radius: 0.2rem;
+	}
+
+	.focused {
+		color: var(--primary);
+		background: var(--secondary);
+		border-radius: 0.2rem;
 	}
 </style>
