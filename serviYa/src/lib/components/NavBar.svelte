@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from '../../routes/$types';
 	import type { City } from '../../types';
-	import Autocomplete from './Autocomplete.svelte';
+	import AutocompleteCity from './AutocompleteCity.svelte';
 	export let data: PageData;
 	let city: City | null = null;
 	$: console.log(city);
@@ -20,7 +20,7 @@
 
 	<div style="padding-top:30px; padding-bottom: 20px;">
 		{#if data.user && data.user.role !== 'ADMIN'}
-			<Autocomplete bind:value={city} />
+			<AutocompleteCity bind:value={city} />
 		{/if}
 	</div>
 	<div>
