@@ -2,6 +2,7 @@
 	import type { City } from '../../types';
 	import { capitalize } from '$lib/utils';
 	import { fade, slide } from 'svelte/transition';
+	import { fetchWithCancel } from './fetchWithCancel';
 
 	let cities = [] as City[];
 	export let value: City | null;
@@ -20,33 +21,17 @@
 	}
 
 	let searchTerm = '';
-	const abortCont = {
-		last: new AbortController(),
-		next: new AbortController(),
-		swap() {
-			this.last = abortCont.next;
-			this.next = new AbortController();
-		}
-	};
 	$: {
 		if (searchTerm === '') {
 			cities = [];
 		}
 		if (searchTerm.length >= 2 && !hasBeenJustFound) {
-			abortCont.last.abort();
 			const url = `http://localhost:3000/api/city?name=${searchTerm}`;
-
-			fetch(url, { signal: abortCont.next.signal })
-				.then((rawRes) => rawRes.json())
-				.then(({ result }) => {
-					cities = result;
-				})
-				.catch((err) => {
-					if (err.name !== 'AbortError') {
-						console.error(err);
-					}
+			fetchWithCancel(url, (res) => {
+				res.json().then((res) => {
+					cities = res.result;
 				});
-			abortCont.swap();
+			});
 		} else {
 			hasBeenJustFound = false;
 		}
