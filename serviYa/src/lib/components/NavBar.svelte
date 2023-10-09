@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from '../../routes/$types';
 	import type { City } from '../../types';
-	import Autocomplete from './autocomplete.svelte';
+	import Autocomplete from './Autocomplete.svelte';
 	export let data: PageData;
 	let city: City | null = null;
 	$: console.log(city);
