@@ -27,6 +27,20 @@ export const actions: Actions = {
 			await request.formData()
 		) as Record<string, string>;
 		try {
+			const data = {
+				role: 'PROFESIONAL',
+				profesinalData: {
+					create: {
+						services: {
+							connect: {
+								id: service_id
+							}
+						},
+						location_id: location_id
+					}
+				}
+			}
+			console.log(data)
 			await prisma.authUser.update({
 				where: {
 					id: user.userId

@@ -104,6 +104,10 @@
 				align-items: space-between;
 				flex-direction: column;
 				height: 100%;
+				width: 100%;
+				.inputs {
+					width: 100%;
+				}
 				h1 {
 					font-size: 2rem;
 				}
