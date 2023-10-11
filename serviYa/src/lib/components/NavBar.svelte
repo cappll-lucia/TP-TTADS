@@ -4,7 +4,6 @@
 	import AutocompleteCity from './AutocompleteCity.svelte';
 	export let data: PageData;
 	let city: City | null = null;
-	$: console.log(city);
 </script>
 
 <nav class=" navbar bg-white px-4">
@@ -125,7 +124,7 @@
 			}
 		}
 	}
-	.a {
+	a {
 		background: none;
 		border: none;
 		padding: 0;

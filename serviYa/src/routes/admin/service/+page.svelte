@@ -4,7 +4,7 @@
 	import { enhance } from '$app/forms';
 	import { fade } from 'svelte/transition';
 	export let form: ActionData;
-	console.log(form);
+
 	$: hide_form = true;
 	export let data: PageData;
 	$: ({ services } = data);
