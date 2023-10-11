@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { getContext, onMount } from 'svelte';
 	import { getLocations, getProvinces } from '../../data/location_data';
-	import type { Province, Location } from '../../types';
 	import type { Writable } from 'svelte/store';
 	import { fade, fly } from 'svelte/transition';
 	import type { ActionData, PageData } from './$types';
 	import { browser } from '$app/environment';
 
 	//variables
-	let provinces: Province[] = [];
-	let locations: Location[] = [];
+	let provinces: any[] = [];
+	let locations: any[] = [];
 	let selectedProvince = { id: '0', nombre: 'Provincia' };
 	let selectedLocation = { id: '0', nombre: 'Localidad' };
 	export let data: PageData;
