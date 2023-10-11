@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { derived, writable } from 'svelte/store';
-	import InputCustom, { type Form } from '$lib/components/InputCustom.svelte';
+	import InputCustom from '$lib/components/InputCustom.svelte';
+	import type { Form } from '../../../lib/components/types';
 	import { enhance } from '$app/forms';
 	import { mapErrorToForm, parseFormData } from '$lib/utils.js';
 	import type { PageData } from './$types.js';
@@ -82,7 +83,6 @@
 					<td
 						><button
 							on:click={() => {
-								console.log(prov);
 								focused_province = prov;
 								edit_dialog.showModal();
 							}}>Edit</button

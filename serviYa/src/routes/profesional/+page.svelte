@@ -5,12 +5,17 @@
 	import { fade, fly } from 'svelte/transition';
 	import type { ActionData, PageData } from './$types';
 	import { browser } from '$app/environment';
+	import AutocompleteCity from './../../lib/components/AutocompleteCity.svelte';
 
 	//variables
+<<<<<<< HEAD
 	let provinces: any[] = [];
 	let locations: any[] = [];
 	let selectedProvince = { id: '0', nombre: 'Provincia' };
 	let selectedLocation = { id: '0', nombre: 'Localidad' };
+=======
+	let selectedLocation = { id: '0', name: 'Localidad', province: 'idk' };
+>>>>>>> eb539649ddbee156a194e5f37a939259963d1e12
 	export let data: PageData;
 	const services = data.services as any[];
 	export let form: ActionData;
@@ -18,33 +23,9 @@
 	if (browser && form) {
 		alert(form.body.message);
 	}
-	onMount(() => {
-		loadProvinces();
-	});
-
-	const loadProvinces = async () => {
-		try {
-			const jsonResp = await getProvinces();
-			provinces = [...jsonResp.provincias];
-			provinces.unshift({ id: '0', nombre: 'Provincia' });
-		} catch (error) {}
-	};
-
-	const loadLocations = (id: string) => {
-		return async () => {
-			try {
-				if (id != '0') {
-					selectedLocation = { id: '0', nombre: 'Localidad' };
-					const jsonResp = await getLocations(id);
-					locations = [...jsonResp.localidades];
-					locations.unshift({ id: '0', nombre: 'Localidad' });
-				}
-			} catch (error) {}
-		};
-	};
 </script>
 
-<div class="container">
+<div class="container become_prof_page">
 	<hgroup>
 		<h3 transition:fly={{ y: 200, duration: 300 }}>
 			¡Únete a ServiYa y forma parte de la revolución en servicios!
@@ -77,44 +58,48 @@
 					<option value={service.id}>{service.name.toUpperCase()}</option>
 				{/each}
 			</select>
-			<select
-				name="province_id"
-				id="province"
-				bind:value={selectedProvince.id}
-				on:change={loadLocations(selectedProvince.id)}
-			>
-				{#each provinces as province (province.id)}
-					<option
-						selected
-						value={province.id}>{province.nombre.toUpperCase()}</option
-					>
-				{/each}
-			</select>
-			{#if selectedProvince.id != '0'}
-				<select
-					name="location_id"
-					id="location"
-					bind:value={selectedLocation.id}
-					transition:fade
-				>
-					{#each locations as location (location.id)}
-						<option value={location.id}>{location.nombre.toUpperCase()}</option>
-					{/each}
-				</select>
-			{/if}
+			<input
+				type="hidden"
+				value={selectedLocation.id}
+				name="location_id"
+			/>
+			<AutocompleteCity
+				bind:value={selectedLocation}
+				class_name="from_form"
+			/>
 			{#if selectedLocation.id != '0'}
 				<button
+					type="submit"
 					transition:fly={{ y: 200, duration: 300 }}
-					class="searchByLocation-btn">Registrarse</button
-				>
+					class="become_prof_btn"
+					>Registrarse
+				</button>
 			{/if}
 		</form>
 	</div>
-	<a href="/">Volver al menu</a>
+	<a href="/"><i class="mi mi-arrow-left"/>Volver al menú</a>
 </div>
 
 <style lang="scss">
 	hgroup {
 		text-align: center;
+	}
+	.become_prof_page {
+		padding: 2rem 0;
+	}
+	.form_profesional {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: space-between;
+		form {
+			width: 70%;
+			textarea {
+				resize: none;
+			}
+		}
+		.become_prof_btn {
+			margin-top: 2rem;
+		}
 	}
 </style>

@@ -6,6 +6,7 @@
 
 	let cities = [] as City[];
 	export let value: City | null;
+	export let class_name: string = 'from_header';
 	let hasBeenJustFound = false;
 	let hide = true;
 
@@ -64,61 +65,74 @@
 	}
 </script>
 
-<input
-	bind:value={searchTerm}
-	on:focusin={onFocus}
-	on:input={() => (indexSelected = -1)}
-	on:keydown={keyboardNavigate}
-/>
-{#if !hide && searchTerm !== '' && cities.length !== 0}
-	<ul transition:slide={{ duration: 300 }}>
-		{#each cities as c, i}
-			<li
-				class={false ? 'focused' : ''}
-				id={'item-' + i}
-				on:focus={() => focusItem(i)}
-				on:mouseover={() => focusItem(i)}
-			>
-				<a
-					id={'item-a-' + i}
-					href={null}
-					on:click={() => select(c)}
+<div class="div-city">
+	<input
+		bind:value={searchTerm}
+		on:focusin={onFocus}
+		on:input={() => (indexSelected = -1)}
+		on:keydown={keyboardNavigate}
+		placeholder="Ciudad"
+	/>
+	{#if !hide && searchTerm !== '' && cities.length !== 0}
+		<ul transition:slide={{ duration: 300 }} class={class_name}>
+			{#each cities as c, i}
+				<li
+					class={false ? 'focused' : ''}
+					id={'item-' + i}
+					on:focus={() => focusItem(i)}
+					on:mouseover={() => focusItem(i)}
 				>
-					{showCityDescription(c)}
-				</a>
-			</li>
-		{/each}
-	</ul>
-{/if}
+					<a
+						id={'item-a-' + i}
+						href={null}
+						on:click={() => select(c)}
+					>
+						{showCityDescription(c)}
+					</a>
+				</li>
+			{/each}
+		</ul>
+	{/if}
+</div>
 
 <style lang="scss">
 	a {
 		width: 100%;
 		height: 100%;
 		color: var(--text-color);
+		background-color: transparent;
+		text-decoration: none;
 	}
 
 	input {
 		margin: 0;
+		width: 100%;
 	}
 
 	ul {
 		margin: 0;
-		width: 17rem;
+		width: 18rem;
 		display: flex;
 		flex-direction: column;
-		background: var(--contrast-inverse);
+		justify-content: center;
+		align-items: flex-start;
 		position: absolute;
+		background-color: hsl(205, 25%, 23%);
 		box-shadow: var(--card-box-shadow);
 		border-radius: 0.2rem;
+		padding: 0;
+		margin: 0;
 	}
 
 	li {
+		height: 2.5rem;
+		list-style: none;
+		padding: 0.5rem;
+		margin: 0;
 		width: 100%;
 	}
 
 	.focused {
-		color: var(--primary);
 		background: var(--secondary);
 		border-radius: 0.2rem;
 	}
@@ -126,4 +140,9 @@
 	li:hover {
 		@extend .focused;
 	}
+
+	.from_header{
+		margin-left: 2px;
+	}
+
 </style>
