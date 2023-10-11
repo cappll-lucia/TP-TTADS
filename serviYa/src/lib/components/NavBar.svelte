@@ -37,6 +37,11 @@
             </li>
           {:else}
             <form class="mb-0 listbox" method="POST">
+              <a href="/editme">
+                <button class="a" type="submit">
+                  <li class="shadow">Edit my data</li>
+                </button>
+              </a>
               <button class="a" formaction="/logout" type="submit">
                 <li class="shadow">LogOut</li>
               </button>
@@ -86,6 +91,7 @@
               form{
                 margin:0;
                 display:flex;
+                flex-direction:column;  
                 align-items:center;
                 padding-bottom:5px;
               button li{

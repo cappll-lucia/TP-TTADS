@@ -41,7 +41,6 @@
 	const city = getContext<Writable<Location | null>>('city');
 </script>
 
-<span>ciudad actual -> {$city?.nombre}</span>
 {#if data.user}
 	<ServicesGallery data={data.services}/>
 {:else}

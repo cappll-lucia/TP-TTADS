@@ -37,7 +37,6 @@ export const actions: Actions = {
 					errors
 				};
 			} else {
-				console.log(error);
 				return {
 					message: 'No se pudo registrar al usuario'
 				};
