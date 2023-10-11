@@ -1,7 +1,10 @@
 <script lang="ts">
 	import type { PageData } from '../../routes/$types';
-	import Autocomplete from './autocomplete.svelte';
+	import type { City } from '../../types';
+	import AutocompleteCity from './AutocompleteCity.svelte';
 	export let data: PageData;
+	let city: City | null = null;
+	$: console.log(city);
 </script>
 
 <nav class=" navbar bg-white px-4">
@@ -17,7 +20,7 @@
 
 	<div style="padding-top:30px; padding-bottom: 20px;">
 		{#if data.user && data.user.role !== 'ADMIN'}
-			<Autocomplete />
+			<AutocompleteCity bind:value={city} />
 		{/if}
 	</div>
 	<div>
