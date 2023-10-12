@@ -6,19 +6,15 @@
 	import type { ActionData, PageData } from './$types';
 	import { browser } from '$app/environment';
 	import AutocompleteCity from './../../lib/components/AutocompleteCity.svelte';
+	import { enhance } from '$app/forms';
 
 	//variables
-<<<<<<< HEAD
-	let provinces: any[] = [];
-	let locations: any[] = [];
-	let selectedProvince = { id: '0', nombre: 'Provincia' };
-	let selectedLocation = { id: '0', nombre: 'Localidad' };
-=======
 	let selectedLocation = { id: '0', name: 'Localidad', province: 'idk' };
->>>>>>> eb539649ddbee156a194e5f37a939259963d1e12
 	export let data: PageData;
 	const services = data.services as any[];
 	export let form: ActionData;
+
+	let loading = false;
 
 	if (browser && form) {
 		alert(form.body.message);
@@ -33,7 +29,13 @@
 		<h3 transition:fly={{ y: 200, duration: 300 }}>¡Tu talento, nuestra comunidad!</h3>
 	</hgroup>
 	<div class="form_profesional">
-		<form method="POST">
+		<form method="POST" use:enhance={()=>{
+			loading=true;
+			return({update})=>{
+				loading=false;
+				update()
+			}
+		}}>
 			<input
 				type="text"
 				name="phone"
@@ -72,6 +74,7 @@
 					type="submit"
 					transition:fly={{ y: 200, duration: 300 }}
 					class="become_prof_btn"
+					aria-busy={loading}
 					>Registrarse
 				</button>
 			{/if}

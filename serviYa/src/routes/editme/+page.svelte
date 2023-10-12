@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { editmeSchema } from './editmeSchema';
-	import type { ActionData } from './$types';
-	import { ZodError } from 'zod';
 	import InputCustom from '$lib/components/InputCustom.svelte';
+	import type { ActionData } from '../$types';
+	import { ZodError } from 'zod';
 	import { writable } from 'svelte/store';
-    import {goto} from '$app/navigation';
-	export let form;
+	import type { PageData } from '../$types';
+	import { goto } from '$app/navigation';
+	import { editmeSchema } from './editmeSchema';
+	import type { Form } from '$lib/components/types';
+
+	export let form: Form;
 	const formStore = writable(form);
 	$: formStore.set(form);
 
@@ -18,16 +21,16 @@
 		email: data?.user?.email
 	};
 
-	const validateOrThrow = (formData: FormData) => {
+	const validate_or_throw = (FormData: FormData) => {
 		const obj = {} as any;
-		+formData.forEach((v: any, k: any) => (obj[k] = v));
+		+FormData.forEach((v: any, k: any) => (obj[k] = v));
 		editmeSchema.parse(obj);
 	};
 
-	const manageError = (error: any) => {
+	const manage_error = (error: any) => {
 		if (error instanceof ZodError) {
 			const { fieldErrors } = error.flatten();
-			form = { errors: fieldErrors } as ActionData;
+			form = { errors: fieldErrors } as any;
 		}
 	};
 </script>
@@ -43,15 +46,15 @@
 				class="register-form"
 				use:enhance={({ formData }) => {
 					try {
-						validateOrThrow(formData);
+						validate_or_throw(formData);
 						loading = true;
-						return async({ update }) => {
+						return async ({ update }) => {
 							loading = false;
-                            await goto('/');
+							await goto('/');
 							update();
 						};
 					} catch (error) {
-						manageError(error);
+						manage_error(error);
 					}
 				}}
 			>
@@ -72,34 +75,12 @@
 				<div class="actions">
 					<button
 						type="submit"
-						class="btn btn-primary"
-						disabled={loading}
+						class="submit-btn"
+						typeof="submit"
+						aria-busy={loading}>Register</button
 					>
-						<span>Guardar Cambios</span>
-					</button>
 				</div>
 			</form>
 		</div>
 	</article>
 </main>
-
-<style lang="scss">
-    .register-form{
-        width: 50%
-    }
-    .input-tag{
-        color: #34393b;
-        font-size: 0.8rem;
-    }   
-
-    @media (max-width: 1000px) {
-        .register-form{
-            width: 70%
-        }
-    }
-    @media (max-width: 756px) {
-        .register-form{
-            width: 100%
-        }
-    }
-</style>
