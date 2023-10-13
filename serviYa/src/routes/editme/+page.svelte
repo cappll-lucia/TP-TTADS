@@ -21,9 +21,9 @@
 		email: data?.user?.email
 	};
 
-	const validate_or_throw = (FormData: FormData) => {
+	const validate_or_throw = (formData: FormData) => {
 		const obj = {} as any;
-		+FormData.forEach((v: any, k: any) => (obj[k] = v));
+		formData.forEach((v: any, k: any) => (obj[k] = v));
 		editmeSchema.parse(obj);
 	};
 
@@ -48,11 +48,11 @@
 					try {
 						validate_or_throw(formData);
 						loading = true;
-						return async ({ update }) => {
+						 return async ({ update }) => {
 							loading = false;
 							await goto('/');
 							update();
-						};
+						}; 
 					} catch (error) {
 						manage_error(error);
 					}
@@ -67,10 +67,7 @@
 						default_value={user.name}
 						name="name"
 						type="text"
-					/>
-					{#if form?.message}
-						<span class="error">{form?.message}</span>
-					{/if}
+					/> 
 				</div>
 				<div class="actions">
 					<button
