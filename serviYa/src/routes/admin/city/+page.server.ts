@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	/* if (session && user.role !== 'ADMIN') {
 		throw redirect(302, '/');
 	} */
-	const allowedProvinces = prisma.province.findMany({});
+	const allowedProvinces = await prisma.province.findMany();
 	const cities = prisma.city.findMany({}); //TODO: Pagination???
 	return { cities, allowedProvinces };
 };

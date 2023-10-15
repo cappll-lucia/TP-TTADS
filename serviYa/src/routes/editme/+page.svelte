@@ -8,6 +8,7 @@
 	import { goto } from '$app/navigation';
 	import { editmeSchema } from './editmeSchema';
 	import type { Form } from '$lib/components/types';
+	import AutocompleteCity from '$lib/components/AutocompleteCity.svelte';
 
 	export let form: Form;
 	const formStore = writable(form);
@@ -19,6 +20,12 @@
 	const user = {
 		name: data?.user?.name,
 		email: data?.user?.email
+	};
+	console.log(data?.user);
+	let current_city = {
+		id: data?.user?.city?.id || '0',
+		name: data?.user?.city?.name || 'Localidad',
+		province: data?.user?.city?.province || 'idk'
 	};
 
 	const validate_or_throw = (formData: FormData) => {
@@ -33,6 +40,9 @@
 			form = { errors: fieldErrors } as any;
 		}
 	};
+
+	$: {
+	}
 </script>
 
 <main class="container">
@@ -48,11 +58,11 @@
 					try {
 						validate_or_throw(formData);
 						loading = true;
-						 return async ({ update }) => {
+						return async ({ update }) => {
 							loading = false;
 							await goto('/');
 							update();
-						}; 
+						};
 					} catch (error) {
 						manage_error(error);
 					}
@@ -67,17 +77,37 @@
 						default_value={user.name}
 						name="name"
 						type="text"
-					/> 
+					/>
+					<AutocompleteCity bind:value={current_city} />
+					<input
+						name="city_id"
+						value={current_city.id}
+						hidden
+					/>
+					{#if form?.errors?.city_id}
+						<span class="error">{form?.errors?.city_id}</span>
+					{/if}
 				</div>
 				<div class="actions">
 					<button
 						type="submit"
 						class="submit-btn"
 						typeof="submit"
-						aria-busy={loading}>Register</button
+						aria-busy={loading}>Editar</button
 					>
 				</div>
 			</form>
 		</div>
 	</article>
 </main>
+
+<style>
+	.error {
+		font-size: medium;
+		color: red;
+		position: relative;
+		display: inline-block;
+		height: 2rem;
+		margin: 0;
+	}
+</style>

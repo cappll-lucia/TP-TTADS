@@ -29,13 +29,16 @@
 		<h3 transition:fly={{ y: 200, duration: 300 }}>¡Tu talento, nuestra comunidad!</h3>
 	</hgroup>
 	<div class="form_profesional">
-		<form method="POST" use:enhance={()=>{
-			loading=true;
-			return({update})=>{
-				loading=false;
-				update()
-			}
-		}}>
+		<form
+			method="POST"
+			use:enhance={() => {
+				loading = true;
+				return ({ update }) => {
+					loading = false;
+					update();
+				};
+			}}
+		>
 			<input
 				type="text"
 				name="phone"
@@ -65,10 +68,7 @@
 				value={selectedLocation.id}
 				name="location_id"
 			/>
-			<AutocompleteCity
-				bind:value={selectedLocation}
-				class_name="from_form"
-			/>
+			<AutocompleteCity bind:value={selectedLocation} />
 			{#if selectedLocation.id != '0'}
 				<button
 					type="submit"
@@ -80,7 +80,7 @@
 			{/if}
 		</form>
 	</div>
-	<a href="/"><i class="mi mi-arrow-left"/>Volver al menú</a>
+	<a href="/"><i class="mi mi-arrow-left" />Volver al menú</a>
 </div>
 
 <style lang="scss">

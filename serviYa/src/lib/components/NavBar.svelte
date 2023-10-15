@@ -56,16 +56,21 @@
 						class="mb-0 listbox"
 						method="POST"
 					>
-						<a
-							href="/editme"
+						<button
+							class="a"
 							type="submit"
-						>Editar usuario
-						</a>
+						>
+							<a
+								href="/editme"
+								type="submit"
+								>Editar usuario
+							</a>
+						</button>
 						<button
 							class="a"
 							formaction="/logout"
 							type="submit"
-						>LogOut
+							>LogOut
 						</button>
 					</form>
 				{/if}
@@ -108,30 +113,25 @@
 				.listbox {
 					left: -4.5rem;
 					width: 8rem;
-					height: 6rem;
+					height: 5.5rem;
 
 					form {
-						    padding: 6px 0px;
-								margin: 0;
-								display: flex;
-								flex-direction: column;
-								justify-content: center;
-								align-items: center;
-								gap: 0.5rem;
-						button{
+						margin: 0;
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						button {
+							height: 2.5rem;
 							margin-top: 3px;
 							padding: 0.5rem 1rem;
 							width: 8rem;
 							text-align: left;
 							height: 2.5rem;
 						}
-						a{
+						a {
 							text-decoration: none;
-							padding: 0.5rem 1rem;
-							width: 8rem;
-							height: 2.5rem;
 							text-align: left;
-							color:var(--dropdown-color)
+							color: var(--dropdown-color);
 						}
 						button:hover {
 							background-color: hsl(210, 70%, 16%);

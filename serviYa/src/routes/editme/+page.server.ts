@@ -20,13 +20,15 @@ export const actions: Actions = {
 		}
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
 		try {
-			const { name } = editmeSchema.parse(formData);
+			const { name, city_id } = editmeSchema.parse(formData);
+
 			await prisma.authUser.update({
 				where: {
 					id: user.userId
 				},
 				data: {
-					name
+					name,
+					city_id: city_id
 				}
 			});
 		} catch (error) {

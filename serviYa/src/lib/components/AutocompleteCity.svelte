@@ -5,8 +5,7 @@
 	import { fetchWithCancel } from './fetchWithCancel';
 
 	let cities = [] as City[];
-	export let value: City | null;
-	export let class_name: string = 'from_header';
+	export let value: City | undefined;
 	let hasBeenJustFound = false;
 	let hide = true;
 
@@ -74,7 +73,7 @@
 		placeholder="Ciudad"
 	/>
 	{#if !hide && searchTerm !== '' && cities.length !== 0}
-		<ul transition:slide={{ duration: 300 }} class={class_name}>
+		<ul transition:slide={{ duration: 300 }}>
 			{#each cities as c, i}
 				<li
 					class={false ? 'focused' : ''}
@@ -122,6 +121,7 @@
 		border-radius: 0.2rem;
 		padding: 0;
 		margin: 0;
+		z-index: 100;
 	}
 
 	li {
@@ -141,8 +141,7 @@
 		@extend .focused;
 	}
 
-	.from_header{
+	.from_header {
 		margin-left: 2px;
 	}
-
 </style>
