@@ -74,6 +74,11 @@
 							</a>
 						</button>
 						<button
+							on:click={(e) => {
+								if (!confirm('estas seguro?')) {
+									e.preventDefault();
+								}
+							}}
 							class="a"
 							formaction="/logout"
 							type="submit"
