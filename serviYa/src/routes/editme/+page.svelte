@@ -3,12 +3,14 @@
 	import InputCustom from '$lib/components/InputCustom.svelte';
 	import type { ActionData } from '../$types';
 	import { ZodError } from 'zod';
-	import { writable } from 'svelte/store';
+	import { writable, type Writable } from 'svelte/store';
 	import type { PageData } from '../$types';
 	import { goto, invalidateAll } from '$app/navigation';
 	import { editmeSchema } from './editmeSchema';
 	import type { Form } from '$lib/components/types';
 	import AutocompleteCity from '$lib/components/AutocompleteCity.svelte';
+	import { getContext } from 'svelte';
+	import type { City } from '../../types';
 
 	export let form: Form;
 	const formStore = writable(form);
@@ -22,11 +24,8 @@
 		email: data?.user?.email
 	};
 
-	let current_city = {
-		id: data?.city?.id || '0',
-		name: data?.city?.name || 'Localidad',
-		province: data?.city?.province || 'idk'
-	};
+	let city = getContext('city') as Writable<City>;
+	let current_city = { ...$city };
 
 	const validate_or_throw = (formData: FormData) => {
 		const obj = {} as any;
@@ -59,6 +58,7 @@
 						validate_or_throw(formData);
 						loading = true;
 						return async ({ update }) => {
+							$city = current_city;
 							loading = false;
 							await goto('/');
 							update();

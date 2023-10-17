@@ -5,7 +5,6 @@
 	import { fetchWithCancel } from './fetchWithCancel';
 	let cities = [] as City[];
 	export let value: City | null | undefined;
-
 	let hasBeenJustFound = false;
 	let hide = true;
 	function showCityDescription(x: City | null) {
@@ -19,7 +18,7 @@
 		cities = [];
 	}
 
-	let searchTerm = value?.name ? showCityDescription(value) : '';
+	$: searchTerm = value?.name ? showCityDescription(value) : '';
 	$: {
 		if (searchTerm === '') {
 			cities = [];

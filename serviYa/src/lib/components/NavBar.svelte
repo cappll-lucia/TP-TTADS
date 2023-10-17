@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
 	import type { PageData } from '../../routes/$types';
 	import type { City } from '../../types';
 	import AutocompleteCityNavbar from './AutocompleteCityNavbar.svelte';
+	import type { Writable } from 'svelte/store';
 	export let data: PageData;
-	let city = data.city;
+	let city = getContext('city') as Writable<City>;
 </script>
 
 <nav class=" navbar bg-white px-4">
@@ -19,7 +21,7 @@
 
 	<div style="padding-top:30px; padding-bottom: 20px;">
 		{#if data.user && data.user.role !== 'ADMIN'}
-			<AutocompleteCityNavbar bind:value={city} />
+			<AutocompleteCityNavbar bind:value={$city} />
 		{/if}
 	</div>
 	<div>
