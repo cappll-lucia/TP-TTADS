@@ -13,7 +13,6 @@
 	export let data: PageData;
 	const formStore = writable(form as Form);
 	$: formStore.set(form as Form);
-
 	const failed = derived(formStore, (x) => Boolean(x?.errors));
 
 	let dialog: HTMLDialogElement;

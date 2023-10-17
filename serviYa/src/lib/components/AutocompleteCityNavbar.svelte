@@ -3,12 +3,10 @@
 	import { capitalize } from '$lib/utils';
 	import { slide } from 'svelte/transition';
 	import { fetchWithCancel } from './fetchWithCancel';
-
 	let cities = [] as City[];
-	export let value: City | null;
+	export let value: City | null | undefined;
 	let hasBeenJustFound = false;
 	let hide = true;
-
 	function showCityDescription(x: City | null) {
 		return x ? capitalize(x.name) + ', ' + capitalize(x.province) : '';
 	}
@@ -20,7 +18,7 @@
 		cities = [];
 	}
 
-	let searchTerm = '';
+	$: searchTerm = value?.name ? showCityDescription(value) : '';
 	$: {
 		if (searchTerm === '') {
 			cities = [];
@@ -66,7 +64,7 @@
 
 <div class="autocomplete_city_navbar">
 	<div class="input_container">
-		<i  class="mi mi-location"></i>
+		<i class="mi mi-location" />
 		<input
 			bind:value={searchTerm}
 			on:focusin={onFocus}
@@ -76,7 +74,10 @@
 		/>
 	</div>
 	{#if !hide && searchTerm !== '' && cities.length !== 0}
-		<ul transition:slide={{ duration: 300 }} class="cities_list">
+		<ul
+			transition:slide={{ duration: 300 }}
+			class="cities_list"
+		>
 			{#each cities as c, i}
 				<li
 					class={false ? 'focused' : ''}
@@ -106,42 +107,42 @@
 		text-decoration: none;
 	}
 
-.autocomplete_city_navbar{
-	.input_container{
-		display: flex;
-		justify-content: space-between;
-		align-items:center;
-		width: 18rem;
-		i{
-			font-size: 1.5rem;
-			padding-top:10px;
+	.autocomplete_city_navbar {
+		.input_container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 18rem;
+			i {
+				font-size: 1.5rem;
+				padding-top: 10px;
+			}
+			input {
+				margin: 0;
+				width: 16rem;
+				padding: 0.2rem 0.5rem;
+				--border-color: none;
+			}
+			input:hover {
+				cursor: pointer;
+			}
+			input:focus {
+				--border-color: var(--primary);
+			}
 		}
-		input {
+		ul {
 			margin: 0;
-			width: 16rem;
-			padding: 0.2rem 0.5rem;
-			--border-color	: none;
-		}
-		input:hover{
-			cursor: pointer;
-		}
-		input:focus {
-			--border-color	: var(--primary);
-		}
-	}
-	ul {
-		margin: 0;
-		width: 18rem;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: flex-start;
-		position: absolute;
-		background-color: hsl(205, 25%, 23%);
-		box-shadow: var(--card-box-shadow);
-		border-radius: 0.2rem;
-		padding: 0;
-		margin: 0;
+			width: 18rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: flex-start;
+			position: absolute;
+			background-color: hsl(205, 25%, 23%);
+			box-shadow: var(--card-box-shadow);
+			border-radius: 0.2rem;
+			padding: 0;
+			margin: 0;
 			li {
 				height: 2.5rem;
 				list-style: none;
@@ -149,9 +150,8 @@
 				margin: 0;
 				width: 100%;
 			}
+		}
 	}
-}
-
 
 	.focused {
 		background: var(--secondary);
@@ -162,8 +162,7 @@
 		@extend .focused;
 	}
 
-	.from_header{
+	.from_header {
 		margin-left: 2px;
 	}
-
 </style>

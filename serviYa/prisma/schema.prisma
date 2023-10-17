@@ -9,10 +9,12 @@ datasource db {
 }
 
 model AuthUser {
-  id             String            @id @map("_id")
+  id             String          @id @map("_id")
   name           String
   email          String            @unique
   role           String
+  city_id        String?     @db.ObjectId 
+  city           City?       @relation(references: [id], fields: [city_id], onDelete: Cascade)
   auth_session   AuthSession[]
   auth_key       AuthKey[]
   profesinalData ProfessionalData?
@@ -66,7 +68,7 @@ model City {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   name     String
   province String
-
+  users   AuthUser[]
   @@map("city")
 }
 

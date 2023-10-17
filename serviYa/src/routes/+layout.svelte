@@ -4,11 +4,10 @@
 	import type { PageData } from './$types';
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-
-	const city = writable<Location | null>(null);
-	setContext('city', city);
-
 	export let data: PageData;
+
+	const city = writable(data.city);
+	setContext('city', city);
 </script>
 
 <div class="container-fluid">

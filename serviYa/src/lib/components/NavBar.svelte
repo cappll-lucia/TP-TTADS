@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
 	import type { PageData } from '../../routes/$types';
 	import type { City } from '../../types';
 	import AutocompleteCityNavbar from './AutocompleteCityNavbar.svelte';
+	import type { Writable } from 'svelte/store';
 	export let data: PageData;
-	let city: City | null = null;
+	let city = getContext('city') as Writable<City>;
 </script>
 
 <nav class=" navbar bg-white px-4">
@@ -19,7 +21,7 @@
 
 	<div style="padding-top:30px; padding-bottom: 20px;">
 		{#if data.user && data.user.role !== 'ADMIN'}
-			<AutocompleteCityNavbar bind:value={city} />
+			<AutocompleteCityNavbar bind:value={$city} />
 		{/if}
 	</div>
 	<div>
@@ -58,15 +60,19 @@
 					>
 						<button
 							class="a"
-							formaction="/editme"
 							type="submit"
-						>Editar usuario
+						>
+							<a
+								href="/editme"
+								type="submit"
+								>Editar usuario
+							</a>
 						</button>
 						<button
 							class="a"
 							formaction="/logout"
 							type="submit"
-						>LogOut
+							>LogOut
 						</button>
 					</form>
 				{/if}
@@ -109,18 +115,30 @@
 				.listbox {
 					left: -4.5rem;
 					width: 8rem;
+					height: 5.5rem;
+
 					form {
 						margin: 0;
 						display: flex;
 						flex-direction: column;
 						align-items: center;
-						padding-bottom: 5px;
-						button{
+						button {
+							height: 2.5rem;
+							margin-top: 3px;
 							padding: 0.5rem 1rem;
 							width: 8rem;
 							text-align: left;
+							height: 2.5rem;
+						}
+						a {
+							text-decoration: none;
+							text-align: left;
+							color: var(--dropdown-color);
 						}
 						button:hover {
+							background-color: hsl(210, 70%, 16%);
+						}
+						a:hover {
 							background-color: hsl(210, 70%, 16%);
 						}
 					}
