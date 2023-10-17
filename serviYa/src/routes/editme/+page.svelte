@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import InputCustom from '$lib/components/InputCustom.svelte';
 	import type { ActionData } from '../$types';
 	import { ZodError } from 'zod';
 	import { writable } from 'svelte/store';
 	import type { PageData } from '../$types';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { editmeSchema } from './editmeSchema';
 	import type { Form } from '$lib/components/types';
 	import AutocompleteCity from '$lib/components/AutocompleteCity.svelte';
@@ -21,11 +21,11 @@
 		name: data?.user?.name,
 		email: data?.user?.email
 	};
-	console.log(data?.user);
+
 	let current_city = {
-		id: data?.user?.city?.id || '0',
-		name: data?.user?.city?.name || 'Localidad',
-		province: data?.user?.city?.province || 'idk'
+		id: data?.city?.id || '0',
+		name: data?.city?.name || 'Localidad',
+		province: data?.city?.province || 'idk'
 	};
 
 	const validate_or_throw = (formData: FormData) => {
@@ -109,5 +109,8 @@
 		display: inline-block;
 		height: 2rem;
 		margin: 0;
+	}
+	.submit-btn {
+		margin-top: 2rem;
 	}
 </style>

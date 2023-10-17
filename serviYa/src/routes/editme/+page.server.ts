@@ -6,7 +6,7 @@ import { editmeSchema } from './editmeSchema';
 import { prisma } from '$lib/server/lucia/prisma';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const session = await locals.auth.validate();
+	const { session, user } = await locals.auth.validateUser();
 	if (!session) {
 		throw redirect(302, '/');
 	}

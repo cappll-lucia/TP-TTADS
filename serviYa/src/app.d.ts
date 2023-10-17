@@ -23,7 +23,7 @@ declare global {
 			name: string;
 			email: string;
 			role: 'USER' | 'ADMIN' | 'PROFESIONAL';
-			city?: City;
+			city_id?: string;
 		};
 	}
 }

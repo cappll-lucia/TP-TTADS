@@ -20,7 +20,8 @@
 		cities = [];
 	}
 
-	let searchTerm = '';
+	let searchTerm = value?.name ? showCityDescription(value) : '';
+
 	$: {
 		if (searchTerm === '') {
 			cities = [];

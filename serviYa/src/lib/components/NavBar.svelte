@@ -3,7 +3,7 @@
 	import type { City } from '../../types';
 	import AutocompleteCityNavbar from './AutocompleteCityNavbar.svelte';
 	export let data: PageData;
-	let city: City | null = null;
+	let city = data.city;
 </script>
 
 <nav class=" navbar bg-white px-4">
