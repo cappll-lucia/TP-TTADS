@@ -9,7 +9,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw redirect(302, '/');
 	} */
 	const provinces = await prisma.province.findMany({});
-	console.log({ provinces });
 	return { provinces };
 };
 
@@ -32,7 +31,6 @@ export const actions: Actions = {
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
 		const zodResult = provinceEditSchema.safeParse(formData);
 		if (!zodResult.success) {
-			console.log(formData);
 			return {
 				data: { ...formData },
 				errors: zodResult.error.flatten().fieldErrors

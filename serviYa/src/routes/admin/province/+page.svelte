@@ -103,7 +103,6 @@
 		method="post"
 		use:enhance={({ formData }) => {
 			const res = parseFormData(formData, provinceEditSchema);
-			console.log(res);
 			if (!res.success) {
 				mapErrorToForm(formStore, res);
 				return ({ update }) => {
@@ -114,7 +113,6 @@
 			return ({ update, result }) => {
 				formStore.set(null);
 				loading = false;
-				console.log(result);
 				if (result.type == 'success') {
 					edit_dialog.close();
 				}
