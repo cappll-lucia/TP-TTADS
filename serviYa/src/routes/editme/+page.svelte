@@ -1,12 +1,18 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { editmeSchema } from './editmeSchema';
-	import type { ActionData } from './$types';
-	import { ZodError } from 'zod';
+	import { applyAction, enhance } from '$app/forms';
 	import InputCustom from '$lib/components/InputCustom.svelte';
-	import { writable } from 'svelte/store';
-    import {goto} from '$app/navigation';
-	export let form;
+	import type { ActionData } from '../$types';
+	import { ZodError } from 'zod';
+	import { writable, type Writable } from 'svelte/store';
+	import type { PageData } from '../$types';
+	import { goto, invalidateAll } from '$app/navigation';
+	import { editmeSchema } from './editmeSchema';
+	import type { Form } from '$lib/components/types';
+	import AutocompleteCity from '$lib/components/AutocompleteCity.svelte';
+	import { getContext } from 'svelte';
+	import type { City } from '../../types';
+
+	export let form: Form;
 	const formStore = writable(form);
 	$: formStore.set(form);
 
@@ -18,18 +24,24 @@
 		email: data?.user?.email
 	};
 
-	const validateOrThrow = (formData: FormData) => {
+	let city = getContext('city') as Writable<City>;
+	let current_city = { ...$city };
+
+	const validate_or_throw = (formData: FormData) => {
 		const obj = {} as any;
-		+formData.forEach((v: any, k: any) => (obj[k] = v));
+		formData.forEach((v: any, k: any) => (obj[k] = v));
 		editmeSchema.parse(obj);
 	};
 
-	const manageError = (error: any) => {
+	const manage_error = (error: any) => {
 		if (error instanceof ZodError) {
 			const { fieldErrors } = error.flatten();
-			form = { errors: fieldErrors } as ActionData;
+			form = { errors: fieldErrors } as any;
 		}
 	};
+
+	$: {
+	}
 </script>
 
 <main class="container">
@@ -43,15 +55,16 @@
 				class="register-form"
 				use:enhance={({ formData }) => {
 					try {
-						validateOrThrow(formData);
+						validate_or_throw(formData);
 						loading = true;
-						return async({ update }) => {
+						return async ({ update }) => {
+							$city = current_city;
 							loading = false;
-                            await goto('/');
+							await goto('/');
 							update();
 						};
 					} catch (error) {
-						manageError(error);
+						manage_error(error);
 					}
 				}}
 			>
@@ -65,41 +78,39 @@
 						name="name"
 						type="text"
 					/>
-					{#if form?.message}
-						<span class="error">{form?.message}</span>
+					<AutocompleteCity bind:value={current_city} />
+					<input
+						name="city_id"
+						value={current_city.id}
+						hidden
+					/>
+					{#if form?.errors?.city_id}
+						<span class="error">{form?.errors?.city_id}</span>
 					{/if}
 				</div>
 				<div class="actions">
 					<button
 						type="submit"
-						class="btn btn-primary"
-						disabled={loading}
+						class="submit-btn"
+						typeof="submit"
+						aria-busy={loading}>Editar</button
 					>
-						<span>Guardar Cambios</span>
-					</button>
 				</div>
 			</form>
 		</div>
 	</article>
 </main>
 
-<style lang="scss">
-    .register-form{
-        width: 50%
-    }
-    .input-tag{
-        color: #34393b;
-        font-size: 0.8rem;
-    }   
-
-    @media (max-width: 1000px) {
-        .register-form{
-            width: 70%
-        }
-    }
-    @media (max-width: 756px) {
-        .register-form{
-            width: 100%
-        }
-    }
+<style>
+	.error {
+		font-size: medium;
+		color: red;
+		position: relative;
+		display: inline-block;
+		height: 2rem;
+		margin: 0;
+	}
+	.submit-btn {
+		margin-top: 2rem;
+	}
 </style>

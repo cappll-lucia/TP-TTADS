@@ -1,53 +1,85 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
 	import type { PageData } from '../../routes/$types';
 	import type { City } from '../../types';
-	import AutocompleteCity from './AutocompleteCity.svelte';
+	import AutocompleteCityNavbar from './AutocompleteCityNavbar.svelte';
+	import type { Writable } from 'svelte/store';
 	export let data: PageData;
-	let city: City | null = null;
+	let city = getContext('city') as Writable<City>;
 </script>
 
-<nav class=" navbar bg-white px-4 ">
-    <div class="serviya-logo">
-      <img
-      alt="logo"
-      height="40px"
-      width="40px"
-      src="/serviYa2.png"
-      />
-      <a href="/">ServiYa</a>
-    </div>
-    <div style="padding-top:30px; padding-bottom: 20px;">
+<nav class=" navbar bg-white px-4">
+	<div class="serviya-logo">
+		<img
+			alt="logo"
+			height="40px"
+			width="40px"
+			src="/serviYa2.png"
+		/>
+		<a href="/">ServiYa</a>
+	</div>
+
+	<div style="padding-top:30px; padding-bottom: 20px;">
 		{#if data.user && data.user.role !== 'ADMIN'}
-		<AutocompleteCity bind:value={city} />
-	{/if}
-    </div>
-    <div class="usr-menu">
-      {#if data.user}
-        <li>Bienvenido, {data?.user?.name}!</li>
-      {/if}
-      <details class="menu" role="list">
-        <summary aria-haspopup="listbox">
-          <i class="fa-regular fa-user" />
-        </summary>
-        <ul role="listbox" class="listbox">
-          {#if !data.user}
-            <li>
-              <a href="/register">Register</a>
-            </li>
-            <li>
-              <a href="/login">Log in</a>
-            </li>
-          {:else}
-            <form class="mb-0 listbox" method="POST">
-              <button class="a" formaction="/logout" type="submit">
-                <li class="shadow">LogOut</li>
-              </button>
-            </form>
-          {/if}
-        </ul>
-      </details>
-    </div>
-  </nav>
+			<AutocompleteCityNavbar bind:value={$city} />
+		{/if}
+	</div>
+	<div>
+		<a
+			role="button"
+			href="/profesional"
+			>Quiero prestar un servicio
+		</a>
+	</div>
+	<div class="usr-menu">
+		{#if data.user}
+			<li>Bienvenido, {data?.user?.name}!</li>
+		{/if}
+		<details
+			class="menu"
+			role="list"
+		>
+			<summary aria-haspopup="listbox">
+				<i class="fa-regular fa-user" />
+			</summary>
+			<ul
+				role="listbox"
+				class="listbox"
+			>
+				{#if !data.user}
+					<li>
+						<a href="/register">Register</a>
+					</li>
+					<li>
+						<a href="/login">Log in</a>
+					</li>
+				{:else}
+					<form
+						class="mb-0 listbox"
+						method="POST"
+					>
+						<button
+							class="a"
+							type="submit"
+						>
+							<a
+								href="/editme"
+								type="submit"
+								>Editar usuario
+							</a>
+						</button>
+						<button
+							class="a"
+							formaction="/logout"
+							type="submit"
+							>LogOut
+						</button>
+					</form>
+				{/if}
+			</ul>
+		</details>
+	</div>
+</nav>
 
 <style lang="scss">
 	.navbar {
@@ -57,7 +89,6 @@
 		justify-content: space-between;
 		align-items: center;
 		box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-		// box-shadow: 0.0145rem 0.029rem 0.174rem rgba(27, 40, 50, 0.01698),0.0335rem 0.067rem 0.402rem rgba(27, 40, 50, 0.024),0.0625rem 0.125rem 0.75rem rgba(27, 40, 50, 0.03),0.1125rem 0.225rem 1.35rem rgba(27, 40, 50, 0.036),0.2085rem 0.417rem 2.502rem rgba(27, 40, 50, 0.04302),0.5rem 1rem 6rem rgba(27, 40, 50, 0.06),0 0 0 0.0625rem rgba(27, 40, 50, 0.015);
 		.serviya-logo {
 			display: flex;
 			justify-content: space-between;
@@ -84,19 +115,31 @@
 				.listbox {
 					left: -4.5rem;
 					width: 8rem;
+					height: 5.5rem;
+
 					form {
 						margin: 0;
 						display: flex;
+						flex-direction: column;
 						align-items: center;
-						padding-bottom: 5px;
-						button li {
-							margin: 5px 0 0 0;
-							top: 15px;
+						button {
+							height: 2.5rem;
+							margin-top: 3px;
+							padding: 0.5rem 1rem;
 							width: 8rem;
 							text-align: left;
+							height: 2.5rem;
 						}
-						button li:hover {
-							background-color: hsl(205, 20%, 94%);
+						a {
+							text-decoration: none;
+							text-align: left;
+							color: var(--dropdown-color);
+						}
+						button:hover {
+							background-color: hsl(210, 70%, 16%);
+						}
+						a:hover {
+							background-color: hsl(210, 70%, 16%);
 						}
 					}
 				}

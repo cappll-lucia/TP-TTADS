@@ -1,6 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 
 import type { PrismaClient } from '@prisma/client';
+import type { City } from './types';
 
 // for information about these interfaces
 declare global {
@@ -21,8 +22,9 @@ declare global {
 		type UserAttributes = {
 			name: string;
 			email: string;
-			role: "USER"|"ADMIN"|"PROFESIONAL"
+			role: 'USER' | 'ADMIN' | 'PROFESIONAL';
+			city_id?: string;
 		};
 	}
 }
-export { };
+export {};

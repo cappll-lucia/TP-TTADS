@@ -1,5 +1,5 @@
 import { error, redirect } from '@sveltejs/kit';
-import type { PageServerLoad, Actions } from './$types';
+import type { PageServerLoad, Actions } from '../$types';
 import { prisma } from '$lib/server/lucia/prisma';
 export const load: PageServerLoad = async ({ locals }) => {
 	const { user, session } = await locals.auth.validateUser();
@@ -40,7 +40,6 @@ export const actions: Actions = {
 					}
 				}
 			}
-			console.log(data)
 			await prisma.authUser.update({
 				where: {
 					id: user.userId

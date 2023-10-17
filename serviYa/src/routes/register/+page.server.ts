@@ -26,10 +26,11 @@ export const actions: Actions = {
 				attributes: {
 					name,
 					email,
-					role: "USER"
+					role: 'USER'
 				}
 			});
 		} catch (error) {
+			console.log(error);
 			if (error instanceof ZodError) {
 				const { fieldErrors: errors } = error.flatten();
 				return {
