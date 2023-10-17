@@ -21,19 +21,21 @@
 	</div>
 
 	<div style="padding-top:30px; padding-bottom: 20px;">
-		{#if data.user && data.user.role !== 'ADMIN'}
+		{#if data.user && data.user.role !== 'ADMIN' && $page.url.pathname == '/'}
 			{#key $page.url.pathname}
 				<AutocompleteCityNavbar bind:value={$city} />
 			{/key}
 		{/if}
 	</div>
-	<div>
-		<a
-			role="button"
-			href="/profesional"
-			>Quiero prestar un servicio
-		</a>
-	</div>
+	{#if data.user && data.user.role === 'USER'}
+		<div>
+			<a
+				role="button"
+				href="/profesional"
+				>Quiero prestar un servicio
+			</a>
+		</div>
+	{/if}
 	<div class="usr-menu">
 		{#if data.user}
 			<li>Bienvenido, {data?.user?.name}!</li>

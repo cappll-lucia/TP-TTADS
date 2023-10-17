@@ -102,7 +102,6 @@
 		on:reset|preventDefault
 		method="post"
 		use:enhance={({ formData }) => {
-			console.log(formData);
 			const res = parseFormData(formData, provinceEditSchema);
 			console.log(res);
 			if (!res.success) {

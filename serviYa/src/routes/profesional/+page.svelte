@@ -66,7 +66,7 @@
 			<input
 				type="hidden"
 				value={selectedLocation.id}
-				name="location_id"
+				name="city_id"
 			/>
 			<AutocompleteCity bind:value={selectedLocation} />
 			{#if selectedLocation.id != '0'}
