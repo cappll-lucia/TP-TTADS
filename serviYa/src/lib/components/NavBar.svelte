@@ -4,6 +4,7 @@
 	import type { City } from '../../types';
 	import AutocompleteCityNavbar from './AutocompleteCityNavbar.svelte';
 	import type { Writable } from 'svelte/store';
+	import { page } from '$app/stores';
 	export let data: PageData;
 	let city = getContext('city') as Writable<City>;
 </script>
@@ -21,7 +22,9 @@
 
 	<div style="padding-top:30px; padding-bottom: 20px;">
 		{#if data.user && data.user.role !== 'ADMIN'}
-			<AutocompleteCityNavbar bind:value={$city} />
+			{#key $page.url.pathname}
+				<AutocompleteCityNavbar bind:value={$city} />
+			{/key}
 		{/if}
 	</div>
 	<div>
