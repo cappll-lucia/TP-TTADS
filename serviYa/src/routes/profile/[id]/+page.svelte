@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { writable } from 'svelte/store';
 	import type { PageData } from './$types';
 	export let data: PageData;
-	$: console.log(data);
 	const { profesional } = data;
+	const turns = data.turns;
 </script>
 
 <main class="container">
@@ -15,12 +16,9 @@
 	<article class="turns">
 		<table>
 			<tr>
-				<th>Lunes</th>
-				<th>Martes</th>
-				<th>Miercoles</th>
-				<th>Jueves</th>
-				<th>Viernes</th>
-				<th>Sabado</th>
+				{#each turns as t}
+					<th>{t.date}</th>
+				{/each}
 			</tr>
 			<tr>
 				<td><button class="agend">Agendar</button></td>
