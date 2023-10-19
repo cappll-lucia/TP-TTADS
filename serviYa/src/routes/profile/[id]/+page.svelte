@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { writable } from 'svelte/store';
+	import { fade, fly, slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 	export let data: PageData;
 	const { profesional, available_turns } = data;
 	export let form;
+	let desc = '';
 </script>
 
 {#if form?.success}
@@ -20,32 +21,48 @@
 		action="?/agendar"
 		method="post"
 	>
-		<h3>Turnos disponibles en la semana:</h3>
-		<table role="grid">
-			<tbody>
-				{#each available_turns as turn}
-					<tr>
-						<td class="ctr">
-							{#if turn.available}
-								{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}
-							{:else}
-								<s>{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}</s>
-							{/if}
-						</td>
-						<td>
-							<button
-								type="submit"
-								name="turn"
-								value={turn.date.toISOString()}
-								disabled={!turn.available}
-							>
-								Agendar turno
-							</button>
-						</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
+		<label for="desc">Que trabajo requiere del profesional:</label>
+		<textarea
+			id="desc"
+			name="desc"
+			placeholder="que necesita?"
+			bind:value={desc}
+			on:focus={() => {
+				window.scroll({ top: 600, left: 0, behavior: 'smooth' });
+			}}
+		/>
+		{#if desc.length > 3}
+			<table
+				role="grid"
+				transition:fly={{ y: 200 }}
+			>
+				<tbody>
+					{#each available_turns as turn}
+						<tr>
+							<td class="ctr">
+								{#if turn.available}
+									{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}
+								{:else}
+									<s>{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}</s>
+								{/if}
+							</td>
+							<td>
+								<button
+									type="submit"
+									name="turn"
+									value={turn.date.toISOString()}
+									disabled={!turn.available}
+								>
+									Agendar turno
+								</button>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		{:else}
+			<div style="height: 400px;" />
+		{/if}
 	</form>
 </main>
 

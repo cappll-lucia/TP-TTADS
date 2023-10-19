@@ -1,5 +1,7 @@
 import { prisma } from '$lib/server/lucia/prisma';
-import type { PageServerLoad } from './$types';
+import { fail } from '@sveltejs/kit';
+import type { PageServerLoad, Actions } from './$types';
+import { turnSolicitationSchema } from './turnSolicitationSchema';
 
 function addDays(dateTime: Date, count_days = 0) {
 	return new Date(new Date(dateTime).setDate(dateTime.getDate() + count_days));
@@ -32,14 +34,19 @@ export const load: PageServerLoad = async ({ params }) => {
 	return { profesional, available_turns };
 };
 
-export const actions = {
+export const actions: Actions = {
 	agendar: async ({ request }) => {
-		const formRes = await request.formData();
-		const date = new Date(formRes.get('turn'));
-		console.log(date);
+		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
+		const zodRes = turnSolicitationSchema.safeParse(formData);
+		if (zodRes.success === false) {
+			return fail(400, { message: 'Invalid request' });
+		}
+
+		console.log(zodRes.data);
+
 		return {
 			success: true,
-			date: date
+			date: new Date(zodRes.data.turn)
 		};
 	}
 };
