@@ -18,10 +18,12 @@ model AuthUser {
   auth_session AuthSession[]
   auth_key     AuthKey[]
 
-  services_id String[]  @db.ObjectId
-  services    Service[] @relation(references: [id], fields: [services_id])
-  phone       String?
-  description String?
+  services_id           String[]      @db.ObjectId
+  services              Service[]     @relation(references: [id], fields: [services_id])
+  phone                 String?
+  description           String?
+  appointmens_to_attend Appointment[] @relation("profesional_appointment")
+  asked_appointments    Appointment[] @relation("client_appointment")
 
   @@map("auth_user")
 }
@@ -72,4 +74,17 @@ model Province {
   name String
 
   @@map("province")
+}
+
+model Appointment {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  profesional_id String
+  profesional    AuthUser @relation("profesional_appointment", references: [id], fields: [profesional_id], onDelete: Cascade)
+  client_id      String
+  client         AuthUser @relation("client_appointment", references: [id], fields: [client_id], onDelete: Cascade)
+  date           DateTime
+  description    String
+
+  @@index([profesional_id])
+  @@map("appointment")
 }

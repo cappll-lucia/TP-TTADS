@@ -35,14 +35,26 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions: Actions = {
-	agendar: async ({ request }) => {
+	agendar: async ({ request, locals }) => {
+		const { user } = await locals.auth.validateUser();
+		if (!user) {
+			return fail(401, { message: 'Unauntenticated' });
+		}
+
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
 		const zodRes = turnSolicitationSchema.safeParse(formData);
 		if (zodRes.success === false) {
 			return fail(400, { message: 'Invalid request' });
 		}
 
-		console.log(zodRes.data);
+		await prisma.appointment.create({
+			data: {
+				client_id: user.userId,
+				date: new Date(zodRes.data.turn),
+				description: zodRes.data.desc,
+				profesional_id: zodRes.data.profesional_id
+			}
+		});
 
 		return {
 			success: true,

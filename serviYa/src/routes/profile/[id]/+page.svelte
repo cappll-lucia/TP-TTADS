@@ -22,6 +22,12 @@
 		method="post"
 	>
 		<label for="desc">Que trabajo requiere del profesional:</label>
+		<input
+			hidden
+			type="text"
+			name="profesional_id"
+			value={profesional.id}
+		/>
 		<textarea
 			id="desc"
 			name="desc"
