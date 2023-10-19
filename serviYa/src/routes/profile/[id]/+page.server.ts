@@ -17,18 +17,17 @@ export const load: PageServerLoad = async ({ params }) => {
 		throw Error('Profesional not found');
 	}
 
-	//TODO - todo esto deberia sacarse desde los datos del profesional
-	const professional_valid_days = [true, true, true, true, true, false, false];
+	const busy_appointments = await prisma.appointment.findMany({
+		where: { profesional_id: profesional_id, date: { gt: new Date() }, state: 'TO_DO' }
+	});
+	const busy_days = busy_appointments.map((x) => x.date);
 
 	let available_turns: { date: Date; available: boolean }[] = [];
 
 	for (let i = 1; i <= 7; i++) {
-		const day = addDays(new Date(), i);
-		const valid_day = professional_valid_days[day.getDay() - 1];
-		available_turns.push({
-			date: day,
-			available: valid_day
-		});
+		const date = addDays(new Date(), i);
+		const available = !busy_days.some((x) => x.getDay() == date.getDay());
+		available_turns.push({ date, available });
 	}
 
 	return { profesional, available_turns };
@@ -53,7 +52,7 @@ export const actions: Actions = {
 				date: new Date(zodRes.data.turn),
 				description: zodRes.data.desc,
 				profesional_id: zodRes.data.profesional_id,
-				state: 'PENDING'
+				state: 'UNCONFIRMED'
 			}
 		});
 
