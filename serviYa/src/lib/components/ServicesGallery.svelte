@@ -2,6 +2,7 @@
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import type { City } from '../../types';
+	import { fade } from 'svelte/transition';
 
 	export let data: any;
 
@@ -9,13 +10,11 @@
 </script>
 
 {#if $city}
-	<div
-		class="container services_gallery services_gallery_{data.length} col-lg-8 col-md-10 col-sm-12 col-12"
-	>
+	<div class="container">
 		{#each data as s}
-			<div class=" services_gallery--serv">
+			<article class="service">
 				<a href="/services/{s.name}?city={$city.id}">{s.name}</a>
-			</div>
+			</article>
 		{/each}
 	</div>
 {:else}
@@ -23,36 +22,38 @@
 {/if}
 
 <style lang="scss">
-	.services_gallery {
+	.container {
+		padding-left: 4rem;
+		padding-right: 4rem;
 		display: flex;
+		justify-items: center;
+		align-items: center;
+		align-content: center;
 		justify-content: center;
-		align-items: flex-start;
 		flex-wrap: wrap;
-		gap: 5px;
-		.services_gallery--serv {
-			background-color: #1e88e5;
-			height: 150px;
-			min-width: calc(33.33% - 50px);
-			display: flex;
-			border-radius: 20px;
-			margin: 5px;
-			justify-content: center;
-			align-items: center;
-			a {
-				font-size: 1rem;
-				font-weight: 600;
-				color: #000;
-			}
-		}
+		gap: calc(12%);
+	}
+	.service {
+		flex: 0 0 calc(36%); /* Adjust as needed */
+		display: flex;
+		justify-items: center;
+		align-items: center;
+		align-content: center;
+		justify-content: center;
+		text-align: center;
+
+		height: 120px;
+		font-size: 1.4rem;
+		transition: all 0.35s ease-in-out;
 	}
 
-	@media (max-width: 600px) {
-		.services_gallery {
-			gap: 3px;
-			.services_gallery--serv {
-				min-width: calc(33.33% - 10px);
-				border-radius: 20px;
-			}
-		}
+	.service a:hover {
+		cursor: pointer;
+	}
+	.service:hover {
+		border-radius: 10px;
+		background: linear-gradient(120deg, var(--secondary), var(--secondary-focus));
+		font-size: 1.5rem;
+		width: 260px;
 	}
 </style>
