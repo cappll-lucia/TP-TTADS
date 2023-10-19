@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Review } from '../../types';
-	export let review: Review;
+	export let review: any;
 
 	const reviewDate = `${review.created_at.getDate()}/${review.created_at.getMonth()}/${review.created_at.getFullYear()}   ${review.created_at.getHours()}:${review.created_at.getMinutes()}`;
 </script>
@@ -57,7 +57,7 @@
 		.score {
 			padding: 0.2rem 0 0.5rem 0;
 			color: #fce448;
-			i{
+			i {
 				padding-right: 0.3rem;
 			}
 		}

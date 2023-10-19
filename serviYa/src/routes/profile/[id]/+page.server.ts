@@ -1,6 +1,8 @@
 import { prisma } from '$lib/server/lucia/prisma';
-import type { PageServerLoad, Actions } from '../../$types';
+import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
+import { reviewSchema } from './reviewSchema';
+import { ZodError } from 'zod';
 
 function addDays(dateTime: Date, count_days = 0) {
 	return new Date(new Date(dateTime).setDate(dateTime.getDate() + count_days));
@@ -13,7 +15,8 @@ const dateOptions = {
 	day: 'numeric'
 };
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
+	const user = await locals.auth.validate();
 	const profesionalId = params.id;
 	const profesional = await prisma.authUser.findUnique({
 		where: { id: profesionalId },
@@ -32,6 +35,13 @@ export const load: PageServerLoad = async ({ params }) => {
 			prof_user: true
 		}
 	});
+
+	const userWrittenReviews = await prisma.review.findMany({
+		where: {
+			prof_id: profesionalId,
+			author_id: user?.userId
+		}
+	});
 	const turns = [];
 
 	for (let i = 0; i < 30; i++) {
@@ -45,27 +55,41 @@ export const load: PageServerLoad = async ({ params }) => {
 		});
 	}
 
-	return { profesional, reviews, turns };
+	return { profesional, user, reviews, userWrittenReviews, turns };
 };
 
 
 export const actions: Actions = {
-	addReview: async ({ request }) => {
-		const { author_id, prof_id, score, comment } = Object.fromEntries(await request.formData()) as Record<string, string>;
+	addReview: async ({ request, locals, params }) => {
+		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
+		const user = await locals.auth.validate();
+		if (!user) return fail(401, { message: 'Usuario no autenticado' });
+		const profesionalId = params.id;
 		try {
+			const { score, comment } = reviewSchema.parse(formData);
 			const review = await prisma.review.create({
 				data: {
-					author_id,
-					prof_id,
+					author_id: user.userId,
+					prof_id: profesionalId,
 					comment,
-					score: parseInt(score)
+					score: Number(score)
 				}
 			});
 			return {
 				status: 200,
 			}
-		} catch (err) {
-			return fail(400, { message: 'Server error' });
+		} catch (error) {
+			if (error instanceof ZodError) {
+				const { fieldErrors: errors } = error.flatten();
+				return {
+					data: { formData },
+					errors
+				};
+			} else {
+				return {
+					message: 'No se pudo registrar la reseña'
+				};
+			}
 		}
 	}
 }
