@@ -52,7 +52,8 @@ export const actions: Actions = {
 				client_id: user.userId,
 				date: new Date(zodRes.data.turn),
 				description: zodRes.data.desc,
-				profesional_id: zodRes.data.profesional_id
+				profesional_id: zodRes.data.profesional_id,
+				state: 'PENDING'
 			}
 		});
 

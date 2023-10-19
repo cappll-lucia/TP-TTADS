@@ -77,14 +77,22 @@ model Province {
 }
 
 model Appointment {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
   profesional_id String
-  profesional    AuthUser @relation("profesional_appointment", references: [id], fields: [profesional_id], onDelete: Cascade)
+  profesional    AuthUser         @relation("profesional_appointment", references: [id], fields: [profesional_id], onDelete: Cascade)
   client_id      String
-  client         AuthUser @relation("client_appointment", references: [id], fields: [client_id], onDelete: Cascade)
+  client         AuthUser         @relation("client_appointment", references: [id], fields: [client_id], onDelete: Cascade)
   date           DateTime
   description    String
+  state          AppointmentState
 
   @@index([profesional_id])
   @@map("appointment")
+}
+
+enum AppointmentState {
+  ACCEPTED
+  REJECTED
+  DONE
+  PENDING
 }
