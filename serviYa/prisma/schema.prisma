@@ -23,6 +23,9 @@ model AuthUser {
   phone       String?
   description String?
 
+  reviews         Review[] @relation("prof_reviews")
+  written_reviews Review[] @relation("written_reviews")
+
   @@map("auth_user")
 }
 
@@ -72,4 +75,17 @@ model Province {
   name String
 
   @@map("province")
+}
+
+model Review {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  prof_id    String
+  prof_user  AuthUser @relation("prof_reviews", fields: [prof_id], references: [id])
+  author_id  String
+  author     AuthUser @relation("written_reviews", fields: [author_id], references: [id])
+  score      Int
+  comment    String
+  created_at DateTime @default(now())
+
+  @@map("review")
 }

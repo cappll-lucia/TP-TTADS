@@ -11,7 +11,6 @@
 		if (data.city) city.set(data.city);
 	}
 	setContext('city', city);
-	$: console.log('layout:', data);
 </script>
 
 <div class="container-fluid">
