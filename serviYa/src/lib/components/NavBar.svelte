@@ -7,6 +7,7 @@
 	import { page } from '$app/stores';
 	export let data: PageData;
 	let city = getContext('city') as Writable<City>;
+	const excludedPaths = ['/', '/profesional'];
 </script>
 
 <nav class=" navbar bg-white px-4">
@@ -27,7 +28,7 @@
 			{/key}
 		{/if}
 	</div>
-	{#if data.user && data.user.role === 'USER'}
+	{#if data.user && data.user.role === 'USER' && $page.url.pathname != '/profesional'}
 		<div>
 			<a
 				role="button"

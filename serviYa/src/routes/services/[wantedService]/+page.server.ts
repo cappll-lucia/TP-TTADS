@@ -22,10 +22,10 @@ async function getProfessionals(cityId: string, service: string) {
 	}
 	const resProf = await prisma.authUser.findMany({
 		where: {
-			city_id: cityId
-			// services_id: {
-			// 	hasSome: resServ.id
-			// }
+			city_id: cityId,
+			services_id: {
+				hasSome: resServ.id
+			}
 		}
 	});
 	console.log(resProf);

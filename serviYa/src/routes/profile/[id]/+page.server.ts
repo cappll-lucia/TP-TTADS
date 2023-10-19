@@ -5,13 +5,6 @@ function addDays(dateTime: Date, count_days = 0) {
 	return new Date(new Date(dateTime).setDate(dateTime.getDate() + count_days));
 }
 
-const dateOptions = {
-	weekday: 'long',
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric'
-};
-
 export const load: PageServerLoad = async ({ params }) => {
 	const profesional_id = params.id;
 	const profesional = await prisma.authUser.findUnique({
@@ -21,18 +14,32 @@ export const load: PageServerLoad = async ({ params }) => {
 	if (!profesional) {
 		throw Error('Profesional not found');
 	}
-	const turns = [];
 
-	for (let i = 0; i < 30; i++) {
-		turns.push({
-			date: addDays(new Date(), i).toLocaleDateString('es-AR', {
-				weekday: 'long',
-				day: 'numeric',
-				month: 'long'
-			}),
-			available: true
+	//TODO - todo esto deberia sacarse desde los datos del profesional
+	const professional_valid_days = [true, true, true, true, true, false, false];
+
+	let available_turns: { date: Date; available: boolean }[] = [];
+
+	for (let i = 1; i <= 7; i++) {
+		const day = addDays(new Date(), i);
+		const valid_day = professional_valid_days[day.getDay() - 1];
+		available_turns.push({
+			date: day,
+			available: valid_day
 		});
 	}
 
-	return { profesional, turns };
+	return { profesional, available_turns };
+};
+
+export const actions = {
+	agendar: async ({ request }) => {
+		const formRes = await request.formData();
+		const date = new Date(formRes.get('turn'));
+		console.log(date);
+		return {
+			success: true,
+			date: date
+		};
+	}
 };

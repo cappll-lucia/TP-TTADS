@@ -2,10 +2,13 @@
 	import { writable } from 'svelte/store';
 	import type { PageData } from './$types';
 	export let data: PageData;
-	const { profesional } = data;
-	const turns = data.turns;
+	const { profesional, available_turns } = data;
+	export let form;
 </script>
 
+{#if form?.success}
+	<mark class="ctr">{'Turno agendado con éxito para el dia '}{form.date.toLocaleDateString()}</mark>
+{/if}
 <main class="container">
 	<article>
 		<h1>{profesional.name}</h1>
@@ -13,35 +16,41 @@
 		<p>{profesional.description}</p>
 	</article>
 
-	<article class="turns">
-		<table>
-			<tr>
-				{#each turns as t}
-					<th>{t.date}</th>
+	<form
+		action="?/agendar"
+		method="post"
+	>
+		<h3>Turnos disponibles en la semana:</h3>
+		<table role="grid">
+			<tbody>
+				{#each available_turns as turn}
+					<tr>
+						<td class="ctr">
+							{#if turn.available}
+								{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}
+							{:else}
+								<s>{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}</s>
+							{/if}
+						</td>
+						<td>
+							<button
+								type="submit"
+								name="turn"
+								value={turn.date.toISOString()}
+								disabled={!turn.available}
+							>
+								Agendar turno
+							</button>
+						</td>
+					</tr>
 				{/each}
-			</tr>
-			<tr>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-			</tr>
+			</tbody>
 		</table>
-	</article>
+	</form>
 </main>
 
 <style>
-	.turns {
-		overflow-x: scroll;
-	}
-	th {
+	.ctr {
 		text-align: center;
-	}
-	.agend {
-		text-align: center;
-		padding: 0.4rem;
-		font-size: 0.98rem;
 	}
 </style>
