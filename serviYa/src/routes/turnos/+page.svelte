@@ -1,8 +1,12 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
+	import { invalidate, invalidateAll } from '$app/navigation';
 	import type { PageData } from './$types';
 	export let data: PageData;
 
-	const { confirmedAppointments, otherAppointments, pendingAppointments } = data;
+	$: pendingAppointments = data.pendingAppointments;
+	$: otherAppointments = data.otherAppointments;
+	$: confirmedAppointments = data.confirmedAppointments;
 
 	let modal: HTMLElement;
 	let appointment_data = { id: '', description: '' };
@@ -24,11 +28,21 @@
 	bind:this={modal}
 >
 	<article>
-		<form method="post">
+		<form
+			method="post"
+			use:enhance={() => {
+				return ({ update }) => {
+					update();
+					console.log(pendingAppointments);
+					alert('Turno cancelado');
+					modal.attributes.removeNamedItem('open');
+				};
+			}}
+		>
 			<header>
 				<a
 					href="#"
-					on:click={closeModal}><i class="mi-close" /></a
+					on:click|preventDefault={closeModal}><i class="mi-close" /></a
 				>
 				<h3>Detalles del Turno</h3>
 			</header>
@@ -43,6 +57,11 @@
 					class="cancel outline"
 					type="submit"
 					formaction="?/cancelar"
+					on:click={(event) => {
+						if (!confirm('Esta seguro de cancelar?')) {
+							event.preventDefault();
+						}
+					}}
 				>
 					Cancelar
 				</button>
@@ -62,7 +81,7 @@
 	<h1>Turnos</h1>
 	<article>
 		<h2>Pendientes de confirmacion</h2>
-		{#each pendingAppointments as app}
+		{#each pendingAppointments as app (app.id)}
 			<div>
 				<h3>{app.date}</h3>
 				<p>{app.description}</p>
@@ -72,7 +91,7 @@
 	</article>
 	<article>
 		<h2>Por realizar</h2>
-		{#each confirmedAppointments as app}
+		{#each confirmedAppointments as app (app.id)}
 			<div>
 				<h3>{app.date}</h3>
 				<p>{app.description}</p>
@@ -81,7 +100,7 @@
 	</article>
 	<article>
 		<h2>Historial</h2>
-		{#each otherAppointments as app}
+		{#each otherAppointments as app (app.id)}
 			<div>
 				<h3>{app.date}</h3>
 				<p>{app.description}</p>

@@ -30,5 +30,18 @@ export const actions: Actions = {
 			data: { state: 'TO_DO' }
 		});
 		return { status: 200 };
+	},
+	cancelar: async ({ request }) => {
+		const data = await request.formData();
+		const appointment_id = data.get('appointment_id')?.toString();
+		//todo falta validar cosas (segun bruno)
+		if (!appointment_id) {
+			return Error('No se envio el id del turno');
+		}
+		await prisma.appointment.delete({
+			where: { id: appointment_id }
+		});
+
+		return { status: 200, success: true };
 	}
 };
