@@ -62,10 +62,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 export const actions: Actions = {
 	addReview: async ({ request, locals, params }) => {
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
-		console.log('ar2')
 		const zodResult = reviewSchema.safeParse(formData);
 		if (!zodResult.success) {
-			console.log(zodResult.error)
 			return {
 				data: {
 					...formData
@@ -84,10 +82,44 @@ export const actions: Actions = {
 				score: Number(formData.score)
 			}
 		})
-		console.log(review);
 		return {
 			status: 200,
 		}
+	},
+	editReview: async ({ request, locals, params }) => {
+		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
+		const reviewId = formData.id;
+		delete formData.id
+		const zodResult = reviewSchema.safeParse(formData);
+		if (!zodResult.success) {
+			return {
+				data: { ...formData },
+				errors: zodResult.error.flatten().fieldErrors
+			};
+		}
+		const user = await locals.auth.validate();
+		if (!user) return fail(401, { message: 'Usuario no autenticado' });
+		const profesionalId = params.id;
+		await prisma.review.update({
+			data: {
+				comment: formData.comment,
+				score: Number(formData.score),
+				edited_at: new Date()
+			},
+			where: {
+				id: reviewId,
+			}
+		})
+		return {
+			status: 200,
+		}
+	},
+	deleteReview: async ({ request }) => {
+		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
+		await prisma.review.delete({
+			where: {
+				id: formData.id,
+			}
+		})
 	}
-
 }

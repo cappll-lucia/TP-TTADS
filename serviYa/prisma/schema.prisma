@@ -78,14 +78,15 @@ model Province {
 }
 
 model Review {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
   prof_id    String
-  prof_user  AuthUser @relation("prof_reviews", fields: [prof_id], references: [id])
+  prof_user  AuthUser  @relation("prof_reviews", fields: [prof_id], references: [id])
   author_id  String
-  author     AuthUser @relation("written_reviews", fields: [author_id], references: [id])
+  author     AuthUser  @relation("written_reviews", fields: [author_id], references: [id])
   score      Int
   comment    String
-  created_at DateTime @default(now())
+  created_at DateTime  @default(now())
+  edited_at  DateTime?
 
   @@map("review")
 }

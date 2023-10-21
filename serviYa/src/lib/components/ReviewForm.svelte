@@ -1,17 +1,23 @@
 <script lang="ts">
 	import type { Review } from '../../types';
 	export let review: any;
+	import { enhance } from '$app/forms';
 
 	let mode: string = 'visible';
 
-	const reviewDate = `${review.created_at.getDate()}/${review.created_at.getMonth()}/${review.created_at.getFullYear()}   ${review.created_at.getHours()}:${review.created_at.getMinutes()}`;
+	const reviewDate = (date: Date) =>
+		`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}   ${date.getHours()}:${date.getMinutes()}`;
 </script>
 
 <div class="review">
 	<div class="name_and_date">
 		<span typeof="name">{review.author.name}</span>
 		{#if mode != 'edit'}
-			<span typeof="date">{reviewDate}</span>
+			{#if review.edited_at}
+				<span typeof="date">Editado {reviewDate(review.edited_at)}</span>
+			{:else}
+				<span typeof="date">{reviewDate(review.created_at)}</span>
+			{/if}
 		{/if}
 	</div>
 	<span typeof="email">{review.author.email}</span>
@@ -21,73 +27,86 @@
 				<i class="fas fa-star" />
 			{/each}
 		</div>
-	{:else}
-		<div class="editable_score">
-			<span class="review-score">
-				<label
-					for="rate-1"
-					style="--i:1"><i class="fa-solid fa-star" /></label
-				>
-				<input
-					type="radio"
-					name="score"
-					id="rate-1"
-					value="1"
-					checked
-				/>
-				<label
-					for="rate-2"
-					style="--i:2"><i class="fa-solid fa-star" /></label
-				>
-				<input
-					type="radio"
-					name="score"
-					id="rate-2"
-					value="2"
-				/>
-				<label
-					for="rate-3"
-					style="--i:3"><i class="fa-solid fa-star" /></label
-				>
-				<input
-					type="radio"
-					name="score"
-					id="rate-3"
-					value="3"
-				/>
-				<label
-					for="rate-4"
-					style="--i:4"><i class="fa-solid fa-star" /></label
-				>
-				<input
-					type="radio"
-					name="score"
-					id="rate-4"
-					value="4"
-				/>
-				<label
-					for="rate-5"
-					style="--i:5"><i class="fa-solid fa-star" /></label
-				>
-				<input
-					type="radio"
-					name="score"
-					id="rate-5"
-					value="5"
-				/>
-			</span>
-		</div>
 	{/if}
 	<div class="forms">
 		<form
-			action=""
+			action="?/editReview"
+			method="POST"
 			class="edit_review_form"
+			use:enhance
+			on:reset={() => {
+				mode = 'visible';
+			}}
 		>
+			{#if mode == 'edit'}
+				<div class="editable_score">
+					<span class="review-score">
+						<label
+							for="rate-1"
+							style="--i:1"><i class="fa-solid fa-star" /></label
+						>
+						<input
+							type="radio"
+							name="score"
+							id="rate-1"
+							value="1"
+							checked
+						/>
+						<label
+							for="rate-2"
+							style="--i:2"><i class="fa-solid fa-star" /></label
+						>
+						<input
+							type="radio"
+							name="score"
+							id="rate-2"
+							value="2"
+						/>
+						<label
+							for="rate-3"
+							style="--i:3"><i class="fa-solid fa-star" /></label
+						>
+						<input
+							type="radio"
+							name="score"
+							id="rate-3"
+							value="3"
+						/>
+						<label
+							for="rate-4"
+							style="--i:4"><i class="fa-solid fa-star" /></label
+						>
+						<input
+							type="radio"
+							name="score"
+							id="rate-4"
+							value="4"
+						/>
+						<label
+							for="rate-5"
+							style="--i:5"><i class="fa-solid fa-star" /></label
+						>
+						<input
+							type="radio"
+							name="score"
+							id="rate-5"
+							value="5"
+						/>
+					</span>
+				</div>
+			{/if}
 			<input
 				type="text"
+				name="comment"
 				value={review.comment}
 				class={mode}
 				disabled={mode === 'visible'}
+			/>
+			<input
+				type="text"
+				name="id"
+				value={review.id}
+				hidden
 			/>
 			{#if mode == 'edit'}
 				<div class="action_panel">
@@ -106,9 +125,17 @@
 		</form>
 		{#if mode != 'edit'}
 			<form
-				action=""
+				action="?/deleteReview"
+				method="POST"
 				class="delete_review_form"
+				use:enhance
 			>
+				<input
+					type="text"
+					name="id"
+					value={review.id}
+					hidden
+				/>
 				<button
 					class="review_edit_button"
 					on:click={() => {
@@ -116,6 +143,11 @@
 					}}><i class="mi mi-edit" /></button
 				>
 				<button
+					on:click={(e) => {
+						if (!confirm('estas seguro?')) {
+							e.preventDefault();
+						}
+					}}
 					type="submit"
 					class="review_delete_button"><i class="mi mi-delete" /></button
 				>
@@ -127,6 +159,7 @@
 <style lang="scss">
 	.review {
 		width: 20rem;
+		height: 13rem;
 		padding: 1rem;
 		border-radius: 24px;
 		background-color: #374956;
@@ -149,7 +182,6 @@
 			}
 			span[typeof='date'] {
 				font-size: 0.8rem;
-				// line-height: 1.3rem;
 				color: gray;
 				margin: 0;
 			}
@@ -160,7 +192,7 @@
 			margin-bottom: 0.5rem;
 		}
 		.score {
-			padding: 0.2rem 0 0.5rem 0;
+			padding: 0.2rem 0 0.8rem 0;
 			color: #fce448;
 			i {
 				padding-right: 0.3rem;
@@ -171,7 +203,7 @@
 			display: flex;
 			align-items: center;
 			width: 100%;
-			height: 3rem;
+			height: 2rem;
 			justify-content: flex-start;
 			input[type='radio'] {
 				display: none;
@@ -193,14 +225,6 @@
 		}
 		label:has(~ :checked) i {
 			color: #faec1b;
-		}
-
-		span[typeof='comment'] {
-			padding: 0.5rem 0;
-			height: 4rem;
-			font-style: italic;
-			display: flex;
-			align-items: flex-start;
 		}
 	}
 
@@ -255,5 +279,6 @@
 	.visible {
 		background-color: transparent;
 		border: none;
+		margin-bottom: 0.4rem;
 	}
 </style>

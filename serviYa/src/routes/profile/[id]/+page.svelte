@@ -5,8 +5,10 @@
 	import ReviewCard from '$lib/components/ReviewCard.svelte';
 	import ReviewForm from '$lib/components/ReviewForm.svelte';
 	import { ZodError } from 'zod';
+	import type { Review } from '@prisma/client';
 
 	export let data: PageData;
+	let mode: string = 'visible';
 
 	export let form;
 	const formStore = writable(form);
@@ -21,6 +23,9 @@
 			form = { errors: fieldErrors } as ActionData;
 		}
 	}
+
+	const reviewDate = (r: Review) =>
+		`${r.created_at.getDate()}/${r.created_at.getMonth()}/${r.created_at.getFullYear()}   ${r.created_at.getHours()}:${r.created_at.getMinutes()}`;
 </script>
 
 <main class="container">
@@ -52,10 +57,10 @@
 		<h2>Reseñas</h2>
 		<div class="reviews-container">
 			{#each data.reviews as review}
-				{#if review.author_id == data.user?.userId}
-					<ReviewForm {review} />
-				{:else}
+				{#if review.author_id != data.user?.userId}
 					<ReviewCard {review} />
+				{:else}
+					<ReviewForm {review} />
 				{/if}
 			{/each}
 		</div>
@@ -164,6 +169,10 @@
 		padding: 0.4rem;
 		font-size: 0.98rem;
 	}
+	.reviews {
+		margin-bottom: 8rem;
+	}
+
 	.reviews-container {
 		width: 100%;
 		display: flex;
@@ -208,13 +217,11 @@
 	}
 
 	.review-score {
-		// white-space: nowrap;
 		display: flex;
 		align-items: center;
 		width: 100%;
-		height: 3rem;
+		height: 2rem;
 		justify-content: flex-start;
-
 		input[type='radio'] {
 			display: none;
 		}
@@ -229,7 +236,6 @@
 		label:is(:hover, :has(~ :hover)) i {
 			transform: scale(1.35);
 			color: #fffdba;
-			// animation: jump 0.5s calc(0.3s + (var(--i) - 1) * 0.15s) alternate infinite;
 		}
 		label:has(~ :checked) i {
 			color: #faec1b;
@@ -238,7 +244,7 @@
 
 	.existing-review-message {
 		text-align: center;
-		height: 5rem;
+		height: 3rem;
 		width: 100%;
 		font-style: italic;
 	}

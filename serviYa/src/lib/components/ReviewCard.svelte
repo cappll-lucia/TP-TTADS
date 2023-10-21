@@ -2,13 +2,18 @@
 	import type { Review } from '../../types';
 	export let review: any;
 
-	const reviewDate = `${review.created_at.getDate()}/${review.created_at.getMonth()}/${review.created_at.getFullYear()}   ${review.created_at.getHours()}:${review.created_at.getMinutes()}`;
+	const reviewDate = (date: Date) =>
+		`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}   ${date.getHours()}:${date.getMinutes()}`;
 </script>
 
 <div class="review">
 	<div class="name_and_date">
 		<span typeof="name">{review.author.name}</span>
-		<span typeof="date">{reviewDate}</span>
+		{#if review.edited_at}
+			<span typeof="date">Editado {reviewDate(review.edited_at)}</span>
+		{:else}
+			<span typeof="date">{reviewDate(review.created_at)}</span>
+		{/if}
 	</div>
 	<span typeof="email">{review.author.email}</span>
 	<div class="score">
@@ -54,7 +59,8 @@
 			margin-bottom: 0.5rem;
 		}
 		.score {
-			padding: 0.2rem 0 0.5rem 0;
+			padding: 0.2rem 0 0.8rem 0;
+
 			color: #fce448;
 			i {
 				padding-right: 0.3rem;
