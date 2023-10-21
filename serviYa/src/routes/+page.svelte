@@ -43,7 +43,14 @@
 </script>
 
 {#if data.user}
-	<ServicesGallery data={data.services} />
+	{#if data.user.role === 'ADMIN'}
+		<a
+			href="/admin"
+			role="button">Ir a Dashboard</a
+		>
+	{:else}
+		<ServicesGallery data={data.services} />
+	{/if}
 {:else}
 	<div class="landing">
 		<div class="content">
