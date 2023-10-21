@@ -1,5 +1,5 @@
 import { error, type Actions } from '@sveltejs/kit';
-import { cityCreateSchema } from './citySchema';
+import { cityCreateSchema, cityModifySchema } from './citySchema';
 import type { PageServerLoad } from '../$types';
 import { prisma } from '$lib/server/lucia/prisma';
 
@@ -35,5 +35,34 @@ export const actions: Actions = {
 		await prisma.city.create({ data: city });
 		console.log('adding city', city);
 		aux.push(city);
+	},
+	modify_city: async ({ request }) => {
+		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
+		const zodResult = cityModifySchema.safeParse(formData);
+		if (!zodResult.success) {
+			return {
+				data: { ...formData },
+				errors: zodResult.error.flatten().fieldErrors
+			};
+		}
+		const modified_city = zodResult.data;
+
+		const old_city = await prisma.city.findUnique({
+			where: { id: modified_city.id }
+		});
+		if (!old_city) {
+			throw error(404, 'Not found city to modify');
+		}
+		const mod_province = await prisma.province.findFirst({
+			where: { name: modified_city.province }
+		});
+		if (!mod_province) {
+			throw error(404, 'Not found province to modify');
+		}
+
+		await prisma.city.update({
+			data: { name: modified_city.name, province: mod_province.name },
+			where: { id: modified_city.id }
+		});
 	}
 } satisfies Actions;

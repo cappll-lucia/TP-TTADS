@@ -3,10 +3,11 @@
 	import InputCustom from '$lib/components/InputCustom.svelte';
 	import { enhance } from '$app/forms';
 	import { mapErrorToForm, parseFormData } from '$lib/utils.js';
-	import { cityCreateSchema } from './citySchema.js';
+	import { cityCreateSchema, cityModifySchema } from './citySchema.js';
 	import type { PageData } from './$types.js';
 	import SelectCustom from '$lib/components/SelectCustom.svelte';
 	import type { Form } from '$lib/components/types.js';
+	import type { City } from '@prisma/client';
 
 	export let form;
 
@@ -15,23 +16,37 @@
 	$: formStore.set(form as Form);
 	const failed = derived(formStore, (x) => Boolean(x?.errors));
 
-	let dialog: HTMLDialogElement;
-	let createForm: HTMLFormElement;
+	let create_city_dialog: HTMLDialogElement;
+	let create_city_form: HTMLFormElement;
+	let modify_city_dialog: HTMLDialogElement;
+	let modify_city_form: HTMLFormElement;
+	let focused_city: City = {
+		id: '',
+		name: '',
+		province: ''
+	};
 
 	let loading = false;
 	function openAddCityModal() {
 		formStore.set(null);
-		dialog.showModal();
+		create_city_dialog.showModal();
+	}
+
+	function openModifyCityModal(modified_city: City) {
+		focused_city = modified_city;
+		modify_city_dialog.showModal();
 	}
 </script>
 
 <button on:click={openAddCityModal}>New city</button>
+
+<!-- Create city dialog -->
 <dialog
-	bind:this={dialog}
+	bind:this={create_city_dialog}
 	open={$failed}
 >
 	<form
-		bind:this={createForm}
+		bind:this={create_city_form}
 		method="post"
 		on:reset|preventDefault
 		use:enhance={({ formData }) => {
@@ -47,8 +62,8 @@
 				formStore.set(null);
 				loading = false;
 				if (result.type == 'success') {
-					createForm.reset();
-					dialog.close();
+					create_city_form.reset();
+					create_city_dialog.close();
 				}
 				update();
 			};
@@ -75,6 +90,63 @@
 	</form>
 </dialog>
 
+<!-- Modify city dialog -->
+<dialog bind:this={modify_city_dialog}>
+	<form
+		bind:this={modify_city_form}
+		method="post"
+		on:reset|preventDefault
+		use:enhance={({ formData }) => {
+			const res = parseFormData(formData, cityModifySchema);
+			if (!res.success) {
+				mapErrorToForm(formStore, res);
+				return ({ update }) => {
+					update();
+				};
+			}
+			loading = true;
+			return ({ update, result }) => {
+				formStore.set(null);
+				loading = false;
+				if (result.type == 'success') {
+					modify_city_form.reset();
+					modify_city_dialog.close();
+				}
+				update();
+			};
+		}}
+	>
+		<article>
+			<input
+				hidden
+				name="id"
+				value={focused_city.id}
+			/>
+			<input
+				type="text"
+				name="name"
+				value={focused_city.name}
+				required
+			/>
+			<select
+				name="province"
+				value={focused_city.province}
+				required
+			>
+				{#each data.allowedProvinces as province}
+					<option value={province.name}>{province.name}</option>
+				{/each}
+			</select>
+
+			<button
+				aria-busy={loading}
+				formaction="?/modify_city"
+				type="submit">Modificar</button
+			>
+		</article>
+	</form>
+</dialog>
+
 <main class="container">
 	<article>
 		<table>
@@ -86,6 +158,9 @@
 				<tr>
 					<td>{city.name}</td>
 					<td>{city.province}</td>
+					<td>
+						<button on:click={() => openModifyCityModal(city)}> Edit </button>
+					</td>
 				</tr>
 			{/each}
 		</table>
