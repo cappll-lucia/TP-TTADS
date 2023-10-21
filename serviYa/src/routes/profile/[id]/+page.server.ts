@@ -1,8 +1,8 @@
 import { prisma } from '$lib/server/lucia/prisma';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
-import { reviewSchema } from './reviewSchema';
 import { ZodError } from 'zod';
+import { reviewSchema } from './reviewSchema';
 
 function addDays(dateTime: Date, count_days = 0) {
 	return new Date(new Date(dateTime).setDate(dateTime.getDate() + count_days));
@@ -62,34 +62,32 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 export const actions: Actions = {
 	addReview: async ({ request, locals, params }) => {
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
+		console.log('ar2')
+		const zodResult = reviewSchema.safeParse(formData);
+		if (!zodResult.success) {
+			console.log(zodResult.error)
+			return {
+				data: {
+					...formData
+				},
+				errors: zodResult.error.flatten().fieldErrors
+			};
+		}
 		const user = await locals.auth.validate();
 		if (!user) return fail(401, { message: 'Usuario no autenticado' });
 		const profesionalId = params.id;
-		try {
-			const { score, comment } = reviewSchema.parse(formData);
-			const review = await prisma.review.create({
-				data: {
-					author_id: user.userId,
-					prof_id: profesionalId,
-					comment,
-					score: Number(score)
-				}
-			});
-			return {
-				status: 200,
+		const review = await prisma.review.create({
+			data: {
+				author_id: user.userId,
+				prof_id: profesionalId,
+				comment: formData.comment,
+				score: Number(formData.score)
 			}
-		} catch (error) {
-			if (error instanceof ZodError) {
-				const { fieldErrors: errors } = error.flatten();
-				return {
-					data: { formData },
-					errors
-				};
-			} else {
-				return {
-					message: 'No se pudo registrar la reseña'
-				};
-			}
+		})
+		console.log(review);
+		return {
+			status: 200,
 		}
 	}
+
 }

@@ -44,7 +44,6 @@
 			}
 			span[typeof='date'] {
 				font-size: 0.8rem;
-				// line-height: 1.3rem;
 				color: gray;
 				margin: 0;
 			}
@@ -62,7 +61,7 @@
 			}
 		}
 		span[typeof='comment'] {
-			padding: 0.5rem 0;
+			padding: 0.5rem;
 			height: 4rem;
 			font-style: italic;
 			display: flex;

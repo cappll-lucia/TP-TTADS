@@ -1,12 +1,6 @@
 import { z } from 'zod';
 
 export const reviewSchema = z.object({
-    author_id:
-        z.string({ required_error: 'ID del cliente requerido' })
-            .min(4, { message: "ID autor" }),
-    prof_id:
-        z.string({ required_error: 'ID del profesional requerido' })    
-            .min(4, { message: "ID autor" }),
     score: z
         .string({ required_error: 'Seleccione una puntuación de 1 a 5 estrellas' })
         .min(1, { message: 'Seleccione una puntuación de 1 a 5 estrellas' })

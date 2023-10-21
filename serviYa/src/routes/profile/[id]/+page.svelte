@@ -2,7 +2,8 @@
 	import { writable } from 'svelte/store';
 	import { enhance } from '$app/forms';
 	import type { PageData, ActionData } from './$types';
-	import Review from '$lib/components/Review.svelte';
+	import ReviewCard from '$lib/components/ReviewCard.svelte';
+	import ReviewForm from '$lib/components/ReviewForm.svelte';
 	import { ZodError } from 'zod';
 
 	export let data: PageData;
@@ -51,7 +52,11 @@
 		<h2>Reseñas</h2>
 		<div class="reviews-container">
 			{#each data.reviews as review}
-				<Review {review} />
+				{#if review.author_id == data.user?.userId}
+					<ReviewForm {review} />
+				{:else}
+					<ReviewCard {review} />
+				{/if}
 			{/each}
 		</div>
 		<div class="new-review-form">
@@ -60,7 +65,6 @@
 				<form
 					action="?/addReview"
 					method="POST"
-					on:reset|preventDefault
 					use:enhance={({ formData }) => {
 						try {
 							return ({ update }) => {
@@ -130,12 +134,6 @@
 						type="text"
 						name="comment"
 						placeholder="Comentario"
-					/>
-					<input
-						type="text"
-						name="prof_id"
-						hidden
-						value={data.profesional.id}
 					/>
 					<div class="errors">
 						{#if form?.errors?.score}
