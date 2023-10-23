@@ -2,21 +2,19 @@
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import type { City } from '../../types';
+	import { fade } from 'svelte/transition';
 
 	export let data: any;
-	const getColorIndex = () => Math.floor(Math.random() * (4 - 1 + 1)) + 1;
-	data.forEach((x: any) => (x.color = getColorIndex()));
+
 	const city = getContext('city') as Writable<City | null>;
 </script>
 
 {#if $city}
-	<div
-		class="container services_gallery services_gallery_{data.length} col-lg-8 col-md-10 col-sm-12 col-12"
-	>
+	<div class="container">
 		{#each data as s}
-			<div class="services_gallery--servColor{s.color} services_gallery--serv">
+			<article class="service">
 				<a href="/services/{s.name}?city={$city.id}">{s.name}</a>
-			</div>
+			</article>
 		{/each}
 	</div>
 {:else}
@@ -24,50 +22,38 @@
 {/if}
 
 <style lang="scss">
-	.services_gallery {
-		height: auto;
+	.container {
+		padding-left: 4rem;
+		padding-right: 4rem;
 		display: flex;
-		justify-content: space-arround;
+		justify-items: center;
 		align-items: center;
+		align-content: center;
+		justify-content: center;
 		flex-wrap: wrap;
-		gap: 5px;
-		.services_gallery--serv {
-			height: 150px;
-			display: flex;
-			flex: 1;
-			min-width: calc(33.33% - 50px);
-			border-radius: 20px;
-			margin: 5px;
-			justify-content: center;
-			align-items: center;
-			a {
-				font-size: 1rem;
-				font-weight: 600;
-				color: #000;
-			}
-		}
+		gap: calc(12%);
+	}
+	.service {
+		flex: 0 0 calc(36%); /* Adjust as needed */
+		display: flex;
+		justify-items: center;
+		align-items: center;
+		align-content: center;
+		justify-content: center;
+		text-align: center;
+
+		height: 120px;
+		font-size: 1.4rem;
+		transition: all 0.35s ease-in-out;
 	}
 
-	.services_gallery--servColor1 {
-		background-color: #06ff00;
+	.service a:hover {
+		cursor: pointer;
 	}
-	.services_gallery--servColor2 {
-		background-color: #ffe400;
-	}
-	.services_gallery--servColor3 {
-		background-color: #ff8e00;
-	}
-	.services_gallery--servColor4 {
-		background-color: #ff1700;
-	}
-
-	@media (max-width: 600px) {
-		.services_gallery {
-			gap: 3px;
-			.services_gallery--serv {
-				min-width: calc(33.33% - 10px);
-				border-radius: 20px;
-			}
-		}
+	.service:hover {
+		border-radius: 10px;
+		background: linear-gradient(120deg, var(--secondary), var(--secondary-focus));
+		font-size: 1.5rem;
+		width: 260px;
 	}
 </style>

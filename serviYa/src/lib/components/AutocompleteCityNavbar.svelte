@@ -64,7 +64,7 @@
 
 <div class="autocomplete_city_navbar">
 	<div class="input_container">
-		<i class="mi mi-location" />
+		<i class="mi location" />
 		<input
 			bind:value={searchTerm}
 			on:focusin={onFocus}

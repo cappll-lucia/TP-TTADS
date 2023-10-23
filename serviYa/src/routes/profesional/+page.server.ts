@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		const services = await prisma.service.findMany({});
 		return { services };
 	} catch (err) {
-		console.log(err);
+		console.error(err);
 	}
 };
 
@@ -47,7 +47,7 @@ export const actions: Actions = {
 				}
 			};
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 };

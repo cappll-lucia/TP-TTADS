@@ -1,3 +1,8 @@
+<script lang="ts">
+	import { navigating, page } from '$app/stores';
+	import { blur } from 'svelte/transition';
+</script>
+
 <nav>
 	<ul>
 		<li><a href="/admin/service">Services</a></li>
@@ -6,7 +11,20 @@
 	</ul>
 </nav>
 
-<slot />
+{#if !$navigating}
+	{#key $page.url.pathname}
+		<div>
+			<slot />
+		</div>
+	{/key}
+{:else}
+	<div>
+		<div
+			style="margin: 20%; font-size: 5rem;"
+			aria-busy="true"
+		/>
+	</div>
+{/if}
 
 <style lang="scss">
 	ul {

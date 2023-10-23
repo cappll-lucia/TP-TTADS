@@ -1,1 +1,3 @@
 export type City = { id: string; name: string; province: string };
+export type User = { id: string, name: string, email: string, role: string, city_id: string | undefined, services_id: string[], phone: string | undefined, description: string | undefined };
+export type Review = { id: string, comment: string, score: number, author_id: string, author: User, prof_user: User, prof_id: string, created_at: Date };

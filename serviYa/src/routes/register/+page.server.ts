@@ -30,7 +30,6 @@ export const actions: Actions = {
 				}
 			});
 		} catch (error) {
-			console.log(error);
 			if (error instanceof ZodError) {
 				const { fieldErrors: errors } = error.flatten();
 				return {

@@ -25,6 +25,9 @@ model AuthUser {
   appointmens_to_attend Appointment[] @relation("profesional_appointment")
   asked_appointments    Appointment[] @relation("client_appointment")
 
+  reviews         Review[] @relation("prof_reviews")
+  written_reviews Review[] @relation("written_reviews")
+
   @@map("auth_user")
 }
 
@@ -76,6 +79,20 @@ model Province {
   @@map("province")
 }
 
+
+model Review {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  prof_id    String
+  prof_user  AuthUser  @relation("prof_reviews", fields: [prof_id], references: [id])
+  author_id  String
+  author     AuthUser  @relation("written_reviews", fields: [author_id], references: [id])
+  score      Int
+  comment    String
+  created_at DateTime  @default(now())
+  edited_at  DateTime?
+
+  @@map("review")
+}
 model Appointment {
   id             String           @id @default(auto()) @map("_id") @db.ObjectId
   profesional_id String

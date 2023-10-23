@@ -18,7 +18,6 @@ export const actions: Actions = {
 	add_city: async ({ request }) => {
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
 		const zodResult = cityCreateSchema.safeParse(formData);
-		console.log('recived');
 		if (!zodResult.success) {
 			return {
 				data: { ...formData },
@@ -33,7 +32,6 @@ export const actions: Actions = {
 		}
 
 		await prisma.city.create({ data: city });
-		console.log('adding city', city);
 		aux.push(city);
 	},
 	modify_city: async ({ request }) => {
