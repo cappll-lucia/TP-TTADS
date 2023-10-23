@@ -22,6 +22,7 @@
 </script>
 
 <div class="container become_prof_page">
+	<a href="/"><i class="mi mi-arrow-left" /> Volver al menú</a>
 	<hgroup>
 		<h3 transition:fly={{ y: 200, duration: 300 }}>
 			¡Únete a ServiYa y forma parte de la revolución en servicios!
@@ -54,6 +55,7 @@
 			<select
 				name="service_id"
 				id="service"
+				required
 			>
 				<option
 					disabled
@@ -69,6 +71,35 @@
 				name="city_id"
 			/>
 			<AutocompleteCity bind:value={selectedLocation} />
+			<br />
+			<hgroup>
+				<h1><strong>Dias que trabajas</strong></h1>
+			</hgroup>
+			<table role="grid">
+				<thead>
+					<tr>
+						<th>Lunes</th>
+						<th>Martes</th>
+						<th>Miércoles</th>
+						<th>Jueves</th>
+						<th>Viernes</th>
+						<th>Sábado</th>
+						<th>Domingo</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th><input type="checkbox" /></th>
+						<th><input type="checkbox" /></th>
+						<th><input type="checkbox" /></th>
+						<th><input type="checkbox" /></th>
+						<th><input type="checkbox" /></th>
+						<th><input type="checkbox" /></th>
+						<th><input type="checkbox" /></th>
+					</tr>
+				</tbody>
+			</table>
+
 			{#if selectedLocation.id != '0'}
 				<button
 					type="submit"
@@ -80,7 +111,6 @@
 			{/if}
 		</form>
 	</div>
-	<a href="/"><i class="mi mi-arrow-left" />Volver al menú</a>
 </div>
 
 <style lang="scss">
@@ -104,5 +134,9 @@
 		.become_prof_btn {
 			margin-top: 2rem;
 		}
+	}
+	tbody tr th {
+		text-align: center; /* Center-align text within cells */
+		padding: 8px; /* Optional padding for cells */
 	}
 </style>

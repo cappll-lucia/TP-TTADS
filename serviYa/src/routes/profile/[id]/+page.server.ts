@@ -3,6 +3,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 import { ZodError } from 'zod';
 import { reviewSchema } from './reviewSchema';
+import { turnSolicitationSchema } from './turnSolicitationSchema';
 
 function addDays(dateTime: Date, count_days = 0) {
 	return new Date(new Date(dateTime).setDate(dateTime.getDate() + count_days));
@@ -16,6 +17,7 @@ const dateOptions = {
 };
 
 export const load: PageServerLoad = async ({ params, locals }) => {
+  // validation
 	const user = await locals.auth.validate();
 	const profesionalId = params.id;
 	const profesional = await prisma.authUser.findUnique({
@@ -26,6 +28,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		throw Error('Profesional not found');
 	}
 
+  //reviews
 	const reviews = await prisma.review.findMany({
 		where: {
 			prof_id: profesionalId
@@ -42,20 +45,54 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			author_id: user?.userId
 		}
 	});
-	const turns = [];
 
-	for (let i = 0; i < 30; i++) {
-		turns.push({
-			date: addDays(new Date(), i).toLocaleDateString('es-AR', {
-				weekday: 'long',
-				day: 'numeric',
-				month: 'long'
-			}),
-			available: true
-		});
+
+  //appointments
+	const busy_appointments = await prisma.appointment.findMany({
+		where: { profesional_id: profesional_id, date: { gt: new Date() }, state: 'TO_DO' }
+	});
+	const busy_days = busy_appointments.map((x) => x.date);
+
+	let available_turns: { date: Date; available: boolean }[] = [];
+
+	for (let i = 1; i <= 7; i++) {
+		const date = addDays(new Date(), i);
+		const available = !busy_days.some((x) => x.getDay() == date.getDay());
+		available_turns.push({ date, available });
 	}
 
-	return { profesional, user, reviews, userWrittenReviews, turns };
+  return { profesional, user, reviews, userWrittenReviews, available_turns };
+
+};
+
+export const actions: Actions = {
+	agendar: async ({ request, locals }) => {
+		const { user } = await locals.auth.validateUser();
+		if (!user) {
+			return fail(401, { message: 'Unauntenticated' });
+		}
+
+		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
+		const zodRes = turnSolicitationSchema.safeParse(formData);
+		if (zodRes.success === false) {
+			return fail(400, { message: 'Invalid request' });
+		}
+
+		await prisma.appointment.create({
+			data: {
+				client_id: user.userId,
+				date: new Date(zodRes.data.turn),
+				description: zodRes.data.desc,
+				profesional_id: zodRes.data.profesional_id,
+				state: 'UNCONFIRMED'
+			}
+		});
+
+		return {
+			success: true,
+			date: new Date(zodRes.data.turn)
+		};
+	}
 };
 
 

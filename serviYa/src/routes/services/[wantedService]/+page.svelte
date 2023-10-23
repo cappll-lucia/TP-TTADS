@@ -13,7 +13,7 @@
 
 <main class="container">
 	{#if professionalsList.length > 0}
-		<h1 class="kbd">
+		<h1>
 			Profesionales disponibles para {wantedService} en {$city.name}, {$city.province}
 		</h1>
 		<ProfessionalsGallery professionalList={professionalsList} />
