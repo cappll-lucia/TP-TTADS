@@ -9,27 +9,23 @@ datasource db {
 }
 
 model AuthUser {
-  id             String          @id @map("_id")
-  name           String
-  email          String            @unique
-  role           String
-  city_id        String?     @db.ObjectId 
-  city           City?       @relation(references: [id], fields: [city_id], onDelete: Cascade)
-  auth_session   AuthSession[]
-  auth_key       AuthKey[]
-  profesinalData ProfessionalData?
+  id           String        @id @map("_id")
+  name         String
+  email        String        @unique
+  role         String
+  city_id      String?       @db.ObjectId
+  city         City?         @relation(references: [id], fields: [city_id], onDelete: Cascade)
+  auth_session AuthSession[]
+  auth_key     AuthKey[]
+
+  services_id           String[]      @db.ObjectId
+  services              Service[]     @relation(references: [id], fields: [services_id])
+  phone                 String?
+  description           String?
+  appointmens_to_attend Appointment[] @relation("profesional_appointment")
+  asked_appointments    Appointment[] @relation("client_appointment")
 
   @@map("auth_user")
-}
-
-model ProfessionalData {
-  id          String    @id @map("_id")  @db.ObjectId  @default(auto())
-  user_id     String    @unique
-  user        AuthUser  @relation(references: [id], fields: [user_id], onDelete: Cascade)
-  location_id String
-  services_id String[]  @db.ObjectId
-  services    Service[] @relation(references: [id], fields: [services_id])
-  provinceId  String?   @db.ObjectId
 }
 
 model AuthSession {
@@ -56,19 +52,20 @@ model AuthKey {
 }
 
 model Service {
-  id   String @id  @default(auto()) @map("_id") @db.ObjectId
-  name String
-  professional_data_id String[] @db.ObjectId
-  professional_data ProfessionalData[] @relation(fields: [professional_data_id], references: [id])
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  auth_user_id String[]
+  auth_user    AuthUser[] @relation(fields: [auth_user_id], references: [id])
 
   @@map("service")
 }
 
 model City {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
   name     String
   province String
-  users   AuthUser[]
+  users    AuthUser[]
+
   @@map("city")
 }
 
@@ -77,4 +74,25 @@ model Province {
   name String
 
   @@map("province")
+}
+
+model Appointment {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  profesional_id String
+  profesional    AuthUser         @relation("profesional_appointment", references: [id], fields: [profesional_id], onDelete: Cascade)
+  client_id      String
+  client         AuthUser         @relation("client_appointment", references: [id], fields: [client_id], onDelete: Cascade)
+  date           DateTime
+  description    String
+  state          AppointmentState
+
+  @@index([profesional_id])
+  @@map("appointment")
+}
+
+enum AppointmentState {
+  UNCONFIRMED
+  TO_DO
+  REJECTED
+  DONE
 }

@@ -4,8 +4,10 @@
 	import type { City } from '../../types';
 	import AutocompleteCityNavbar from './AutocompleteCityNavbar.svelte';
 	import type { Writable } from 'svelte/store';
+	import { page } from '$app/stores';
 	export let data: PageData;
 	let city = getContext('city') as Writable<City>;
+	const excludedPaths = ['/', '/profesional'];
 </script>
 
 <nav class=" navbar bg-white px-4">
@@ -20,17 +22,21 @@
 	</div>
 
 	<div style="padding-top:30px; padding-bottom: 20px;">
-		{#if data.user && data.user.role !== 'ADMIN'}
-			<AutocompleteCityNavbar bind:value={$city} />
+		{#if data.user && data.user.role !== 'ADMIN' && $page.url.pathname == '/'}
+			{#key $page.url.pathname}
+				<AutocompleteCityNavbar bind:value={$city} />
+			{/key}
 		{/if}
 	</div>
-	<div>
-		<a
-			role="button"
-			href="/profesional"
-			>Quiero prestar un servicio
-		</a>
-	</div>
+	{#if data.user && data.user.role === 'USER' && $page.url.pathname != '/profesional'}
+		<div>
+			<a
+				role="button"
+				href="/profesional"
+				>Quiero prestar un servicio
+			</a>
+		</div>
+	{/if}
 	<div class="usr-menu">
 		{#if data.user}
 			<li>Bienvenido, {data?.user?.name}!</li>
@@ -69,6 +75,11 @@
 							</a>
 						</button>
 						<button
+							on:click={(e) => {
+								if (!confirm('estas seguro?')) {
+									e.preventDefault();
+								}
+							}}
 							class="a"
 							formaction="/logout"
 							type="submit"

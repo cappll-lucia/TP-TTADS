@@ -19,43 +19,24 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
-		const { user, session } = await locals.auth.validateUser();
+		const { user } = await locals.auth.validateUser();
 		if (!user) {
 			return error(401, 'Unauthorized');
 		}
-		const { phone, description, service_id, province_id, location_id } = Object.fromEntries(
+		const { city_id, phone, description, service_id } = Object.fromEntries(
 			await request.formData()
 		) as Record<string, string>;
 		try {
-			const data = {
-				role: 'PROFESIONAL',
-				profesinalData: {
-					create: {
-						services: {
-							connect: {
-								id: service_id
-							}
-						},
-						location_id: location_id
-					}
-				}
-			}
 			await prisma.authUser.update({
 				where: {
 					id: user.userId
 				},
 				data: {
 					role: 'PROFESIONAL',
-					profesinalData: {
-						create: {
-							services: {
-								connect: {
-									id: service_id
-								}
-							},
-							location_id: location_id
-						}
-					}
+					city_id,
+					description,
+					phone,
+					services_id: [service_id]
 				}
 			});
 

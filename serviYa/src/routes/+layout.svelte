@@ -7,6 +7,9 @@
 	export let data: PageData;
 
 	const city = writable(data.city);
+	$: {
+		if (data.city) city.set(data.city);
+	}
 	setContext('city', city);
 </script>
 
