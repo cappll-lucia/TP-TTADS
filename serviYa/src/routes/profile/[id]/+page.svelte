@@ -6,20 +6,14 @@
 	import ReviewForm from '$lib/components/ReviewForm.svelte';
 	import { ZodError } from 'zod';
 	import type { Review } from '@prisma/client';
-  	import { fade, fly, slide } from 'svelte/transition';
-
+	import { fly } from 'svelte/transition';
 
 	export let data: PageData;
-  	const { profesional, available_turns } = data;
-
-	let mode: string = 'visible';
+	const { profesional, available_turns } = data;
 
 	export let form;
 	const formStore = writable(form);
 	$: formStore.set(form);
-
-	const { profesional } = data;
-	const turns = data.turns;
 
 	function manageError(error: any) {
 		if (error instanceof ZodError) {
@@ -47,7 +41,7 @@
 	<article class="turns">
 		<table>
 			<tr>
-				{#each turns as t}
+				{#each available_turns as t}
 					<th>{t.date}</th>
 				{/each}
 			</tr>
@@ -79,7 +73,7 @@
 				<form
 					action="?/addReview"
 					method="POST"
-					use:enhance={({ formData }) => {
+					use:enhance={() => {
 						try {
 							return ({ update }) => {
 								update();
@@ -166,61 +160,59 @@
 	</article>
 </main>
 
-
-	<form
-		action="?/agendar"
-		method="post"
-	>
-		<label for="desc">Que trabajo requiere del profesional:</label>
-		<input
-			hidden
-			type="text"
-			name="profesional_id"
-			value={profesional.id}
-		/>
-		<textarea
-			id="desc"
-			name="desc"
-			placeholder="que necesita?"
-			bind:value={desc}
-			on:focus={() => {
-				window.scroll({ top: 600, left: 0, behavior: 'smooth' });
-			}}
-		/>
-		{#if desc.length > 3}
-			<table
-				role="grid"
-				transition:fly={{ y: 200 }}
-			>
-				<tbody>
-					{#each available_turns as turn}
-						<tr>
-							<td class="ctr">
-								{#if turn.available}
-									{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}
-								{:else}
-									<s>{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}</s>
-								{/if}
-							</td>
-							<td>
-								<button
-									type="submit"
-									name="turn"
-									value={turn.date.toISOString()}
-									disabled={!turn.available}
-								>
-									Agendar turno
-								</button>
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
-		{:else}
-			<div style="height: 400px;" />
-		{/if}
-	</form>
-</main>
+<form
+	action="?/agendar"
+	method="post"
+>
+	<label for="desc">Que trabajo requiere del profesional:</label>
+	<input
+		hidden
+		type="text"
+		name="profesional_id"
+		value={profesional.id}
+	/>
+	<textarea
+		id="desc"
+		name="desc"
+		placeholder="que necesita?"
+		bind:value={desc}
+		on:focus={() => {
+			window.scroll({ top: 600, left: 0, behavior: 'smooth' });
+		}}
+	/>
+	{#if desc.length > 3}
+		<table
+			role="grid"
+			transition:fly={{ y: 200 }}
+		>
+			<tbody>
+				{#each available_turns as turn}
+					<tr>
+						<td class="ctr">
+							{#if turn.available}
+								{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}
+							{:else}
+								<s>{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}</s>
+							{/if}
+						</td>
+						<td>
+							<button
+								type="submit"
+								name="turn"
+								value={turn.date.toISOString()}
+								disabled={!turn.available}
+							>
+								Agendar turno
+							</button>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	{:else}
+		<div style="height: 400px;" />
+	{/if}
+</form>
 
 <style lang="scss">
 	.turns {
