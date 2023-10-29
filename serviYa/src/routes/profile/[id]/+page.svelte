@@ -5,7 +5,6 @@
 	import ReviewCard from '$lib/components/ReviewCard.svelte';
 	import ReviewForm from '$lib/components/ReviewForm.svelte';
 	import { ZodError } from 'zod';
-	import type { Review } from '@prisma/client';
 	import { fly } from 'svelte/transition';
 	import Stars from './Stars.svelte';
 
@@ -23,9 +22,6 @@
 		}
 	}
 
-	const reviewDate = (r: Review) =>
-		`${r.created_at.getDate()}/${r.created_at.getMonth()}/${r.created_at.getFullYear()}   ${r.created_at.getHours()}:${r.created_at.getMinutes()}`;
-
 	let desc = '';
 </script>
 
@@ -39,22 +35,66 @@
 		<p>{profesional.description}</p>
 	</article>
 
-	<article class="turns">
-		<table>
-			<tr>
-				{#each available_turns as t}
-					<th>{t.date}</th>
-				{/each}
-			</tr>
-			<tr>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-				<td><button class="agend">Agendar</button></td>
-			</tr>
-		</table>
+	<article>
+		<h2 style="margin: 0;">Solicitar</h2>
+		<form
+			action="?/agendar"
+			method="post"
+		>
+			<label for="desc">Que trabajo requiere del profesional:</label>
+			<input
+				hidden
+				type="text"
+				name="profesional_id"
+				value={profesional.id}
+			/>
+			<textarea
+				id="desc"
+				name="desc"
+				placeholder="que necesita?"
+				bind:value={desc}
+				on:focus={(e) => {
+					const padding = 130; // might be abstacted
+					const scroll = e.target.getBoundingClientRect().y + window.scrollY - padding;
+					window.scroll({ top: scroll, left: 0, behavior: 'smooth' });
+				}}
+			/>
+			{#if desc.length > 3}
+				<div
+					class="turns"
+					transition:fly={{ x: 30, duration: 800 }}
+				>
+					<h4>Turnos disponibles</h4>
+					<table>
+						<tr>
+							{#each available_turns as turn}
+								<th>
+									{#if turn.available}
+										{turn.date.toLocaleDateString('es-AR', { dateStyle: 'short' })}
+									{:else}
+										<s>{turn.date.toLocaleDateString('es-AR', { dateStyle: 'short' })}</s>
+									{/if}
+								</th>
+							{/each}
+						</tr>
+						<tr>
+							{#each available_turns as turn}
+								<td>
+									<button
+										type="submit"
+										name="turn"
+										value={turn.date.toISOString()}
+										disabled={!turn.available}
+									>
+										Agendar
+									</button>
+								</td>
+							{/each}
+						</tr>
+					</table>
+				</div>
+			{/if}
+		</form>
 	</article>
 
 	<article class="reviews">
@@ -68,6 +108,7 @@
 				{/if}
 			{/each}
 		</div>
+
 		<div class="new-review-form">
 			{#if data.userWrittenReviews.length == 0 && data.user?.userId != profesional.id}
 				<h4>Dejá tu reseña</h4>
@@ -107,68 +148,11 @@
 	</article>
 </main>
 
-<form
-	action="?/agendar"
-	method="post"
->
-	<label for="desc">Que trabajo requiere del profesional:</label>
-	<input
-		hidden
-		type="text"
-		name="profesional_id"
-		value={profesional.id}
-	/>
-	<textarea
-		id="desc"
-		name="desc"
-		placeholder="que necesita?"
-		bind:value={desc}
-		on:focus={() => {
-			window.scroll({ top: 600, left: 0, behavior: 'smooth' });
-		}}
-	/>
-	{#if desc.length > 3}
-		<table
-			role="grid"
-			transition:fly={{ y: 200 }}
-		>
-			<tbody>
-				{#each available_turns as turn}
-					<tr>
-						<td class="ctr">
-							{#if turn.available}
-								{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}
-							{:else}
-								<s>{turn.date.toLocaleDateString('es-AR', { dateStyle: 'full' })}</s>
-							{/if}
-						</td>
-						<td>
-							<button
-								type="submit"
-								name="turn"
-								value={turn.date.toISOString()}
-								disabled={!turn.available}
-							>
-								Agendar turno
-							</button>
-						</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-	{:else}
-		<div style="height: 400px;" />
-	{/if}
-</form>
-
 <style lang="scss">
 	.turns {
 		overflow-x: scroll;
 	}
 	th {
-		text-align: center;
-	}
-	.agend {
 		text-align: center;
 	}
 	.reviews {
