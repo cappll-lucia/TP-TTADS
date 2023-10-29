@@ -1,6 +1,6 @@
 import { auth } from '$lib/server/lucia/lucia';
 import { LuciaError } from 'lucia-auth';
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -23,10 +23,10 @@ export const actions: Actions = {
 			redirect(304, '/');
 		} catch (err) {
 			if (err instanceof LuciaError) {
-				return {
+				return fail(401, {
 					email: email,
 					message: err.message
-				};
+				});
 			}
 		}
 	}

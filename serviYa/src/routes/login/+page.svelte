@@ -1,9 +1,10 @@
 <script lang="ts">
-	import type { ActionData, PageData } from './$types';
+	import type { ActionData } from './$types';
 	import { enhance } from '$app/forms';
-	export let data;
 	export let form: ActionData;
+	export const prerender = true;
 	let loading = false;
+	let entering = false;
 </script>
 
 <main class="container">
@@ -13,10 +14,12 @@
 				<h1>Login</h1>
 			</hgroup>
 			<form
+				on:reset|preventDefault
 				method="POST"
 				use:enhance={() => {
 					loading = true;
-					return ({ update }) => {
+					return ({ update, result }) => {
+						entering = result.type === 'success';
 						loading = false;
 						update();
 					};
@@ -49,11 +52,11 @@
 					type="submit"
 					class="contrast"
 					typeof="submit"
-					aria-busy={loading}>Log in</button
+					aria-busy={loading}>{entering ? 'Adentro' : 'Log in'}</button
 				>
 			</form>
 
-			<p>No tienes una cuenta <a href="/register">Register</a></p>
+			<p>No tienes una cuenta?? <a href="/register">Registrate aca</a></p>
 		</div>
 		<div id="login-img" />
 	</article>
