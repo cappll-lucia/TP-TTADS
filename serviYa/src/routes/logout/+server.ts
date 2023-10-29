@@ -9,5 +9,5 @@ export const POST: RequestHandler = async ({ locals }) => {
 	}
 	await auth.invalidateSession(session.sessionId);
 	locals.auth.setSession(null);
-	throw redirect(302, '/');
+	throw redirect(302, '/login');
 };

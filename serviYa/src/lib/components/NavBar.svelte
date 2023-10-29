@@ -7,7 +7,6 @@
 	import { page } from '$app/stores';
 	export let data: PageData;
 	let city = getContext('city') as Writable<City>;
-	const excludedPaths = ['/', '/profesional'];
 </script>
 
 <nav class=" navbar bg-white px-4">
@@ -60,27 +59,21 @@
 						<a href="/login">Log in</a>
 					</li>
 				{:else}
+					{#if data.user.role === 'PROFESIONAL'}
+						<li>
+							<a href="/turnos">Mis turnos</a>
+						</li>
+					{/if}
+					<li>
+						<a href="/editme">Editar datos</a>
+					</li>
 					<form
-						class="mb-0 listbox"
+						class="listbox"
 						method="POST"
 					>
 						<button
-							class="a"
-							type="submit"
-						>
-							<a
-								href="/editme"
-								type="submit"
-								>Editar usuario
-							</a>
-						</button>
-						<button
-							on:click={(e) => {
-								if (!confirm('estas seguro?')) {
-									e.preventDefault();
-								}
-							}}
-							class="a"
+							on:click={(e) => confirm('estas seguro?') || e.preventDefault()}
+							class="button-as-anchor"
 							formaction="/logout"
 							type="submit"
 							>LogOut
@@ -126,7 +119,6 @@
 				.listbox {
 					left: -4.5rem;
 					width: 8rem;
-					height: 5.5rem;
 
 					form {
 						margin: 0;
@@ -157,7 +149,9 @@
 			}
 		}
 	}
-	.a {
+	.button-as-anchor {
+		margin: 0;
+		padding: 0;
 		background: none;
 		border: none;
 		padding: 0;
@@ -169,8 +163,8 @@
 		width: 100%;
 		text-decoration: none;
 	}
-	.a:hover,
-	.a:focus {
+	.button-as-anchor:hover,
+	.button-as-anchor:focus {
 		cursor: pointer;
 		outline: none;
 	}
