@@ -34,10 +34,10 @@ export const actions: Actions = {
 		} catch (error) {
 			if (error instanceof ZodError) {
 				const { fieldErrors: errors } = error.flatten();
-				return {
+				return fail(400, {
 					data: { ...formData },
 					errors
-				};
+				});
 			} else {
 				return {
 					message: 'No se pudo editar el usuario'

@@ -3,6 +3,7 @@
 	import { capitalize } from '$lib/utils';
 	import { slide } from 'svelte/transition';
 	import { fetchWithCancel } from './fetchWithCancel';
+	import { createEventDispatcher } from 'svelte';
 
 	let cities = [] as City[];
 	export let value: City | undefined;
@@ -21,6 +22,15 @@
 	}
 
 	let searchTerm = value?.name ? showCityDescription(value) : '';
+
+	const dispatch = createEventDispatcher();
+	$: {
+		if (value && searchTerm !== showCityDescription(value)) {
+			dispatch('invalid');
+		} else {
+			dispatch('valid');
+		}
+	}
 
 	$: {
 		if (searchTerm === '') {

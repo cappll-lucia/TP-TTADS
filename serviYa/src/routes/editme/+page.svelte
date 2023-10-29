@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
+	import { enhance } from '$app/forms';
 	import InputCustom from '$lib/components/InputCustom.svelte';
-	import type { ActionData } from '../$types';
 	import { ZodError } from 'zod';
 	import { writable, type Writable } from 'svelte/store';
 	import type { PageData } from '../$types';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { editmeSchema } from './editmeSchema';
 	import type { Form } from '$lib/components/types';
 	import AutocompleteCity from '$lib/components/AutocompleteCity.svelte';
@@ -26,6 +25,7 @@
 
 	let city = getContext('city') as Writable<City>;
 	let current_city = { ...$city };
+	let valid_city = true;
 
 	const validate_or_throw = (formData: FormData) => {
 		const obj = {} as any;
@@ -78,7 +78,11 @@
 						name="name"
 						type="text"
 					/>
-					<AutocompleteCity bind:value={current_city} />
+					<AutocompleteCity
+						bind:value={current_city}
+						on:invalid={() => (valid_city = false)}
+						on:valid={() => (valid_city = true)}
+					/>
 					<input
 						name="city_id"
 						value={current_city.id}
@@ -93,6 +97,7 @@
 						type="submit"
 						class="submit-btn"
 						typeof="submit"
+						disabled={!valid_city}
 						aria-busy={loading}>Editar</button
 					>
 				</div>
