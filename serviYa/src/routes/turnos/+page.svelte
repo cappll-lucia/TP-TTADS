@@ -31,11 +31,12 @@
 		<form
 			method="post"
 			use:enhance={() => {
-				return ({ update }) => {
-					update();
-					console.log(pendingAppointments);
-					alert('Turno cancelado');
+				return ({ update, action }) => {
+					console.log(action.search);
+					console.log(action.search === '?/reject');
+					alert(action.search === '?/reject' ? 'Turno rechazado' : 'Turno aceptado');
 					modal.attributes.removeNamedItem('open');
+					update();
 				};
 			}}
 		>
@@ -56,19 +57,19 @@
 				<button
 					class="cancel outline"
 					type="submit"
-					formaction="?/cancelar"
+					formaction="?/reject"
 					on:click={(event) => {
 						if (!confirm('Esta seguro de cancelar?')) {
 							event.preventDefault();
 						}
 					}}
 				>
-					Cancelar
+					Rechazar
 				</button>
 				<button
 					type="submit"
 					class="accept"
-					formaction="?/confirmar"
+					formaction="?/confirm"
 				>
 					Aceptar
 				</button>

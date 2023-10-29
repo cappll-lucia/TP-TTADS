@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	confirmar: async ({ request }) => {
+	confirm: async ({ request }) => {
 		const data = await request.formData();
 		const appointment_id = data.get('appointment_id')?.toString();
 		//todo falta validar cosas (segun bruno)
@@ -31,7 +31,7 @@ export const actions: Actions = {
 		});
 		return { status: 200 };
 	},
-	cancelar: async ({ request }) => {
+	reject: async ({ request }) => {
 		const data = await request.formData();
 		const appointment_id = data.get('appointment_id')?.toString();
 		//todo falta validar cosas (segun bruno)
