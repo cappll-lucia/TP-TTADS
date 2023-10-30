@@ -5,7 +5,7 @@
 	import ReviewCard from '$lib/components/ReviewCard.svelte';
 	import ReviewForm from '$lib/components/ReviewForm.svelte';
 	import { ZodError } from 'zod';
-	import { fly } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 	import Stars from './Stars.svelte';
 
 	export let data: PageData;
@@ -22,11 +22,14 @@
 		}
 	}
 
+	let buttonPressed: HTMLButtonElement | null;
 	let desc = '';
 </script>
 
 {#if form?.success}
-	<mark class="ctr">{'Turno agendado con éxito para el dia '}{form.date.toLocaleDateString()}</mark>
+	<mark class="ctr"
+		>Turno pedido con éxito para el dia {form.date.toLocaleDateString()}, espere confirmacion</mark
+	>
 {/if}
 <main class="container">
 	<article>
@@ -40,6 +43,15 @@
 		<form
 			action="?/agendar"
 			method="post"
+			use:enhance={() => {
+				buttonPressed?.setAttribute('aria-busy', 'true');
+				return ({ update }) => {
+					buttonPressed?.removeAttribute('aria-busy');
+					desc = '';
+					setTimeout(() => window.scroll({ top: 0, behavior: 'smooth' }), 400);
+					update();
+				};
+			}}
 		>
 			<label for="desc">Que trabajo requiere del profesional:</label>
 			<input
@@ -85,6 +97,7 @@
 										name="turn"
 										value={turn.date.toISOString()}
 										disabled={!turn.available}
+										on:click={(e) => (buttonPressed = e.target)}
 									>
 										Agendar
 									</button>
