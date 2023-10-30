@@ -5,8 +5,9 @@
 	import ReviewCard from '$lib/components/ReviewCard.svelte';
 	import ReviewForm from '$lib/components/ReviewForm.svelte';
 	import { ZodError } from 'zod';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import Stars from './Stars.svelte';
+	import { reviewSchema } from './reviewSchema';
 
 	export let data: PageData;
 	const { profesional, available_turns } = data;
@@ -24,6 +25,7 @@
 
 	let buttonPressed: HTMLButtonElement | null;
 	let desc = '';
+	let sendingReview = false;
 </script>
 
 {#if form?.success}
@@ -126,16 +128,23 @@
 			{#if data.userWrittenReviews.length == 0 && data.user?.userId != profesional.id}
 				<h4>Dejá tu reseña</h4>
 				<form
+					on:reset|preventDefault
 					action="?/addReview"
 					method="POST"
-					use:enhance={() => {
-						try {
-							return ({ update }) => {
-								update();
-							};
-						} catch (error) {
-							manageError(error);
+					use:enhance={({ formData }) => {
+						const zodRes = reviewSchema.safeParse(Object.fromEntries(formData));
+						if (!zodRes.success) {
+							manageError(zodRes.error);
+							return;
 						}
+						if (form) {
+							form.errors = {};
+						}
+						sendingReview = true;
+						return ({ update }) => {
+							sendingReview = false;
+							update();
+						};
 					}}
 				>
 					<Stars />
@@ -152,7 +161,10 @@
 							<span class="error">{form.errors.comment}</span>
 						{/if}
 					</div>
-					<button type="submit">Enviar reseña</button>
+					<button
+						type="submit"
+						aria-busy={sendingReview}>Enviar reseña</button
+					>
 				</form>
 			{:else if data.user?.userId != profesional.id}
 				<p class="existing-review-message">Ya enviaste tu reseña para éste profesional</p>

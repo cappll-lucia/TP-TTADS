@@ -1,20 +1,12 @@
 import { prisma } from '$lib/server/lucia/prisma';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
-import { ZodError } from 'zod';
 import { reviewSchema } from './reviewSchema';
 import { turnSolicitationSchema } from './turnSolicitationSchema';
 
 function addDays(dateTime: Date, count_days = 0) {
 	return new Date(new Date(dateTime).setDate(dateTime.getDate() + count_days));
 }
-
-const dateOptions = {
-	weekday: 'long',
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric'
-};
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	// validation
@@ -118,7 +110,7 @@ export const actions: Actions = {
 			status: 200
 		};
 	},
-	editReview: async ({ request, locals, params }) => {
+	editReview: async ({ request, locals }) => {
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
 		const reviewId = formData.id;
 		delete formData.id;
