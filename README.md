@@ -1,8 +1,8 @@
-# ServiYa - Los servicios que necesitas, a tu alcance!
+# ServiYa - Los servicios que necesitás, a tu alcance!
 
 ## Introduccion
-En este repositorio se encuentra todo el contenido relacionado al Trabajo Practico de nuestro grupo 
-para la materia "Técnicas y Tecnologías de Desarrollo de Software" de la Universidad Tecnológica Nacional - Rosario.
+En este repositorio se encuentra todo el contenido relacionado al trabajo Ppráctico de nuestro grupo 
+para la materia "Técnicas y Tecnologías Avanzadas de Desarrollo de Software" de la UTN FRRo (Universidad Tecnológica Nacional Facultad Regional de Rosario).
 
 ### Integrantes del grupo
 * 47799 - Cappellini, Lucía
@@ -12,8 +12,8 @@ para la materia "Técnicas y Tecnologías de Desarrollo de Software" de la Unive
 
 ## Tema
 ### Descripción
-El producto a desarrollarse será una plataforma de contratacion de servicios a domicilio que permitirá poner en contacto a 
-distintos profesionales en distintos rubros con potenciales clientes que requieran de sus servicios.
+El producto a desarrollarse será una plataforma de contratación de servicios a domicilio que permitirá poner en contacto a 
+distintos profesionales de distintos rubros con potenciales clientes que requieran de sus servicios.
 
 ### Modelo de datos
 ```mermaid
@@ -102,10 +102,10 @@ classDiagram
             <ol>
                 <li>
                     Listado de Profesionales (filtrado por servicio y ciudad): muestra nombre, servicio,             
-                    puntaje y boton que muestra perfil del profesional con Reviews   
+                    puntaje y un botón que muestra perfil del profesional con Reviews
                 </li>
                 <li>
-                    Listado de Turnos de un Profesional: muestra fecha, lugar, estado y descripcion; boton abre detalles para aceptar o rechazar turno 
+                    Listado de Turnos de un Profesional: muestra fecha, lugar, estado y descripción y un botón "Detalles" para aceptar o rechazar un turno 
                 </li>
             </ol>
         </td>
@@ -135,7 +135,7 @@ classDiagram
                 <li>CRUD Usuario Cliente</li>
                 <li>CRUD Servicio</li>
                 <li>CRUD Usuario Profesional</li>
-                <li>CRUD Especializacion</li>
+                <li>CRUD Especialización</li>
                 <li>CRUD Turno</li>
                 <li>-</li>
                 <li>-</li>
@@ -147,8 +147,8 @@ classDiagram
         <td>
             <ol>
                 <li>Agendar turno con Profesional</li>
-                <li>Realizar Review de Profesional</li>
-                <li>Cancelar Truno con Profesional</li><li>-</li>
+                <li>Realizar review de Profesional</li>
+                <li>Cancelar turno con Profesional</li><li>-</li>
             </ol>
         </td>
     </tr>
