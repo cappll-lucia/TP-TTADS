@@ -1,8 +1,8 @@
 # ServiYa - Los servicios que necesitás, a tu alcance!
 
 ## Introduccion
-En este repositorio se encuentra todo el contenido relacionado al trabajo Ppráctico de nuestro grupo 
-para la materia "Técnicas y Tecnologías Avanzadas de Desarrollo de Software" de la UTN FRRo (Universidad Tecnológica Nacional Facultad Regional de Rosario).
+En este repositorio se encuentra todo el contenido relacionado al trabajo práctico de nuestro grupo 
+para la materia "Técnicas y Tecnologías Avanzadas de Desarrollo de Software" de la UTN FRRo (Universidad Tecnológica Nacional Facultad Regional Rosario).
 
 ### Integrantes del grupo
 * 47799 - Cappellini, Lucía
