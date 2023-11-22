@@ -10,13 +10,16 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const appointments = await prisma.appointment.findMany({
 		where: { profesional_id: user.userId }
 	});
-	const pendingAppointments = appointments.filter(
-		(appointment) => appointment.state === 'UNCONFIRMED'
-	);
-	const confirmedAppointments = appointments.filter((appointment) => appointment.state === 'TO_DO');
-	const otherAppointments = appointments.filter(
-		(appointment) => appointment.state === 'DONE' || appointment.state === 'REJECTED'
-	);
+
+	const pendingAppointments = appointments
+		.filter((appointment) => appointment.state === 'UNCONFIRMED' && appointment.date >= new Date());
+
+	const confirmedAppointments = appointments
+		.filter((appointment) => appointment.state === 'TO_DO' && appointment.date >= new Date());
+
+	const otherAppointments = appointments
+		.filter((appointment) => appointment.state === 'DONE' || appointment.state === 'REJECTED');
+
 	return { pendingAppointments, confirmedAppointments, otherAppointments };
 };
 
