@@ -11,14 +11,17 @@ export const load: PageServerLoad = async ({ locals }) => {
 		where: { profesional_id: user.userId }
 	});
 
-	const pendingAppointments = appointments
-		.filter((appointment) => appointment.state === 'UNCONFIRMED' && appointment.date >= new Date());
+	const pendingAppointments = appointments.filter(
+		(appointment) => appointment.state === 'UNCONFIRMED' && appointment.date >= new Date()
+	);
 
-	const confirmedAppointments = appointments
-		.filter((appointment) => appointment.state === 'TO_DO' && appointment.date >= new Date());
+	const confirmedAppointments = appointments.filter(
+		(appointment) => appointment.state === 'TO_DO' && appointment.date >= new Date()
+	);
 
-	const otherAppointments = appointments
-		.filter((appointment) => appointment.state === 'DONE' || appointment.state === 'REJECTED');
+	const otherAppointments = appointments.filter(
+		(appointment) => appointment.state === 'DONE' || appointment.state === 'REJECTED'
+	);
 
 	return { pendingAppointments, confirmedAppointments, otherAppointments };
 };
@@ -41,8 +44,9 @@ export const actions: Actions = {
 		if (!appointment_id) {
 			return Error('No se envio el id del turno');
 		}
-		await prisma.appointment.delete({
-			where: { id: appointment_id }
+		await prisma.appointment.update({
+			where: { id: appointment_id },
+			data: { state: 'REJECTED' }
 		});
 
 		return { status: 200, success: true };
