@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import { invalidate, invalidateAll } from '$app/navigation';
 	import type { PageData } from './$types';
 	import { capitalize } from '$lib/utils';
 	export let data: PageData;
@@ -11,6 +10,9 @@
 
 	let modal: HTMLElement;
 	let appointment_data = { id: '', description: '' };
+	let appointmentTableButtons: HTMLUListElement;
+	let appointmentTableData: any = confirmedAppointments || [];
+	let appointmentTableOption = 'Accepted';
 
 	const closeModal = () => {
 		modal.attributes.removeNamedItem('open');
@@ -42,6 +44,20 @@
 		const hours = originalDate.getHours().toString().padStart(2, '0');
 		const minutes = originalDate.getMinutes().toString().padStart(2, '0');
 		return `${hours}:${minutes}`;
+	};
+
+	const changeAppointmentTableType = (event: Event) => {
+		appointmentTableData =
+			(event.target as HTMLButtonElement).value === 'Pending'
+				? pendingAppointments
+				: confirmedAppointments;
+		appointmentTableOption = (event.target as HTMLButtonElement).value;
+		const target = event.target as HTMLButtonElement;
+		const buttons = appointmentTableButtons.querySelectorAll('button');
+		buttons.forEach((button) => {
+			button.classList.add('outline');
+		});
+		target.classList.remove('outline');
 	};
 </script>
 
@@ -88,110 +104,79 @@
 				>
 					Rechazar
 				</button>
-				<button
-					type="submit"
-					class="accept"
-					formaction="?/confirm"
-				>
-					Aceptar
-				</button>
+				{#if appointmentTableOption === 'Pending'}
+					<button
+						type="submit"
+						class="accept"
+						formaction="?/confirm"
+					>
+						Aceptar
+					</button>
+				{/if}
 			</footer>
 		</form>
 	</article>
 </dialog>
 
-<main class="container">
-	<h1>Turnos</h1>
-	<div class="grid">
-		<article class="appointment-lists">
-			<div class="not-confirmed">
-				<h3>Por confirmar</h3>
-				{#each pendingAppointments as app (app.id)}
-					<div>
-						<div class="content">
-							<h4>{formatDate(app.date)}</h4>
-							<h5>{formatDateTime(app.date)}</h5>
-							<!-- <p>{app.description}</p> -->
-							<button on:click={() => setUpModal(app)}
-								><span>Detalles</span> <i class="mi mi-arrow-right" /></button
-							>
-						</div>
-					</div>
-				{/each}
-			</div>
-		</article>
-		<article class="appointment-lists">
-			<div class="confirmed">
-				<h3>Por realizar</h3>
-				{#each confirmedAppointments as app (app.id)}
-					<div>
-						<div class="content">
-							<h4>{formatDate(app.date)}</h4>
-							<h5>{formatDateTime(app.date)}</h5>
-							<p>{app.description}</p>
-						</div>
-					</div>
-				{/each}
-			</div>
+<main class="container-fluid">
+	<!-- TODO hay que chequear que el valor de length que se muestra se actualice bien cuando se acepte un turno-->
+	<nav>
+		<ul />
+		<ul bind:this={appointmentTableButtons}>
+			<li>
+				<h3><strong>Turnos</strong></h3>
+			</li>
+			<li>
+				<button
+					on:click={changeAppointmentTableType}
+					value="Accepted"
+				>
+					{#if appointmentTableOption != 'Accepted' && confirmedAppointments.length > 0}
+						<span>[{confirmedAppointments.length}] </span>
+					{/if}
+					Aceptados</button
+				>
+			</li>
+			<li>
+				<button
+					on:click={changeAppointmentTableType}
+					class="outline"
+					value="Pending"
+				>
+					{#if appointmentTableOption != 'Pending' && pendingAppointments.length > 0}
+						<span>[{pendingAppointments.length}]</span>
+					{/if}
+					Por Confirmar</button
+				>
+			</li>
+		</ul>
+		<ul />
+	</nav>
+	<div class="container-fluid">
+		<article>
+			<table>
+				<thead><th>Fecha</th><th>Hora</th><th>Direccion</th><th /></thead>
+				<tbody>
+					{#each appointmentTableData as app}
+						<tr>
+							<td>{formatDate(app.date)}</td>
+							<td>{formatDateTime(app.date)}</td>
+							<td>{'Placeholder Location 123'}</td>
+
+							<td>
+								<button on:click={() => setUpModal(app)}
+									><span>Detalles</span> <i class="mi mi-arrow-right" /></button
+								>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		</article>
 	</div>
 </main>
 
 <style lang="scss">
-	.appointment-lists {
-		display: flex;
-		flex-direction: row;
-		width: 100%;
-		.confirmed,
-		.not-confirmed {
-			width: 50%;
-			padding: 1rem;
-			div {
-				padding-left: 1rem;
-				margin-top: 1rem;
-				min-height: 10rem;
-				border-radius: 10px;
-				.content {
-					background: var(--card-background-color);
-					display: flex;
-					flex-direction: column;
-					padding: 1rem 0 1rem 1rem;
-					h4 {
-						width: 100%;
-						margin-bottom: 5px;
-					}
-					h5 {
-						width: 100%;
-						color: gray;
-						margin-bottom: 15px;
-					}
-					p {
-						width: 100%;
-						font-style: italic;
-					}
-					button {
-						width: 7rem;
-						height: 2rem;
-						padding: 5px;
-						border: none;
-						display: flex;
-						align-items: center;
-						justify-content: space-evenly;
-						background-color: transparent;
-						border-radius: unset;
-						color: #f4511e;
-						border-bottom: solid #f4511e 2px;
-						margin-bottom: 0;
-						margin-top: 1rem;
-						i {
-							display: flex;
-							align-items: center;
-						}
-					}
-				}
-			}
-		}
-	}
 	.not-confirmed {
 		div {
 			background-color: #f4511e;
