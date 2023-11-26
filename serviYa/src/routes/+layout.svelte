@@ -5,6 +5,7 @@
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	export let data: PageData;
+	import '../app.pcss';
 
 	const city = writable(data.city);
 	$: {

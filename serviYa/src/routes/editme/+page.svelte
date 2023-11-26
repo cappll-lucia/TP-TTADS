@@ -26,7 +26,7 @@
 	let city = getContext('city') as Writable<City>;
 	let current_city = { ...$city };
 	let valid_city = true;
-
+	let img_url = 'https://businessreflex.se/wp-content/uploads/2019/03/placeholder-person.png';
 	const validate_or_throw = (formData: FormData) => {
 		const obj = {} as any;
 		formData.forEach((v: any, k: any) => (obj[k] = v));
@@ -44,69 +44,81 @@
 	}
 </script>
 
-<main class="container">
+<main class="container mt-10">
 	<article class="grid">
-		<div class="form-panel">
-			<hgroup>
-				<h1>Editar Usuario</h1>
-			</hgroup>
-			<form
-				method="POST"
-				class="register-form"
-				use:enhance={({ formData }) => {
-					try {
-						validate_or_throw(formData);
-						loading = true;
-						return async ({ update }) => {
-							$city = current_city;
-							loading = false;
-							await goto('/');
-							update();
-						};
-					} catch (error) {
-						manage_error(error);
-					}
-				}}
-			>
-				<div class="inputs">
-					<span class="input-tag">Email</span>
-					<label for="email">{user.email}</label>
-					<span class="input-tag">Nombre</span>
-					<InputCustom
-						{formStore}
-						default_value={user.name}
-						name="name"
-						type="text"
-					/>
-					<AutocompleteCity
-						bind:value={current_city}
-						on:invalid={() => (valid_city = false)}
-						on:valid={() => (valid_city = true)}
-					/>
-					<input
-						name="city_id"
-						value={current_city.id}
-						hidden
-					/>
-					{#if form?.errors?.city_id}
-						<span class="error">{form?.errors?.city_id}</span>
-					{/if}
-				</div>
-				<div class="actions">
-					<button
-						type="submit"
-						class="submit-btn"
-						typeof="submit"
-						disabled={!valid_city}
-						aria-busy={loading}>Editar</button
-					>
-				</div>
-			</form>
+		<div class="form-panel flex flex-row">
+			<div class="w-1/2">
+				<hgroup>
+					<h1>Editar Usuario</h1>
+				</hgroup>
+				<form
+					method="POST"
+					class="register-form"
+					use:enhance={({ formData }) => {
+						try {
+							validate_or_throw(formData);
+							loading = true;
+							return async ({ update }) => {
+								$city = current_city;
+								loading = false;
+								await goto('/');
+								update();
+							};
+						} catch (error) {
+							manage_error(error);
+						}
+					}}
+				>
+					<div class="inputs">
+						<span class="input-tag">Email</span>
+						<label for="email">{user.email}</label>
+						<span class="input-tag">Nombre</span>
+						<InputCustom
+							{formStore}
+							default_value={user.name}
+							name="name"
+							type="text"
+						/>
+						<AutocompleteCity
+							bind:value={current_city}
+							on:invalid={() => (valid_city = false)}
+							on:valid={() => (valid_city = true)}
+						/>
+						<input
+							name="city_id"
+							value={current_city.id}
+							hidden
+						/>
+						{#if form?.errors?.city_id}
+							<span class="error">{form?.errors?.city_id}</span>
+						{/if}
+					</div>
+					<div class="actions">
+						<button
+							type="submit"
+							class="submit-btn"
+							typeof="submit"
+							disabled={!valid_city}
+							aria-busy={loading}>Editar</button
+						>
+					</div>
+				</form>
+			</div>
+			<div class="w-1/2">
+				<div
+					style="--img-url: url({img_url})"
+					id="img"
+					class="h-full bg-center bg-no-repeat"
+				/>
+			</div>
 		</div>
 	</article>
 </main>
 
-<style>
+<style lang="postcss">
+	#img {
+		background-image: var(--img-url);
+	}
 	.error {
 		font-size: medium;
 		color: red;
