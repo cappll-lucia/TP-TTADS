@@ -14,6 +14,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
+		"@types/nodemailer": "^6.4.14",
 		"eslint-plugin-svelte": "^2.32.2",
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
@@ -31,7 +32,9 @@
 		"@lucia-auth/adapter-prisma": "^2.0.0",
 		"@picocss/pico": "^1.5.10",
 		"@prisma/client": "^4.16.2",
+		"handlebars": "^4.7.8",
 		"lucia-auth": "^1.8.0",
+		"nodemailer": "^6.9.7",
 		"svelte-icons-pack": "^2.1.0",
 		"svelte-loading-spinners": "^0.3.4",
 		"zod": "^3.21.4"

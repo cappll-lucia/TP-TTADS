@@ -3,6 +3,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 import { reviewSchema } from './reviewSchema';
 import { turnSolicitationSchema } from './turnSolicitationSchema';
+import { notifyTurnSolicitation } from '$lib/server/email/emailService';
 
 function addDays(dateTime: Date, count_days = 0) {
 	return new Date(new Date(dateTime).setDate(dateTime.getDate() + count_days));
@@ -68,7 +69,7 @@ export const actions: Actions = {
 			return fail(400, { message: 'Invalid request' });
 		}
 
-		await prisma.appointment.create({
+		const turn = await prisma.appointment.create({
 			data: {
 				client_id: user.userId,
 				date: new Date(zodRes.data.turn),
@@ -77,6 +78,12 @@ export const actions: Actions = {
 				state: 'UNCONFIRMED'
 			}
 		});
+
+		prisma.authUser.findUnique({ where: { id: turn.profesional_id } })
+			.then(prof => {
+				if (!prof) return
+				notifyTurnSolicitation({ to: prof.email, date: turn.date, clientName: user.name })
+			})
 
 		return {
 			success: true,
