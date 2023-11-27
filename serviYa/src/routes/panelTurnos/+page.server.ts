@@ -16,14 +16,11 @@ export const load: PageServerLoad = async ({ locals }) => {
 	);
 
 	const confirmedAppointments = appointments.filter(
-		(appointment) => appointment.state === 'TO_DO' && appointment.date >= new Date()
+		(appointment) =>
+			appointment.state === 'TO_DO' && appointment.date >= new Date(new Date().setHours(0, 0, 0))
 	);
 
-	const otherAppointments = appointments.filter(
-		(appointment) => appointment.state === 'DONE' || appointment.state === 'REJECTED'
-	);
-
-	return { pendingAppointments, confirmedAppointments, otherAppointments };
+	return { pendingAppointments, confirmedAppointments };
 };
 
 export const actions: Actions = {

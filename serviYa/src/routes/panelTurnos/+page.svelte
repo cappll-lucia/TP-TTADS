@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
+	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import { capitalize } from '$lib/utils';
 	export let data: PageData;
 
 	$: pendingAppointments = data.pendingAppointments;
-	$: otherAppointments = data.otherAppointments;
+	// $: otherAppointments = data.otherAppointments;
 	$: confirmedAppointments = data.confirmedAppointments;
+	$: appointmentTableData = confirmedAppointments;
 
 	let modal: HTMLElement;
 	let appointment_data = { id: '', description: '' };
 	let appointmentTableButtons: HTMLUListElement;
-	let appointmentTableData: any = confirmedAppointments || [];
 	let appointmentTableOption = 'Accepted';
 
 	const closeModal = () => {
@@ -32,8 +32,7 @@
 		const options: Intl.DateTimeFormatOptions = {
 			weekday: 'long',
 			day: '2-digit',
-			month: 'long',
-			year: 'numeric'
+			month: 'long'
 		};
 		const formatedDate = originalDate.toLocaleDateString('es-ES', options);
 		return capitalize(formatedDate);
@@ -118,13 +117,13 @@
 	</article>
 </dialog>
 
-<main class="container-fluid">
+<main class="container">
 	<!-- TODO hay que chequear que el valor de length que se muestra se actualice bien cuando se acepte un turno-->
 	<nav>
 		<ul />
 		<ul bind:this={appointmentTableButtons}>
 			<li>
-				<h3><strong>Turnos</strong></h3>
+				<span class="optionMenuTitle"><strong>Turnos:</strong></span>
 			</li>
 			<li>
 				<button
@@ -154,15 +153,15 @@
 	</nav>
 	<div class="container-fluid">
 		<article>
-			<table>
-				<thead><th>Fecha</th><th>Hora</th><th>Direccion</th><th /></thead>
+			<table role="grid">
+				<thead><th> Servicio </th><th>Fecha</th><th>Hora</th><th>Direccion</th><th /></thead>
 				<tbody>
 					{#each appointmentTableData as app}
 						<tr>
+							<td>"Servicio goes here?"</td>
 							<td>{formatDate(app.date)}</td>
 							<td>{formatDateTime(app.date)}</td>
 							<td>{'Placeholder Location 123'}</td>
-
 							<td>
 								<button on:click={() => setUpModal(app)}
 									><span>Detalles</span> <i class="mi mi-arrow-right" /></button
@@ -177,24 +176,8 @@
 </main>
 
 <style lang="scss">
-	.not-confirmed {
-		div {
-			background-color: #f4511e;
-			.content {
-				border-radius: 0px 10px 10px 0px;
-				border: solid #f4511e 2px;
-			}
-		}
-	}
-	.confirmed {
-		div {
-			background-color: var(--primary);
-			.content {
-				border-radius: 0px 10px 10px 0px;
-
-				border: solid var(--primary) 2px;
-			}
-		}
+	.optionMenuTitle {
+		font-size: 1.5rem;
 	}
 	.cancel {
 		border-color: red;
@@ -236,24 +219,6 @@
 			}
 			form {
 				margin: 0;
-			}
-		}
-	}
-	@media (max-width: 768px) {
-		.appointment-lists {
-			flex-direction: column;
-			.confirmed,
-			.not-confirmed {
-				width: 100%;
-			}
-		}
-	}
-	@media (max-width: 1199px) and (min-width: 769px) {
-		.appointment-lists {
-			.confirmed {
-				h3 {
-					height: 4.5rem;
-				}
 			}
 		}
 	}

@@ -11,7 +11,6 @@ export const load: PageServerLoad = async ({ params, url }) => {
 	return { professionalsList, service };
 };
 
-
 async function getProfessionals(cityId: string, service: string) {
 	const resServ = await prisma.service.findFirst({
 		where: {
@@ -34,7 +33,7 @@ async function getProfessionals(cityId: string, service: string) {
 			id: prof.id,
 			name: prof.name,
 			profession: resServ.name,
-			rating: '5.5'
+			rating: prof.stars_average
 		};
 	});
 }

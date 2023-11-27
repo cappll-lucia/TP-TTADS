@@ -27,6 +27,7 @@ model AuthUser {
 
   reviews         Review[] @relation("prof_reviews")
   written_reviews Review[] @relation("written_reviews")
+  stars_average   Float?
 
   @@map("auth_user")
 }
@@ -79,7 +80,6 @@ model Province {
   @@map("province")
 }
 
-
 model Review {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   prof_id    String
@@ -93,6 +93,7 @@ model Review {
 
   @@map("review")
 }
+
 model Appointment {
   id             String           @id @default(auto()) @map("_id") @db.ObjectId
   profesional_id String

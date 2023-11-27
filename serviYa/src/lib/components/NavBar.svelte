@@ -61,9 +61,10 @@
 				{:else}
 					{#if data.user.role === 'PROFESIONAL'}
 						<li>
-							<a href="/turnos">Mis turnos</a>
+							<a href="/panelTurnos">Panel de turnos</a>
 						</li>
 					{/if}
+					<li><a href="/misTurnos">Mis Turnos</a></li>
 					<li>
 						<a href="/editme">Editar datos</a>
 					</li>
