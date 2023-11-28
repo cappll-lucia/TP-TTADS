@@ -2,10 +2,10 @@
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import { capitalize } from '$lib/utils';
+	import { invalidateAll } from '$app/navigation';
 	export let data: PageData;
 
 	$: pendingAppointments = data.pendingAppointments;
-	// $: otherAppointments = data.otherAppointments;
 	$: confirmedAppointments = data.confirmedAppointments;
 	$: appointmentTableData = confirmedAppointments;
 
@@ -52,11 +52,17 @@
 				: confirmedAppointments;
 		appointmentTableOption = (event.target as HTMLButtonElement).value;
 		const target = event.target as HTMLButtonElement;
-		const buttons = appointmentTableButtons.querySelectorAll('button');
-		buttons.forEach((button) => {
+		appointmentTableButtons.querySelectorAll('button').forEach((button) => {
 			button.classList.add('outline');
 		});
 		target.classList.remove('outline');
+	};
+	const resetOptionButtons = () => {
+		appointmentTableButtons.querySelectorAll('button').forEach((button) => {
+			button.classList.add('outline');
+		});
+		document.getElementById('accepted_button')?.classList.remove('outline');
+		appointmentTableOption = 'Accepted';
 	};
 </script>
 
@@ -78,6 +84,7 @@
 					alert(action.search === '?/reject' ? 'Turno rechazado' : 'Turno aceptado');
 					modal.attributes.removeNamedItem('open');
 					update();
+					resetOptionButtons();
 				};
 			}}
 		>
@@ -133,6 +140,7 @@
 				<button
 					on:click={changeAppointmentTableType}
 					value="Accepted"
+					id="accepted_button"
 				>
 					{#if appointmentTableOption != 'Accepted' && confirmedAppointments.length > 0}
 						<span>[{confirmedAppointments.length}] </span>
@@ -145,6 +153,7 @@
 					on:click={changeAppointmentTableType}
 					class="outline"
 					value="Pending"
+					id="pending_button"
 				>
 					{#if appointmentTableOption != 'Pending' && pendingAppointments.length > 0}
 						<span>[{pendingAppointments.length}]</span>
@@ -162,7 +171,7 @@
 				<tbody>
 					{#each appointmentTableData as app}
 						<tr>
-							<td>"Servicio goes here?"</td>
+							<td>{'Service placeholder'}</td>
 							<td>{formatDate(app.date)}</td>
 							<td>{formatDateTime(app.date)}</td>
 							<td>{'Placeholder Location 123'}</td>

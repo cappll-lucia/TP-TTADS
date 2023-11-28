@@ -132,7 +132,7 @@
 			{/each}
 		</div>
 		<div class="confirmed">
-			<h3>Aceptado</h3>
+			<h3>Aceptados</h3>
 			{#each confirmedAppointments as app (app.id)}
 				<div>
 					<div class="content">

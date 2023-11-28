@@ -74,7 +74,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	agendar: async ({ request, locals }) => {
+	agendar: async ({ request, locals, params }) => {
 		const { user } = await locals.auth.validateUser();
 		if (!user) {
 			return fail(401, { message: 'Unauntenticated' });
@@ -91,7 +91,7 @@ export const actions: Actions = {
 				client_id: user.userId,
 				date: new Date(zodRes.data.turn),
 				description: zodRes.data.desc,
-				profesional_id: zodRes.data.profesional_id,
+				profesional_id: params.id,
 				state: 'UNCONFIRMED'
 			}
 		});
