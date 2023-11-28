@@ -4,6 +4,8 @@
 	export let form: ActionData;
 	let loading = false;
 	let entering = false;
+
+	$: showPswValue = false;
 </script>
 
 <main class="container">
@@ -36,14 +38,20 @@
 				{#if form?.message === 'AUTH_INVALID_PASSWORD'}
 					<span class="error">Clave incorrecta</span>
 				{/if}
-				<input
-					type="password"
-					name="password"
-					placeholder="Password"
-					aria-label="Password"
-					autocomplete="current-password"
-					required
-				/>
+				<div class="input-row">
+					<input
+						type={showPswValue ? 'text' : 'password'}
+						name="password"
+						placeholder="Password"
+						aria-label="Password"
+						autocomplete="current-password"
+						required
+					/>
+					<i
+						class={`pointer fa-regular ${showPswValue ? 'fa-eye-slash' : 'fa-eye'}`}
+						on:click={() => (showPswValue = !showPswValue)}
+					/>
+				</div>
 
 				<button
 					type="submit"
@@ -64,7 +72,7 @@
 		height: calc(100vh - 80px);
 		.grid {
 			margin-top: 20px;
-			h1{
+			h1 {
 				margin-bottom: 20px;
 			}
 		}
@@ -77,5 +85,15 @@
 		background-image: url('../../ai.profClient.png');
 		background-position: center;
 		background-size: contain;
+	}
+	.input-row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		i {
+			width: 30px;
+			margin-left: 1rem;
+		}
 	}
 </style>

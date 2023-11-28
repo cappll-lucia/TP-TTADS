@@ -34,6 +34,11 @@
 			form = { errors: fieldErrors } as any;
 		}
 	};
+
+	$: showInputValue = {
+		newPsw: false,
+		confirmPsw: false
+	};
 </script>
 
 <main class="container">
@@ -63,20 +68,34 @@
 					}}
 				>
 					<div class="inputs">
-						<InputCustom
-							{formStore}
-							default_value={psw.newPsw}
-							name="password"
-							type="text"
-							placeholder="Nueva contraseña"
-						/>
-						<InputCustom
-							{formStore}
-							default_value={psw.newPsw}
-							name="confirmPassword"
-							type="text"
-							placeholder="Confirmar contraseña"
-						/>
+						<div class="input-row">
+							<InputCustom
+								{formStore}
+								name="password"
+								default_value={psw.newPsw}
+								placeholder="Nueva contraseña"
+								type={showInputValue.newPsw ? 'text' : 'password'}
+							/>
+							<i
+								class={`pointer fa-regular ${showInputValue.newPsw ? 'fa-eye-slash' : 'fa-eye'}`}
+								on:click={() => (showInputValue.newPsw = !showInputValue.newPsw)}
+							/>
+						</div>
+						<div class="input-row">
+							<InputCustom
+								{formStore}
+								default_value={psw.newPsw}
+								name="confirmPassword"
+								type={showInputValue.confirmPsw ? 'text' : 'password'}
+								placeholder="Confirmar contraseña"
+							/>
+							<i
+								class={`pointer fa-regular ${
+									showInputValue.confirmPsw ? 'fa-eye-slash' : 'fa-eye'
+								}`}
+								on:click={() => (showInputValue.confirmPsw = !showInputValue.confirmPsw)}
+							/>
+						</div>
 					</div>
 					<div class="actions">
 						<button
@@ -122,8 +141,8 @@
 				</hgroup>
 			</div>
 		</article>
-	{:else}
-		<article class="grid">
+	{:else if form?.message === 'RESET_PASSWORD_FAILED'}
+		<article class="grid grid-failure">
 			<div class="notification">
 				<hgroup>
 					<h3>Ocurrió un error al Reestablecer su contraseña</h3>
@@ -168,9 +187,24 @@
 			}
 		}
 	}
-	.grid-success {
+
+	.input-row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		i {
+			width: 30px;
+			margin-left: 1rem;
+		}
+	}
+	.grid-success,
+	.grid-failure {
 		width: 80%;
 		margin-left: 10%;
+	}
+	.grid-failure .notification {
+		height: 8rem;
 	}
 	#login-img {
 		background-image: url('../../ai.profClient.png');
@@ -178,27 +212,84 @@
 		background-size: contain;
 	}
 	.notification {
-		height: 15rem;
+		height: 13rem;
 		hgroup {
 			h3 {
 				margin-bottom: 1.5rem;
 			}
 			p {
-				font-size: x-large;
+				font-size: large;
 			}
 		}
 	}
-	.notification-success {
-		height: 10rem;
+	.grid-success .notification,
+	.grid-failure .notification {
+		height: 12rem;
+		width: 100%;
+	}
+
+	@media (max-width: 1024px) {
+		.container {
+			width: 85%;
+		}
+		.notification {
+			height: 10rem;
+		}
 	}
 
 	@media (max-width: 768px) {
 		.container {
 			width: 100%;
 		}
-		.grid-success {
+		.grid-success,
+		.grid-failure,
+		.grid {
 			width: 100%;
 			margin-left: 0;
+		}
+		.grid-success .notification,
+		.grid-failure .notification {
+			height: 10rem;
+		}
+	}
+	@media (max-width: 600px) {
+		.notification {
+			height: 11rem;
+			hgroup {
+				h3 {
+					font-size: large;
+				}
+				p {
+					font-size: medium;
+				}
+			}
+		}
+		.container,
+		.container-fluid {
+			padding-right: 10px;
+			padding-left: 10px;
+		}
+		.grid-success .notification,
+		.grid-failure .notification {
+			height: 8rem;
+		}
+	}
+	@media (max-width: 450px) {
+		.notification {
+			height: 12rem;
+			hgroup {
+				h3 {
+					font-size: medium;
+				}
+			}
+		}
+		.notification-success {
+			height: 6rem;
+		}
+		.container,
+		.container-fluid {
+			padding-right: 10px;
+			padding-left: 10px;
 		}
 	}
 </style>

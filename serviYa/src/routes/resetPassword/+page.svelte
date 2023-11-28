@@ -60,6 +60,7 @@
 						}
 					}}
 				>
+
 					<InputCustom
 						{formStore}
 						name="email"
@@ -120,9 +121,29 @@
 		background-size: contain;
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 1000px) {
+		.container {
+			width: 60%;
+		}
+	}
+	@media (max-width: 775px) {
+		.container {
+			width: 65%;
+		}
+	}
+	@media (max-width: 660px) {
 		.container {
 			width: 100%;
+		}
+	}
+	@media (max-width: 435px) {
+		.grid div hgroup {
+			h1{
+			font-size: x-large;
+		}
+		p{
+			font-size: small;
+		}
 		}
 	}
 </style>
