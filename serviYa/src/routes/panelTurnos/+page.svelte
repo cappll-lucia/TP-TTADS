@@ -60,6 +60,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Panel de turnos - ServiYa</title>
+</svelte:head>
+
 <dialog
 	id="modal"
 	bind:this={modal}

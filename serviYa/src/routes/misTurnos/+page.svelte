@@ -10,7 +10,7 @@
 	$: confirmedAppointments = data.confirmedAppointments;
 
 	let modal: HTMLElement;
-	let appointment_data = { id: '', description: '', state: '' };
+	let appointment_data: any = {};
 	let appointment_type_selected: string;
 
 	const closeModal = () => {
@@ -18,11 +18,12 @@
 		appointment_data.description = '';
 	};
 
-	const setUpModal = (app: { id: string; description: string; state: string }) => {
+	const setUpModal = (app: any) => {
 		appointment_type_selected = app.state;
-		console.log('appointment_type_selected:', appointment_type_selected);
 		appointment_data.description = app.description;
 		appointment_data.id = app.id;
+		appointment_data.profesional_name = app.profesional.name;
+		appointment_data.profesional_id = app.profesional.id;
 		modal.setAttribute('open', 'true');
 	};
 
@@ -45,6 +46,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Mis turnos - ServiYa</title>
+</svelte:head>
+
 <dialog
 	id="modal"
 	bind:this={modal}
@@ -65,6 +70,15 @@
 					on:click|preventDefault={closeModal}><i class="mi-close" /></a
 				>
 				<h3>Detalles del Turno</h3>
+				<span
+					>Realizado por:
+					<a
+						target="_blank"
+						href={`/profile/${appointment_data?.profesional_id}`}
+					>
+						{appointment_data?.profesional_name}
+					</a>
+				</span>
 			</header>
 			<input
 				name="appointment_id"
@@ -110,9 +124,7 @@
 					<div class="content">
 						<h4>{formatDate(app.date)}</h4>
 						<h5>{formatDateTime(app.date)}</h5>
-						<button
-							class="n"
-							on:click={() => setUpModal(app)}
+						<button on:click={() => setUpModal(app)}
 							><span>Detalles</span> <i class="mi mi-arrow-right" /></button
 						>
 					</div>
