@@ -2,7 +2,6 @@
 	import type { ActionData } from './$types';
 	import { enhance } from '$app/forms';
 	export let form: ActionData;
-	export const prerender = true;
 	let loading = false;
 	let entering = false;
 </script>
@@ -10,9 +9,7 @@
 <main class="container">
 	<article class="grid">
 		<div>
-			<hgroup>
-				<h1>Login</h1>
-			</hgroup>
+			<h1>Iniciar sesión</h1>
 			<form
 				on:reset|preventDefault
 				method="POST"
@@ -32,7 +29,7 @@
 					value={form?.email ?? ''}
 					type="email"
 					name="email"
-					placeholder="email"
+					placeholder="Email"
 					aria-label="Username"
 					required
 				/>
@@ -55,7 +52,7 @@
 					aria-busy={loading}>{entering ? 'Adentro' : 'Log in'}</button
 				>
 			</form>
-
+			<p>Olvidó su contraseña?? <a href="/resetPassword">Reestablecer contraseña</a></p>
 			<p>No tienes una cuenta?? <a href="/register">Registrate aca</a></p>
 		</div>
 		<div id="login-img" />
@@ -66,7 +63,10 @@
 	.container {
 		height: calc(100vh - 80px);
 		.grid {
-			margin-top: 60px;
+			margin-top: 20px;
+			h1{
+				margin-bottom: 20px;
+			}
 		}
 	}
 	.error {

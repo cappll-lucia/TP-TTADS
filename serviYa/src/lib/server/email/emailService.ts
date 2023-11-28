@@ -14,3 +14,15 @@ export async function notifyTurnSolicitation(opts: { to: string, date: Date, cli
 	})
 
 }
+
+export async function notifyResetPasswordLink(opts: { to: string, clientName: string, token: any}){
+	const {to, clientName, token} = opts;
+	const html = await import('./notifyResetPasswordLink.html?raw').then(x => x.default)
+	const templeate = Handlebars.compile(html)
+	await sendEmail({
+		from: { name: "ServiYa", address: "serviya@ttaddss.com" },
+		to,
+		subject: "Reestablecer contraseña",
+		html: templeate({clientName, base_url: BASE_URL, token})
+	})
+}
