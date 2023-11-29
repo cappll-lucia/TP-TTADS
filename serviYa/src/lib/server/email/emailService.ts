@@ -38,3 +38,17 @@ export async function notifyTurnAceptation(opts: { to: string, profesionalName: 
 		html: templeate({ date: date.toLocaleDateString(), profesionalName })
 	})
 }
+
+
+
+export async function notifyTurnRejection(opts: { to: string, profesionalName: string, date: Date }) {
+	const { to, profesionalName, date } = opts;
+	const html = await import('./notifyTurnRejection.html?raw').then(x => x.default)
+	const templeate = Handlebars.compile(html)
+	await sendEmail({
+		from: { name: "ServiYa", address: "serviya@ttaddss.com" },
+		to,
+		subject: "Cancelacion de turno",
+		html: templeate({ date: date.toLocaleDateString(), profesionalName })
+	})
+}
