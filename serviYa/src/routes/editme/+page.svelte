@@ -53,13 +53,12 @@
 <main class="container mt-10">
 	<article class="grid">
 		<div>
-			<hgroup>
-				<h1 class="text-3xl">Editar Usuario</h1>
-			</hgroup>
+			<h1 class="text-3xl">Editar Usuario</h1>
 			<form
 				method="POST"
 				class="register-form"
 				enctype="multipart/form-data"
+				on:reset|preventDefault
 				use:enhance={({ formData }) => {
 					try {
 						validate_or_throw(formData);
@@ -78,14 +77,21 @@
 				<div class="form-panel flex flex-row gap-x-10">
 					<div class="inputs w-1/2 mt-10">
 						<span class="input-tag">Email</span>
-						<label for="email">{user.email}</label>
-						<span class="input-tag">Nombre</span>
 						<InputCustom
 							{formStore}
-							default_value={user.name}
-							name="name"
+							default_value={user.email}
+							name="email"
 							type="text"
+							disabled={true}
 						/>
+						<span class="input-tag">Nombre</span>
+						<InputCustom
+						{formStore}
+						default_value={user.name}
+						name="name"
+						type="text"
+						/>
+						<span class="input-tag">Ciudad</span>
 						<AutocompleteCity
 							bind:value={current_city}
 							on:invalid={() => (valid_city = false)}
@@ -171,5 +177,10 @@
 	}
 	.submit-btn {
 		margin-top: 2rem;
+	}
+
+	.inputs{
+		display: flex;
+		flex-direction: column;	
 	}
 </style>

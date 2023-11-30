@@ -24,31 +24,42 @@ export const actions: Actions = {
 		try {
 			const { name, city_id } = editmeSchema.parse(formData);
 			const file = formData.file as unknown as File;
-			if (!file) {
-				throw error(400, { message: 'No file to upload.' });
-			}
-			const { url } = await put(file.name, file, {
-				token: BLOB_READ_WRITE_TOKEN,
-				access: 'public'
-			});
-			await prisma.authUser.update({
-				where: {
-					id: user.userId
-				},
-				data: {
+			if(file.size!=0) {
+				const { url } = await put(file.name, file, {
+					token: BLOB_READ_WRITE_TOKEN,
+					access: 'public'
+				});
+				await prisma.authUser.update({
+					where: {
+						id: user.userId
+					},
+					data: {
 					name,
 					city_id: city_id,
 					url_photo: url
 				}
 			});
+		}else{
+			await prisma.authUser.update({
+				where: {
+					id: user.userId
+				},
+				data: {
+				name,
+				city_id: city_id,
+				url_photo: undefined
+			}
+		});
+		}
 		} catch (error) {
 			console.log(error);
 			if (error instanceof ZodError) {
 				const { fieldErrors: errors } = error.flatten();
-				return fail(400, {
+				delete formData.file;
+				return {
 					data: { ...formData },
 					errors
-				});
+				};
 			} else {
 				return {
 					message: 'No se pudo editar el usuario'
