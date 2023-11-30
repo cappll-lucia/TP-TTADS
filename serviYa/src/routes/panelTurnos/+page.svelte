@@ -8,11 +8,12 @@
 	$: pendingAppointments = data.pendingAppointments;
 	$: confirmedAppointments = data.confirmedAppointments;
 	$: appointmentTableData = confirmedAppointments;
+	$: todayAppointments = data.todayAppointments;
 
 	let modal: HTMLElement;
 	let appointment_data = { id: '', description: '' };
 	let appointmentTableButtons: HTMLUListElement;
-	let appointmentTableOption = 'Accepted';
+	let selected_option = 'Accepted';
 
 	const closeModal = () => {
 		modal.attributes.removeNamedItem('open');
@@ -50,19 +51,20 @@
 			(event.target as HTMLButtonElement).value === 'Pending'
 				? pendingAppointments
 				: confirmedAppointments;
-		appointmentTableOption = (event.target as HTMLButtonElement).value;
+		selected_option = (event.target as HTMLButtonElement).value;
 		const target = event.target as HTMLButtonElement;
 		appointmentTableButtons.querySelectorAll('button').forEach((button) => {
 			button.classList.add('outline');
 		});
 		target.classList.remove('outline');
 	};
+
 	const resetOptionButtons = () => {
 		appointmentTableButtons.querySelectorAll('button').forEach((button) => {
 			button.classList.add('outline');
 		});
 		document.getElementById('accepted_button')?.classList.remove('outline');
-		appointmentTableOption = 'Accepted';
+		selected_option = 'Accepted';
 	};
 </script>
 
@@ -78,10 +80,7 @@
 		<form
 			method="post"
 			use:enhance={() => {
-				return ({ update, action }) => {
-					console.log(action.search);
-					console.log(action.search === '?/reject');
-					alert(action.search === '?/reject' ? 'Turno rechazado' : 'Turno aceptado');
+				return ({ update }) => {
 					modal.attributes.removeNamedItem('open');
 					update();
 					resetOptionButtons();
@@ -114,7 +113,7 @@
 				>
 					Rechazar
 				</button>
-				{#if appointmentTableOption === 'Pending'}
+				{#if selected_option === 'Pending'}
 					<button
 						type="submit"
 						class="accept"
@@ -130,6 +129,44 @@
 
 <main class="container">
 	<!-- TODO hay que chequear que el valor de length que se muestra se actualice bien cuando se acepte un turno-->
+	<article>
+		<h2>Turnos para hoy</h2>
+		{#if todayAppointments.length > 0}
+			<table role="grid">
+				<thead><th> Servicio </th><th>Fecha</th><th>Hora</th><th /></thead>
+				<tbody>
+					{#each todayAppointments as app}
+						<tr>
+							<td>{formatDate(app.date)}</td>
+							<td>{formatDateTime(app.date)}</td>
+
+							<td>{'Placeholder Location 123'}</td>
+							<td>
+								<form method="post">
+									<input
+										type="text"
+										hidden
+										disabled
+										id="app_id"
+										value={app.id}
+									/>
+									<button
+										type="submit"
+										class="accept"
+										formaction="?/finish"
+									>
+										Aceptar
+									</button>
+								</form>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		{:else}
+			<p>No hay turnos para hoy</p>
+		{/if}
+	</article>
 	<nav>
 		<ul />
 		<ul bind:this={appointmentTableButtons}>
@@ -142,7 +179,7 @@
 					value="Accepted"
 					id="accepted_button"
 				>
-					{#if appointmentTableOption != 'Accepted' && confirmedAppointments.length > 0}
+					{#if selected_option != 'Accepted' && confirmedAppointments.length > 0}
 						<span>[{confirmedAppointments.length}] </span>
 					{/if}
 					Aceptados</button
@@ -155,7 +192,7 @@
 					value="Pending"
 					id="pending_button"
 				>
-					{#if appointmentTableOption != 'Pending' && pendingAppointments.length > 0}
+					{#if selected_option != 'Pending' && pendingAppointments.length > 0}
 						<span>[{pendingAppointments.length}]</span>
 					{/if}
 					Por Confirmar</button
