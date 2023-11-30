@@ -31,16 +31,16 @@ export const actions: Actions = {
 				token: BLOB_READ_WRITE_TOKEN,
 				access: 'public'
 			});
-			// await prisma.authUser.update({
-			// 	where: {
-			// 		id: user.userId
-			// 	},
-			// 	data: {
-			// 		name,
-			// 		city_id: city_id,
-			// 		url_photo: url
-			// 	}
-			// });
+			await prisma.authUser.update({
+				where: {
+					id: user.userId
+				},
+				data: {
+					name,
+					city_id: city_id,
+					url_photo: url
+				}
+			});
 		} catch (error) {
 			console.log(error);
 			if (error instanceof ZodError) {
