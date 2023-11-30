@@ -146,8 +146,7 @@
 									<input
 										type="text"
 										hidden
-										disabled
-										id="app_id"
+										name="app_id"
 										value={app.id}
 									/>
 									<button
