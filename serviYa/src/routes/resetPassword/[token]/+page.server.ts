@@ -16,7 +16,6 @@ export const actions: Actions = {
     default: async ({request, params, locals}:any)=>{
         const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
         try{
-            throw new Error(" dsf");
             const { password } = resetPasswordSchema.parse(formData); 
             const token = params.token;
             const userId = await validateResetPasswordToken(token);

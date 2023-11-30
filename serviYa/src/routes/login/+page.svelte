@@ -55,7 +55,6 @@
 
 				<button
 					type="submit"
-					class="contrast"
 					typeof="submit"
 					aria-busy={loading}>{entering ? 'Adentro' : 'Log in'}</button
 				>

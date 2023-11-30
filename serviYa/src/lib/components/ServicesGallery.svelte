@@ -2,7 +2,6 @@
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import type { City } from '../../types';
-	import { fade } from 'svelte/transition';
 
 	export let data: any;
 
