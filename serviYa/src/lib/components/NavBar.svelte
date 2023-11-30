@@ -9,7 +9,7 @@
 	let city = getContext('city') as Writable<City>;
 </script>
 
-<nav class=" navbar bg-white px-4">
+<nav class=" navbar px-4">
 	<div class="serviya-logo">
 		<img
 			alt="logo"

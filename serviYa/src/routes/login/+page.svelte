@@ -2,7 +2,6 @@
 	import type { ActionData } from './$types';
 	import { enhance } from '$app/forms';
 	export let form: ActionData;
-	export const prerender = true;
 	let loading = false;
 	let entering = false;
 </script>
@@ -50,7 +49,6 @@
 
 				<button
 					type="submit"
-					class="contrast"
 					typeof="submit"
 					aria-busy={loading}>{entering ? 'Adentro' : 'Log in'}</button
 				>
