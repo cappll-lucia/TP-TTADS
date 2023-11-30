@@ -15,7 +15,7 @@
 			alt="logo"
 			height="40px"
 			width="40px"
-			src="/serviYa2.png"
+			src="/shazam.png"
 		/>
 		<a href="/">ServiYa</a>
 	</div>
