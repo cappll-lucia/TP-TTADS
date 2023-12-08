@@ -24,7 +24,7 @@ export const actions: Actions = {
 		try {
 			const { name, city_id } = editmeSchema.parse(formData);
 			const file = formData.file as unknown as File;
-			if(file.size!=0) {
+			if (file.size != 0) {
 				const { url } = await put(file.name, file, {
 					token: BLOB_READ_WRITE_TOKEN,
 					access: 'public'
@@ -34,23 +34,23 @@ export const actions: Actions = {
 						id: user.userId
 					},
 					data: {
-					name,
-					city_id: city_id,
-					url_photo: url
-				}
-			});
-		}else{
-			await prisma.authUser.update({
-				where: {
-					id: user.userId
-				},
-				data: {
-				name,
-				city_id: city_id,
-				url_photo: undefined
+						name,
+						city_id: city_id,
+						url_photo: url
+					}
+				});
+			} else {
+				await prisma.authUser.update({
+					where: {
+						id: user.userId
+					},
+					data: {
+						name,
+						city_id: city_id,
+						url_photo: undefined
+					}
+				});
 			}
-		});
-		}
 		} catch (error) {
 			console.log(error);
 			if (error instanceof ZodError) {
