@@ -9,6 +9,10 @@ function auth_error(msj: string) {
 	return { msj, type: 'AUTH_ERROR' } as const;
 }
 
+function is_ok() {
+	return { type: 'OK' } as const;
+}
+
 export class AppointmentService {
 	constructor(private appointment_repo: IAppointmentRepo, private user_repo: IUserRepo) {}
 
@@ -41,6 +45,7 @@ export class AppointmentService {
 		const client = await this.user_repo.getbyId(client_id);
 		if (!client) return logic_error('client not found');
 		notifyTurnAceptation({ to: client.email, date, profesionalName: user.name }); //async
+		return is_ok();
 	}
 }
 
