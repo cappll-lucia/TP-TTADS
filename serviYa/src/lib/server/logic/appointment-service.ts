@@ -44,7 +44,9 @@ export class AppointmentService {
 
 		const client = await this.user_repo.getbyId(client_id);
 		if (!client) return logic_error('client not found');
-		notifyTurnAceptation({ to: client.email, date, profesionalName: user.name }); //async
+
+		notifyTurnAceptation({ to: client.email, date, profesionalName: user.name }) //async
+			.catch(() => console.log('Error sending email: '));
 		return is_ok();
 	}
 }
