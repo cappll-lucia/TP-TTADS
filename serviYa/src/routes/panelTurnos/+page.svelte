@@ -203,11 +203,10 @@
 	<div class="container-fluid">
 		<article>
 			<table role="grid">
-				<thead><th> Servicio </th><th>Fecha</th><th>Hora</th><th>Direccion</th><th /></thead>
+				<thead><th>Fecha</th><th>Hora</th><th>Direccion</th><th /></thead>
 				<tbody>
 					{#each appointmentTableData as app}
 						<tr>
-							<td>{'Service placeholder'}</td>
 							<td>{formatDate(app.date)}</td>
 							<td>{formatDateTime(app.date)}</td>
 							<td>{'Placeholder Location 123'}</td>
