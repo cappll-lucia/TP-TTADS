@@ -2,17 +2,16 @@
 	import type { ActionData } from './$types';
 	import { enhance } from '$app/forms';
 	export let form: ActionData;
-	export const prerender = true;
 	let loading = false;
 	let entering = false;
+
+	$: showPswValue = false;
 </script>
 
 <main class="container">
 	<article class="grid">
 		<div>
-			<hgroup>
-				<h1>Login</h1>
-			</hgroup>
+			<h1>Iniciar sesión</h1>
 			<form
 				on:reset|preventDefault
 				method="POST"
@@ -32,30 +31,35 @@
 					value={form?.email ?? ''}
 					type="email"
 					name="email"
-					placeholder="email"
+					placeholder="Email"
 					aria-label="Username"
 					required
 				/>
 				{#if form?.message === 'AUTH_INVALID_PASSWORD'}
 					<span class="error">Clave incorrecta</span>
 				{/if}
-				<input
-					type="password"
-					name="password"
-					placeholder="Password"
-					aria-label="Password"
-					autocomplete="current-password"
-					required
-				/>
+				<div class="input-row">
+					<input
+						type={showPswValue ? 'text' : 'password'}
+						name="password"
+						placeholder="Password"
+						aria-label="Password"
+						autocomplete="current-password"
+						required
+					/>
+					<i
+						class={`pointer fa-regular ${showPswValue ? 'fa-eye-slash' : 'fa-eye'}`}
+						on:click={() => (showPswValue = !showPswValue)}
+					/>
+				</div>
 
 				<button
 					type="submit"
-					class="contrast"
 					typeof="submit"
 					aria-busy={loading}>{entering ? 'Adentro' : 'Log in'}</button
 				>
 			</form>
-
+			<p>Olvidó su contraseña?? <a href="/resetPassword">Reestablecer contraseña</a></p>
 			<p>No tienes una cuenta?? <a href="/register">Registrate aca</a></p>
 		</div>
 		<div id="login-img" />
@@ -66,7 +70,10 @@
 	.container {
 		height: calc(100vh - 80px);
 		.grid {
-			margin-top: 60px;
+			margin-top: 20px;
+			h1 {
+				margin-bottom: 20px;
+			}
 		}
 	}
 	.error {
@@ -77,5 +84,15 @@
 		background-image: url('../../ai.profClient.png');
 		background-position: center;
 		background-size: contain;
+	}
+	.input-row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		i {
+			width: 30px;
+			margin-left: 1rem;
+		}
 	}
 </style>

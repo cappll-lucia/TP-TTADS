@@ -24,14 +24,16 @@
 			form = { errors: fieldErrors } as ActionData;
 		}
 	}
+	$: showPswValue = {
+		newPsw: false,
+		confirmPsw: false
+	};
 </script>
 
 <main class="container">
 	<article class="grid">
 		<div class="form-panel">
-			<hgroup>
-				<h1>Registro</h1>
-			</hgroup>
+			<h1>Registro</h1>
 			<form
 				method="POST"
 				class="register-form"
@@ -59,20 +61,32 @@
 						{formStore}
 						name="name"
 						type="text"
-						placeholder="Name"
+						placeholder="Nombre y Apellido"
 					/>
-					<InputCustom
-						{formStore}
-						name="password"
-						type="password"
-						placeholder="Password"
-					/>
-					<InputCustom
-						{formStore}
-						name="confirmPassword"
-						type="password"
-						placeholder="Confirm Password"
-					/>
+					<div class="input-row">
+						<InputCustom
+							{formStore}
+							name="password"
+							type={showPswValue.newPsw ? 'text' : 'password'}
+							placeholder="Contraseña"
+						/>
+						<i
+							class={`pointer fa-regular ${showPswValue.newPsw ? 'fa-eye-slash' : 'fa-eye'}`}
+							on:click={() => (showPswValue.newPsw = !showPswValue.newPsw)}
+						/>
+					</div>
+					<div class="input-row">
+						<InputCustom
+							{formStore}
+							name="confirmPassword"
+							type={showPswValue.confirmPsw ? 'text' : 'password'}
+							placeholder="Confirmar Contraseña"
+						/>
+						<i
+							class={`pointer fa-regular ${showPswValue.confirmPsw ? 'fa-eye-slash' : 'fa-eye'}`}
+							on:click={() => (showPswValue.confirmPsw = !showPswValue.confirmPsw)}
+						/>
+					</div>
 					{#if form?.message}
 						<span class="error">{form?.message}</span>
 					{/if}
@@ -81,7 +95,7 @@
 					type="submit"
 					class="contrast submit-btn"
 					typeof="submit"
-					aria-busy={loading}>Register</button
+					aria-busy={loading}>Registrarse</button
 				>
 			</form>
 		</div>
@@ -98,6 +112,7 @@
 		align-items: flex-start;
 		z-index: 0;
 		.grid {
+			width: 100%;
 			.form-panel {
 				display: flex;
 				justify-content: space-between;
@@ -109,9 +124,19 @@
 					width: 100%;
 				}
 				h1 {
-					font-size: 2rem;
+					margin-bottom: 1rem;
 				}
 			}
+		}
+	}
+	.input-row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		i {
+			width: 30px;
+			margin-left: 1rem;
 		}
 	}
 	#register-img {

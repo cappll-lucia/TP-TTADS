@@ -24,6 +24,7 @@ declare global {
 			email: string;
 			role: 'USER' | 'ADMIN' | 'PROFESIONAL';
 			city_id?: string;
+			url_photo?: string;
 		};
 	}
 }

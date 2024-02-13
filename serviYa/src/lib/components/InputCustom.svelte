@@ -8,6 +8,7 @@
 	export let type: 'text' | 'password' | 'email';
 	export let placeholder = '';
 	export let default_value = '';
+	export let disabled=false;
 
 	const hasError = derived(formStore, (form) => Boolean(form && form.errors && form.errors[name]));
 	const value = derived(formStore, (form) => (form && form.data ? form.data[name] : ''));
@@ -20,6 +21,7 @@
 	{name}
 	{type}
 	{placeholder}
+	{disabled}
 	aria-label={name}
 	class={$hasError ? 'input-error' : 'input'}
 	value={$value || default_value}

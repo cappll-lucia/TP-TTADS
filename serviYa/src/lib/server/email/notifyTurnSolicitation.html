@@ -1,0 +1,39 @@
+<style type="text/css">
+	@media screen {
+		@font-face {
+			font-family: 'Lato';
+			font-style: normal;
+			font-weight: 400;
+			src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
+		}
+
+		body {
+			font-family: system-ui, -apple-system, " Segoe UI", Roboto, Ubuntu;
+		}
+	}
+</style>
+
+<body style="	
+  	background: #24c6dc; 
+  	background: -webkit-linear-gradient(to right, #24c6dc, #514a9d);
+  	background: linear-gradient(to right, #24c6dc, #514a9d); 
+	height: 100vh;
+	padding-top: 20px;
+	padding:50px;
+
+">
+	<article style="
+		padding: 30px;
+		padding-top: 10px;
+		background-clip:border-box;
+		background-color:rgb(20, 30, 38);
+		color: rgb(187, 198, 206);
+		font-weight: 400;
+		text-rendering: optimizeLegibility;
+	">
+		<h1>Turno solicitado por {{clientName}}</h1>
+		<p>Turno solicitado para el dia {{date}}</p>
+		<a href="{{base_url}}/turnos"> | >>>>Ver Turnos<<<< | </a>
+
+	</article>
+</body>
