@@ -15,7 +15,7 @@
 			<p hidden>{id}</p>
 			<p><strong>{name}</strong></p>
 			<p>{profession}</p>
-			<p>Rating: {rating} <i class="mi-favorite" /></p>
+			<p>Puntuacion: {rating} <i class="mi-favorite" /></p>
 			<a
 				on:click|once={(e) => {
 					handleClick(e);

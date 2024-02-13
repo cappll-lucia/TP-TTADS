@@ -18,14 +18,20 @@ export const load: PageServerLoad = async ({ locals }) => {
 	);
 
 	const confirmedAppointments = appointments.filter(
-		(appointment) => appointment.state === 'TO_DO' && appointment.date >= new Date()
+		(appointment) =>
+			appointment.state === 'TO_DO' && appointment.date >= new Date(new Date().setHours(0, 0, 0))
 	);
 
-	const otherAppointments = appointments.filter(
-		(appointment) => appointment.state === 'DONE' || appointment.state === 'REJECTED'
-	);
+	const todayAppointments = appointments.filter((appointment) => {
+		const today = new Date(new Date().setHours(0, 0, 0));
+		return (
+			appointment.state === 'TO_DO' &&
+			appointment.date >= today &&
+			appointment.date < new Date(today.setDate(today.getDate() + 1))
+		);
+	});
 
-	return { pendingAppointments, confirmedAppointments, otherAppointments };
+	return { pendingAppointments, confirmedAppointments, todayAppointments };
 };
 
 function should_not_reach(x: never) {
@@ -56,9 +62,39 @@ export const actions: Actions = {
 				should_not_reach(res);
 		}
 	},
+	finish: async ({ request, locals }) => {
+		const { user } = await locals.auth.validateUser();
+		if (!user) {
+			return fail(401, { msj: 'Unauthorized' });
+		}
+		const data = await request.formData();
+		const appointment_id = data.get('app_id')?.toString();
+
+		if (!appointment_id) {
+			return Error('No se envio el id del turno');
+		}
+
+		const appointment = await prisma.appointment.findFirst({ where: { id: appointment_id } });
+		if (!appointment) {
+			return fail(400, { msj: 'not found' });
+		}
+
+		if (appointment.profesional_id != user?.userId) {
+			return fail(401, { msj: 'Unauthorized' });
+		}
+		await prisma.appointment.update({
+			where: { id: appointment_id },
+			data: { state: 'DONE' }
+		});
+		return { status: 200, success: true };
+	},
 
 	reject: async ({ request, locals }) => {
 		const { user } = await locals.auth.validateUser();
+
+		if (!user) {
+			return fail(401, { msj: 'Unauthorized' });
+		}
 
 		const data = await request.formData();
 		const appointment_id = data.get('appointment_id')?.toString();
@@ -73,14 +109,15 @@ export const actions: Actions = {
 			return fail(401, { msj: 'You lack the required credentilas' });
 		}
 
-		await prisma.appointment.delete({
-			where: { id: appointment_id }
-		});
-
 		const { client_id, date } = appointment;
 		prisma.authUser.findUnique({ where: { id: client_id } }).then((client) => {
 			if (!client) return;
 			notifyTurnRejection({ to: client.email, date, profesionalName: user.name });
+		});
+
+		await prisma.appointment.update({
+			where: { id: appointment_id },
+			data: { state: 'REJECTED' }
 		});
 
 		return { status: 200, success: true };

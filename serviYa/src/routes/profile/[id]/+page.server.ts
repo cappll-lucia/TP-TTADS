@@ -8,6 +8,24 @@ import { notifyTurnSolicitation } from '$lib/server/email/emailService';
 function addDays(dateTime: Date, count_days = 0) {
 	return new Date(new Date(dateTime).setDate(dateTime.getDate() + count_days));
 }
+const updateStarsAverage = async (profesionalId: string) => {
+	const new_stars_average = await prisma.review.aggregate({
+		_avg: {
+			score: true
+		},
+		where: {
+			prof_id: { equals: profesionalId }
+		}
+	});
+	await prisma.authUser.update({
+		where: {
+			id: profesionalId
+		},
+		data: {
+			stars_average: new_stars_average._avg.score
+		}
+	});
+};
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	// validation
@@ -57,7 +75,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	agendar: async ({ request, locals }) => {
+	agendar: async ({ request, locals, params }) => {
 		const { user } = await locals.auth.validateUser();
 		if (!user) {
 			return fail(401, { message: 'Unauntenticated' });
@@ -74,7 +92,7 @@ export const actions: Actions = {
 				client_id: user.userId,
 				date: new Date(zodRes.data.turn),
 				description: zodRes.data.desc,
-				profesional_id: zodRes.data.profesional_id,
+				profesional_id: params.id,
 				state: 'UNCONFIRMED'
 			}
 		});
@@ -113,11 +131,12 @@ export const actions: Actions = {
 				score: Number(formData.score)
 			}
 		});
+		await updateStarsAverage(profesionalId);
 		return {
 			status: 200
 		};
 	},
-	editReview: async ({ request, locals }) => {
+	editReview: async ({ request, locals, params }) => {
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
 		const reviewId = formData.id;
 		delete formData.id;
@@ -140,16 +159,18 @@ export const actions: Actions = {
 				id: reviewId
 			}
 		});
+		await updateStarsAverage(params.id);
 		return {
 			status: 200
 		};
 	},
-	deleteReview: async ({ request }) => {
+	deleteReview: async ({ request, params }) => {
 		const formData = Object.fromEntries(await request.formData()) as Record<string, string>;
 		await prisma.review.delete({
 			where: {
 				id: formData.id
 			}
 		});
+		await updateStarsAverage(params.id);
 	}
 };

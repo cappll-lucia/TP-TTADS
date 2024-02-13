@@ -36,7 +36,8 @@ export const actions: Actions = {
 					city_id,
 					description,
 					phone,
-					services_id: [service_id]
+					services_id: [service_id],
+					stars_average: 0
 				}
 			});
 

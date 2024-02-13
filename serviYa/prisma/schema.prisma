@@ -28,6 +28,7 @@ model AuthUser {
 
   reviews         Review[] @relation("prof_reviews")
   written_reviews Review[] @relation("written_reviews")
+  stars_average   Float?
 
   resetPasswordTokens ResetPasswordToken[]
 
