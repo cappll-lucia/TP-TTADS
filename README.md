@@ -8,7 +8,9 @@ para la materia "Técnicas y Tecnologías Avanzadas de Desarrollo de Software" d
 * 47799 - Cappellini, Lucía
 * 47773 - Mollo, Bruno
 * 47772 - Di Giacinti, Ramiro
-* 46095 - Braida, Facundo 
+* 46095 - Braida, Facundo
+
+## [Documentacion](https://github.com/cappll-lucia/TP-TTADS/blob/main/docs/documentacion.md)
 
 ## Tema
 ### Descripción
