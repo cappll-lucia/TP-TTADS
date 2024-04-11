@@ -108,7 +108,35 @@ Se desarrollará una plataforma que pondrá en contacto personas que brindan dis
 
 # Instalación
 
-!!!info TBD
+1.Clonar el repositorio
+```bash
+git clone https://github.com/cappll-lucia/TP-TTADS
+```
+2. Entra en la carpeta del proyecto
+```bash
+cd TP-TADS/serviya
+```
+3.Instalar las dependencias:
+```bash
+npm install
+```
+4.Completar las variables de entorno
+```env
+GOOGLE_EMAIL=""
+GOOGLE_EMAIL_PASSWORD=""
+
+BASE_URL='http://localhost:3000'
+BLOB_READ_WRITE_TOKEN=""
+
+MONGO_URL=""
+```
+Nota: para la url de mongo recomendamos usar [Atlas](https://www.mongodb.com/atlas)
+
+5. Levantar el servidor de desarollo:
+```bash
+npm run dev
+```
+
 
 # [Video Demo](https://drive.google.com/file/d/1g5RAQgcv1-yZqnBU3l_VhSCdBs-Ntoc3/view)
 
