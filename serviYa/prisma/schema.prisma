@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = "mongodb+srv://serviya:LKJ741zxc@cluster0.ezxkjig.mongodb.net/serviYa?retryWrites=true"
+  url      = env("MONGO_URL")
 }
 
 model AuthUser {
