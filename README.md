@@ -191,10 +191,35 @@ classDiagram
     </tr>
 </table>
 
-De ejemplo, borrar despues:
-|Req|Detalle|
-|:-|:-|
-|Listados |1. Estadía del día filtrado por fecha muestra, cliente, habitaciones y estado <br>2. Reservas filtradas por cliente muestra datos del cliente y de cada reserve fechas, estado cantidad de habitaciones y huespedes|
-|CUU/Epic|1. Consumir servicios<br>2. Cancelación de reserva|
-|Otros|1. Envío de recordatorio de reserva por email|
+## Como correr localmente el proyecto
+1.Clonar el repositorio
+```bash
+git clone https://github.com/cappll-lucia/TP-TTADS
+```
+2. Entra en la carpeta del proyecto
+```bash
+cd TP-TADS/serviya
+```
+3.Instalar las dependencias:
+```bash
+npm install
+```
+4.Completar las variables de entorno
+```env
+GOOGLE_EMAIL=""
+GOOGLE_EMAIL_PASSWORD=""
+
+BASE_URL='http://localhost:3000'
+BLOB_READ_WRITE_TOKEN=""
+
+MONGO_URL=""
+```
+Nota: para la url de mongo recomendamos usar [Atlas](https://www.mongodb.com/atlas)
+
+5. Levantar el servidor de desarollo:
+```bash
+npm run dev
+```
+
+
  
