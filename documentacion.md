@@ -1,3 +1,4 @@
+
 # Propuesta TP - Tecnicas y tecnologias Avanzadas de Desarollo de Software
 
 ## Grupo
@@ -196,6 +197,5 @@ npm run dev
 `POST /profile/[id]/?editReview`
 `POST /profile/[id]/?deleteReview`
 
-# Unit Test Outputs
-
-!!!info TBD
+# Unit Test Output
+![unit_test_output](https://github.com/cappll-lucia/TP-TTADS/assets/71228261/a12e1fc1-866c-4317-96fe-571535ff5288)
