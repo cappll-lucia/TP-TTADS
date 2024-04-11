@@ -199,3 +199,5 @@ npm run dev
 
 # Unit Test Output
 ![unit_test_output](https://github.com/cappll-lucia/TP-TTADS/assets/71228261/a12e1fc1-866c-4317-96fe-571535ff5288)
+![unit_test_output_2](https://github.com/cappll-lucia/TP-TTADS/assets/71228261/2953c17d-3042-4185-be65-8a646bc7b99c)
+
