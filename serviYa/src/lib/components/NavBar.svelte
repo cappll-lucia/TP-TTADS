@@ -20,7 +20,7 @@
 		<a href="/">ServiYa</a>
 	</div>
 
-	<div style="padding-top:30px; padding-bottom: 20px;">
+	<div style="padding:30px;">
 		{#if data.user && data.user.role !== 'ADMIN' && $page.url.pathname == '/'}
 			{#key $page.url.pathname}
 				<AutocompleteCityNavbar bind:value={$city} />
@@ -32,13 +32,14 @@
 			<a
 				role="button"
 				href="/profesional"
+				style="width: max-content;"
 				>Quiero prestar un servicio
 			</a>
 		</div>
 	{/if}
 	<div class="usr-menu">
 		{#if data.user}
-			<li>Bienvenido, {data?.user?.name}!</li>
+			<li style="width: max-content;">Bienvenido, {data?.user?.name}!</li>
 		{/if}
 		<details
 			class="menu"
@@ -68,9 +69,12 @@
 					<li>
 						<a href="/editme">Editar datos</a>
 					</li>
+					<li class="logout-btn">
+
+
 					<form
-						class="listbox"
 						method="POST"
+						class="listbox"
 					>
 						<button
 							on:click={(e) => confirm('estas seguro?') || e.preventDefault()}
@@ -80,6 +84,8 @@
 							>LogOut
 						</button>
 					</form>
+					</li>
+
 				{/if}
 			</ul>
 		</details>
@@ -127,25 +133,19 @@
 						flex-direction: column;
 						align-items: center;
 						button {
-							height: 2.5rem;
 							margin-top: 3px;
-							padding: 0.5rem 1rem;
 							width: 8rem;
 							text-align: left;
-							height: 2.5rem;
 						}
 						a {
 							text-decoration: none;
 							text-align: left;
 							color: var(--dropdown-color);
 						}
-						button:hover {
-							background-color: hsl(210, 70%, 16%);
-						}
-						a:hover {
-							background-color: hsl(210, 70%, 16%);
-						}
 					}
+				}
+				.logout-btn:hover{
+					background-color: rgba(36, 51, 62, 0.75);
 				}
 			}
 		}

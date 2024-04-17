@@ -5,7 +5,6 @@ test('has title', async ({ page }) => {
   await expect(page).toHaveTitle("ServiYA");
 });
 
-
 test.describe('register', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/register')

@@ -3,6 +3,10 @@
 	import { capitalize } from '$lib/utils';
 	import { slide } from 'svelte/transition';
 	import { fetchWithCancel } from './fetchWithCancel';
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
+
+
 	let cities = [] as City[];
 	export let value: City | null | undefined;
 	let hasBeenJustFound = false;
@@ -24,7 +28,7 @@
 			cities = [];
 		}
 		if (searchTerm.length >= 2 && !hasBeenJustFound) {
-			const url = `http://localhost:3000/api/city?name=${searchTerm}`;
+			const url = `${PUBLIC_BASE_URL}/api/city?name=${searchTerm}`;
 			fetchWithCancel(url, (res) => {
 				res.json().then((res) => {
 					cities = res.result;
@@ -112,12 +116,13 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			width: 18rem;
+			width: 16rem;
 			i {
 				font-size: 1.5rem;
 				padding-top: 10px;
 			}
 			input {
+				background-color: rgba(240, 248, 255, 0.014);
 				margin: 0;
 				width: 16rem;
 				padding: 0.2rem 0.5rem;
@@ -132,7 +137,7 @@
 		}
 		ul {
 			margin: 0;
-			width: 18rem;
+			width: 16rem;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;

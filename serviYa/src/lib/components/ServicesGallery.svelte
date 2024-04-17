@@ -17,7 +17,10 @@
 		{/each}
 	</div>
 {:else}
-	<p>Por favor elija una ciudad</p>
+<div class="container">
+
+	<p class="elegir">Por favor elija una ciudad</p>
+</div>
 {/if}
 
 <style lang="scss">
@@ -54,5 +57,8 @@
 		background: linear-gradient(120deg, var(--secondary), var(--secondary-focus));
 		font-size: 1.5rem;
 		width: 260px;
+	}
+	.elegir{
+		padding-top: 3rem;
 	}
 </style>
