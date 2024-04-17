@@ -4,6 +4,7 @@
 	import { slide } from 'svelte/transition';
 	import { fetchWithCancel } from './fetchWithCancel';
 	import { createEventDispatcher } from 'svelte';
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 
 	let cities = [] as City[];
 	export let value: City | undefined;
@@ -37,7 +38,7 @@
 			cities = [];
 		}
 		if (searchTerm.length >= 2 && !hasBeenJustFound) {
-			const url = `http://localhost:3000/api/city?name=${searchTerm}`;
+			const url = `${PUBLIC_BASE_URL}/api/city?name=${searchTerm}`;
 			fetchWithCancel(url, (res) => {
 				res.json().then((res) => {
 					cities = res.result;
