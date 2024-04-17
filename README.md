@@ -223,5 +223,4 @@ Nota: para la url de mongo recomendamos usar [Atlas](https://www.mongodb.com/atl
 npm run dev
 ```
 
-
- 
+:)
